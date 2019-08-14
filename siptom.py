@@ -10,6 +10,7 @@ This is a python implementation of sirtom
     - X add pairing
     - add compete to pairing 
     - X create a 1v1 compete function
+    - Get Git to work
 
 """
 
