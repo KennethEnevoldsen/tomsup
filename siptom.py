@@ -69,7 +69,6 @@ class Payoff_matrix():
     def __call__(self):
         return self.matrix
 
-
 #%% Agents
 class Agent():
     """
