@@ -1,76 +1,17 @@
 """
-This is a python implementation of sirtom
-
-
-#TODO
-    - X add WSLS
-    - add 0-tom
-    - add k-tom
-    - X add create_agents() (agent list)
-    - X add pairing
-    - add compete to pairing 
-    - X create a 1v1 compete function
-
+dogstring
 """
 
-
-#%% import modules
-import numpy as np
 import pandas as pd
+import numpy as np
 from warnings import warn
 from itertools import combinations
 
 
+###################
+###___ AGENT ___###
+###################
 
-#%% Payoff Matrix
-class Payoff_matrix():
-    """
-    Example:
-    >>> p_matrix = Payoff_matrix(name="penny_competitive")
-    >>> p_matrix.matrix
-    array([[[ 1, -1],
-        [-1,  1]],
-
-       [[-1,  1],
-        [ 1, -1]]])
-    >>> p_matrix.outcome(1,1, agent = "p1")
-    -1
-
-    TODO: 
-    - add method to class payoff matrix to fetch value
-    - make a nicer print
-    """
-    def __init__(self, name, predefined=None):
-        """
-        TODO:
-        # add the remaining payoff matrices
-        """
-        self.name = name
-        if name == "penny_competitive":
-            self.matrix = np.array(([(1, -1), (-1, 1)],
-                                    [(-1, 1), (1, -1)]))
-        if predefined:
-            matrix = np.array(predefined)
-            if matrix.shape == (2, 2, 2):
-                self.matrix = np.array(predefined)
-            else:
-                raise Exception("Predefined should be a valid matrix where matrix.shape == (2, 2, 2), e.g. a 2x2x2 matrix")
-
-    def outcome(self, action_agent0, action_agent1, agent = 0):
-        """
-        assumes action_agent0 and action_agent1 to be integers
-        agent is either 'p0' or 'p1' indicating whether the agent is player one or two
-        TODO: update docstring
-        """
-
-        return self.matrix[agent, action_agent0, action_agent1]
-
-
-    def __call__(self):
-        return self.matrix
-
-
-#%% Agents
 class Agent():
     """
 
@@ -181,6 +122,8 @@ class Agent():
 
 
 
+
+
 class RB(Agent):
     """
     'RB': Random bias agent
@@ -235,39 +178,9 @@ class WSLS(Agent):
         self._add_to_history(choice = self.choice)
         return self.choice
 
-#%%
-def valid_agents():
-    """
-    prints a list of valid agents
-    """
-    RB_d = {'agent': 'Random Bias',
-     'shorthand': 'RB',
-     'example': 'RB(bias = 0.5)', 
-     'reference': 'Devaine, et al. (2017)', 
-     'strategy': 'Chooses 1 randomly based on a probability or bias'}
-    WSLS_d = {
-     'agent': 'Win-stay, lose-switch',
-     'shorthand': 'WSLS',
-     'example': 'WSLS()', 
-     'reference': 'Nowak & Sigmund (1993)', 
-     'strategy': 'If it win it chooses the same strategy and if it loose it change to another'}
-    agent_dicts = [RB_d, WSLS_d]
-    print(pd.DataFrame(agent_dict).T)
-    
-
-
-def create_agents(agents, start_params):
-    """
-    
-    TODO: create a create_agent() function (for single agents) (eller lav den så den virker på begge måder)
-    agents is a list of agents e.g. ['RB', 'WSLS', '0-tom']
-
-    a wrapper function for the class Agent_group()
-
-    Examples:
-    >>> create_agents(['RB']*3)
-    """
-
+#########################
+###___ AGENT GROUP ___###
+#########################
 
 class Agent_group():
     """
@@ -333,17 +246,10 @@ class Agent_group():
         if self.environment is None and env is None:
             raise TypeError('No env was specified, either specify environment using set_env() or by specifying env for compete()')
 
-        
 
-('t' or None) is None
-tmp = Agent_group(agents = ['RB']*3, parameters = [{'bias': 1}]*3)
-tmp.set_env('rr')
-tmp.pairing
-tmp._agents['RB_0']
-tmp.get_environment()
-
-L = list(range(10))
-
+###################
+###___ UTILS ___###
+###################
 
 def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent = True, return_val = 'df'):
     """
@@ -398,36 +304,3 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
     else:
         raise TypeError("Invalid return_val, please use either 'df' or 'list'")
 
-
-L = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", n_rounds = 10, return_val = 'list')
-list(zip(L, (1,)*10))
-(1,)*10
-for
-L1 = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", n_rounds = 10, return_val = 'df')
-
-for i in range(10):
-    player_c = 
-    SirToM.compete(c_op = player_c, dsdasds)
-
-### dictionary (should be fetchable from somewhere) - should also be the one valid_agents fetch from
-# create dict for payoff matrices 
-agent_dict = {'RB': {'name': 'Random Bias',
-     'shorthand': 'RB',
-     'example': 'RB(bias = 0.5)', 
-     'reference': 'Devaine, et al. (2017)', 
-     'strategy': 'Chooses 1 randomly based on a probability or bias',
-     'function': RB}, 
-     'WSLS': {
-     'agent': 'Win-stay, lose-switch',
-     'shorthand': 'WSLS',
-     'example': 'WSLS()', 
-     'reference': 'Nowak & Sigmund (1993)', 
-     'strategy': 'If it win it chooses the same option again, if it lose it change to another',
-     'function': WSLS}}
-
-
-
-# %% Run test
-if __name__ == "__main__":
-  import doctest
-  doctest.testmod(verbose=True)
