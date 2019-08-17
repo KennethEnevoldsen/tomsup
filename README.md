@@ -67,4 +67,5 @@ See [our getting started guide](https://stanfordnlp.github.io/stanfordnlp/instal
 
 ## LICENSE
 
-If any?
+PACKAGENAME is released under the Apache License [LICENSE, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
