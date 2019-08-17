@@ -186,17 +186,21 @@ class Agent_group():
     """
 
     Examples:
-    >>> round_table = Agent_group(agents = ['RB'], parameters = [{'bias': 1}])
+    >>> round_table = Agent_group(agents = ['RB'], start_params = [{'bias': 1}])
     >>> round_table.agent_names
+
+    >>> Agent_group(agents = ['RB']*3)
     """
-    def __init__(self, agents, parameters):
+    def __init__(self, agents, start_params = None):
         # TODO: add option to set payoff matrix and env here
         self.agents = agents
-        self.params = parameters
+        if start_params is None:
+            start_params = [{}] * len(agents)
+        self.start_params = start_params
         self.environment = None
             # create unique agent ID's, e.g. a list of 3 RB agent becomes [RB_0, RB_1, RB_2]
         self.agent_names = [agent + '_' + str(idx) for agent in set(agents) for idx in range(agents.count(agent))]
-        self._agents = {name: Agent(agent, param) for name, agent, param in zip(self.agent_names, agents, parameters)}
+        self._agents = {name: Agent(agent, param) for name, agent, param in zip(self.agent_names, agents, start_params)}
 
     def get_environment(self):
         if self.environment:

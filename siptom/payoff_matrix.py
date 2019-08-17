@@ -4,6 +4,7 @@ docstring
 import numpy as np
 
 
+
 class Payoff_matrix():
     """
     Example:
