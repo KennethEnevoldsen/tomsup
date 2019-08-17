@@ -9,7 +9,6 @@ This is a python implementation of sirtom
     - X add create_agents() (agent list)
     - X add pairing
     - add compete to pairing 
-    - X create a 1v1 compete function
 
 """
 
