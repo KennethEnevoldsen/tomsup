@@ -31,14 +31,12 @@ To ask questions, report issues or request features, please use the [GitHub Issu
 
 StanfordNLP supports Python 3.6 or later. We strongly recommend that you install PACKAGENAME from PyPI. If you already have [pip installed](https://pip.pypa.io/en/stable/installing/), simply run:
 ```bash
-pip install PACKAGENAME
+pip3 install PACKAGENAME
 ```
 
-Or to install it from source run
+Or to install it from github run
 ```bash
-git clone https://github.com/KennethEnevoldsen/PACKAGENAME
-cd PACKAGENAME
-pip install -e .
+pip3 install git+git://github.com/KennethEnevoldsen/siptom.git
 ```
 
 ## Getting Started with PACKAGENAME
