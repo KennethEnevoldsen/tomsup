@@ -1,5 +1,5 @@
 import pandas as pd
-from siptom.agent import Agent_group
+from agent import AgentGroup
 
 
 def valid_agents():
@@ -38,10 +38,18 @@ def create_agents(agents, start_params = None):
     a wrapper function for the class Agent_group()
 
     Examples:
-    >>> create_agents(agents = ['RB']*3)
+    >>> group = create_agents(agents = ['RB']*3)
+    >>> isinstance(group, AgentGroup)
+    True
+    >>> group.get_names()
+    ['RB_0', 'RB_1', 'RB_2']
+    >>> RB_agent = group.get_agent('RB_0')
+    >>> RB_agent.get_strategy()
+    'RB'
+    >>> group.set_env(env = 'round_robin')
     """
-    return Agent_group(agents = agents, start_params = start_params)
-Agent_group(agents =  ['RB']*3, start_params = None)
+    return AgentGroup(agents = agents, start_params = start_params)
+
 
 # %% Run test
 if __name__ == "__main__":

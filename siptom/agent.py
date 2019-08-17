@@ -64,7 +64,7 @@ class Agent():
             self.__init__()
 
 
-    def get_strategy():
+    def get_strategy(self):
         return self.strategy
 
 
@@ -121,9 +121,6 @@ class Agent():
         return self._start_params
 
 
-
-
-
 class RB(Agent):
     """
     'RB': Random bias agent
@@ -178,18 +175,19 @@ class WSLS(Agent):
         self._add_to_history(choice = self.choice)
         return self.choice
 
+
 #########################
 ###___ AGENT GROUP ___###
 #########################
 
-class Agent_group():
+class AgentGroup():
     """
 
     Examples:
-    >>> round_table = Agent_group(agents = ['RB'], start_params = [{'bias': 1}])
+    >>> round_table = AgentGroup(agents = ['RB']*2, start_params = [{'bias': 1}]*2)
     >>> round_table.agent_names
-
-    >>> Agent_group(agents = ['RB']*3)
+    ['RB_0', 'RB_1']
+    >>> round_table.set_env('round_robin')
     """
     def __init__(self, agents, start_params = None):
         # TODO: add option to set payoff matrix and env here
@@ -212,7 +210,7 @@ class Agent_group():
         return self.agent_names
 
     def get_agent(self, agent):
-        if agent in agent_names:
+        if agent in self.agent_names:
             return self._agents[agent]
         else:
             raise Exception('agent is not in agent names, to get a list of agent names, use get_names()')
@@ -224,9 +222,9 @@ class Agent_group():
         env (str): desired environment
         """
         self.environment = env.lower()
-        if self.environment in ('rr', 'round_robin', 'round robin'):
+        if self.environment == 'round_robin':
             self.pairing = list(combinations(self.agent_names, 2))
-        if self.environment in ['random pairs', 'random']:
+        elif self.environment == 'random_pairs':
             L = self.agent_names[:]
             if len(L) % 2 != 0:
                  raise Exception('List is agent in Agent_group should be even if environment is set to random pairs.' + 
@@ -236,7 +234,7 @@ class Agent_group():
         else:
             raise TypeError(f"{env} is not a valid environment.")
 
-    def compete(n_rounds = 10, n_sim = 1, p_matrix = None, reset_agent = True, env = None):
+    def compete(self, n_rounds = 10, n_sim = 1, p_matrix = None, reset_agent = True, env = None):
         # TODO: add check to payoffmatrix is already set
         #(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent = True, return_val = 'df')
         if self.environment is None and env is None:
@@ -258,7 +256,7 @@ class Agent_group():
 def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent = True, return_val = 'df'):
     """
     agent_0 and agent_1 (Agent): objects of class Agent which should compete
-    p_matrix (Payoff_matrix | str): The Payoff_matrix in which the agents compete or the name of the payoff matrix
+    p_matrix (PayoffMatrix | str): The PayoffMatrix in which the agents compete or the name of the payoff matrix
     n_rounds (int): Number of rounds the agents should compete
     return_val ('df' | 'list')
     n_sim (int)
@@ -274,7 +272,7 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
     """
 
     if isinstance(p_matrix, str):
-        p_matrix = Payoff_matrix(name = p_matrix)
+        p_matrix = PayoffMatrix(name = p_matrix)
     if reset_agent:
         agent_0.reset()
         agent_1.reset()

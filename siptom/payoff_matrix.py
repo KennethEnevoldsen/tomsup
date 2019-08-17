@@ -5,10 +5,10 @@ import numpy as np
 
 
 
-class Payoff_matrix():
+class PayoffMatrix():
     """
     Example:
-    >>> p_matrix = Payoff_matrix(name="penny_competitive")
+    >>> p_matrix = PayoffMatrix(name="penny_competitive")
     >>> p_matrix.matrix
     array([[[ 1, -1],
         [-1,  1]],
