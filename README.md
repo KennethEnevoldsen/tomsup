@@ -1,4 +1,5 @@
-# PACKAGENAME: A Python Package for Agent Based simulations in Python
+# tomsup: Theory of Mind Simulation using Python
+A Python Package for Agent Based simulations.
 
 
 [![PyPI Version](link missing)
@@ -31,18 +32,20 @@ To ask questions, report issues or request features, please use the [GitHub Issu
 
 StanfordNLP supports Python 3.6 or later. We strongly recommend that you install PACKAGENAME from PyPI. If you already have [pip installed](https://pip.pypa.io/en/stable/installing/), simply run:
 ```bash
-pip3 install PACKAGENAME
+pip3 install tomsup
 ```
 
 Or to install it from github run
 ```bash
-pip3 install git+git://github.com/KennethEnevoldsen/siptom.git
+git clone https://github.com/KennethEnevoldsen/tomsup.git
+cd tomsup
+pip3 install -e .
 ```
 
 ## Getting Started with PACKAGENAME
 
 ```python
->>> import PACKAGENAME
+>>> import tomsup
 >>> 
 ```
 
@@ -59,11 +62,16 @@ See [our getting started guide](https://stanfordnlp.github.io/stanfordnlp/instal
 
 ### A todolist:
 
-* The first thing
-* The second thing
-* the last thing
+Need to have
+- rework of WSLS
+
+Nice to have:
+- Smart initialize ToM
+- reinforcement learner agent
+
+
 
 ## LICENSE
 
-PACKAGENAME is released under the Apache License [LICENSE, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+tomsup is released under the Apache [License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 

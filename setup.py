@@ -4,7 +4,7 @@ with open("README.md", 'r') as f:
     long_description = f.read()
 
 setup(
-   name='siptom',
+   name='tomsup',
    version='1.0',
    description='An implementation of game theory of mind in a agent based framework following the implementation of Devaine, et al. (2017).',
    license='Apache License 2.0',
@@ -12,8 +12,8 @@ setup(
    long_description_content_type="text/markdown",
    author='Kenneth C. Enevoldsen and Peter T. Waade',
    author_email='kennethcenevoldsen@gmail.com',
-   url="https://github.com/KennethEnevoldsen/siptom",
-   packages=['siptom'],  #same as name
+   url="https://github.com/KennethEnevoldsen/tomsup",
+   packages=['tomsup'],  #same as name
    install_requires=['numpy', 'pandas'], #external packages as dependencies
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers

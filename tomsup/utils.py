@@ -1,6 +1,10 @@
+"""
+This script contains utility functions
+"""
 import pandas as pd
-from agent import AgentGroup
-
+from siptom.agent import AgentGroup
+import json
+import os
 
 def valid_agents():
     """
@@ -24,7 +28,9 @@ def valid_agents():
     'reference': 'Devaine, et al. (2017)',
     'strategy': 'Chooses 1 randomly based on a probability or bias'}
     """
-    with open('agent_info.json', 'r') as fp:
+    this_dir, this_filename = os.path.split(__file__)
+    path = os.path.join(this_dir, "agent_info.json")
+    with open(path, 'r') as fp:
         agent_dict = json.load(fp)
     return agent_dict
 
@@ -49,6 +55,7 @@ def create_agents(agents, start_params = None):
     >>> group.set_env(env = 'round_robin')
     """
     return AgentGroup(agents = agents, start_params = start_params)
+
 
 
 # %% Run test
