@@ -1,6 +1,13 @@
 from warnings import warn
 import numpy as np
 
+"""
+Parameter Order:
+[1] Volatility
+[2] Behavioural temperature
+[3] Dilution
+[4] Bias
+"""
 #%% Learning subfunctions
 def p_op_var0_update (prev_p_op_mean0, prev_p_op_var0, volatility):
     """ 
@@ -104,14 +111,19 @@ def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution = None):
 
     return new_p_k
 
-def param_var_update (prev_param_mean, prev_param_var, prev_gradient, p_k, volatility, volatility_dumy):
+def param_var_update (prev_param_mean, prev_param_var, prev_gradient, p_k, volatility, volatility_dummy = None):
     """
     k-ToM updates its uncertainty / variance on its estimates of opponent's parameter values
     """
+    #Dummy constant: sets volatility to 0 for all except volatility opponent parameter estimates
+    if volatility_dummy is None:
+        volatility_dummy = np.zeros(prev_param_mean.shape(1))
+        volatility_dummy = np.concatenate(([1], volatility_dummy), axis = None)
+
     #Input variable transforms
     prev_param_mean = inv_logit(prev_param_mean)
     prev_param_var = np.exp(prev_param_var)
-    volatility = np.exp(volatility) * volatility_dumy
+    volatility = np.exp(volatility) * volatility_dummy
 
     #Calculate
     new_var = (
@@ -276,7 +288,8 @@ def learning_function (
     op_choice,
     level,
     agent,
-    p_matrix):
+    p_matrix,
+    **kwargs):
     """
     """
     #Extract needed parameters
@@ -316,7 +329,7 @@ def learning_function (
         p_k = p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution)
 
         #Update parameter estimates
-        param_var = param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volatility, volatility_dumy)
+        param_var = param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volatility, **kwargs)
         param_mean = param_mean_update(prev_p_op_mean, prev_param_mean, prev_gradient, p_k, param_var, op_choice)
 
         ##Do recursive simulating of opponent
@@ -441,8 +454,8 @@ def k_tom (
     op_choice,
     level,
     agent,
-    p_matrix
-    ):
+    p_matrix,
+    **kwargs):
     
     #Update estimates of opponent based on behaviour
     if self_choice:
