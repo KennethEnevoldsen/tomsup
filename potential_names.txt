@@ -1,7 +1,0 @@
-siptom: Simulations in Python Theory of Mind
-
-abmp: Agent based models in python
-
-tomsup: ToM simulations using python
-
-sip: simulations in python #taken 

@@ -4,18 +4,19 @@ docstring
 import numpy as np
 
 
-class Payoff_matrix():
+
+class PayoffMatrix():
     """
     Example:
-    >>> p_matrix = Payoff_matrix(name="penny_competitive")
-    >>> p_matrix.matrix
+    >>> p_matrix = PayoffMatrix(name="penny_competitive")
+    >>> p_matrix()
     array([[[ 1, -1],
         [-1,  1]],
 
        [[-1,  1],
         [ 1, -1]]])
-    >>> p_matrix.outcome(1,1, agent = "p1")
-    -1
+    >>> p_matrix.payoff( action_agent0 = 1, action_agent1 = 1 , agent = 0)
+    1
 
     TODO: 
     - add method to class payoff matrix to fetch value
@@ -37,7 +38,7 @@ class Payoff_matrix():
             else:
                 raise Exception("Predefined should be a valid matrix where matrix.shape == (2, 2, 2), e.g. a 2x2x2 matrix")
 
-    def outcome(self, action_agent0, action_agent1, agent = 0):
+    def payoff(self, action_agent0, action_agent1, agent = 0):
         """
         assumes action_agent0 and action_agent1 to be integers
         agent is either 'p0' or 'p1' indicating whether the agent is player one or two
