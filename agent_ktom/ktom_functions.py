@@ -164,8 +164,8 @@ def gradient_update(
         #Make parameter structure similar to own
         sim_params_incr = params
         #Populate it with estimated values, including the increment
-        for estim_param in range(len(param_mean)):
-            sim_params_incr[estim_param] = param_mean_incr[estim_param]
+        for param_idx, param_key in enumerate(params):
+            sim_params_incr[param_key] = param_mean_incr[param_idx]
 
         #Simulate opponent learning using the incremented 
         sim_new_internal_states_incr = learning_function(
@@ -338,8 +338,8 @@ def learning_function (
             #Make parameter structure similar to own
             sim_params = params
             #Populate it with estimated values
-            for estim_param in range(param_mean.shape[1]):
-                sim_params[estim_param] = param_mean[level_index, estim_param]
+            for param_idx, param_key in enumerate(params):
+                sim_params[param_key] = param_mean[level_index, param_idx]
 
             #Simulate opponent learning (recursive)
             sim_new_internal_states = learning_function(
@@ -431,6 +431,7 @@ def decision_function (
     p_self = logit(p_self)
 
     return p_self
+
 
 #%% Full k-ToM Function
 def k_tom (
