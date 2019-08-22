@@ -2,7 +2,7 @@
 This script contains utility functions
 """
 import pandas as pd
-from siptom.agent import AgentGroup
+from tomsup.agent import AgentGroup
 import json
 import os
 

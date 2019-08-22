@@ -1,3 +1,3 @@
-from siptom.payoffmatrix import *
-from siptom.utils import *
-from siptom.agent import *
+from tomsup.payoffmatrix import *
+from tomsup.utils import *
+from tomsup.agent import *

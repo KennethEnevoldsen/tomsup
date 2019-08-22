@@ -2,16 +2,16 @@
 Dette er et test script til at tjekke om pakken fungerer
 """
 #%%
-import siptom
+import tomsup
 
 ## Get a list of valid agents
-siptom.valid_agents()
+tomsup.valid_agents()
 
-## Siptom - create a single agent
+## tomsup - create a single agent
     # There is two ways to setup an agent (these are equivalent)
-sirRB = siptom.Agent(strategy = "RB", save_history = True, bias = 0.7)
-sirRB = siptom.RB(bias = 0.7, save_history = True)
-isinstance(sirRB, siptom.Agent)  # sirRB is an agent 
+sirRB = tomsup.Agent(strategy = "RB", save_history = True, bias = 0.7)
+sirRB = tomsup.RB(bias = 0.7, save_history = True)
+isinstance(sirRB, tomsup.Agent)  # sirRB is an agent 
 type(sirRB)  # of supclass RB
 
 choice = sirRB.compete()
@@ -26,7 +26,7 @@ print(desired_agent)
 parameters = [{'bias': 0.7}]*3 + [{}]*3  # list of their starting parameters in dictionary format
 print(parameters)
 
-group = siptom.create_agents(desired_agent, start_params = parameters)
+group = tomsup.create_agents(desired_agent, start_params = parameters)
 print(type(group))
 
 # inspect group

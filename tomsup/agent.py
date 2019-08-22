@@ -2,7 +2,7 @@
 dogstring
 """
 #%%
-from siptom.payoffmatrix import PayoffMatrix
+from tomsup.payoffmatrix import PayoffMatrix
 import pandas as pd
 import numpy as np
 from warnings import warn
