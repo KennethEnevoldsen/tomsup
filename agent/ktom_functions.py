@@ -237,7 +237,7 @@ def param_var_update (prev_param_mean, prev_param_var, prev_gradient, p_k, volat
     #Input variable transforms
     prev_param_mean = inv_logit(prev_param_mean)
     prev_param_var = np.exp(prev_param_var)
-    volatility = np.exp(volatility)
+    volatility = np.exp(volatility) * volatility_dumy
 
     #Calculate
     new_var = (
@@ -289,6 +289,8 @@ def learning_function (
     prev_gradient = prev_internal_states['own_states']['prev_gradient']
     prev_p_k = prev_internal_states['own_states']['prev_p_k']
     prev_gradient = prev_internal_states['own_states']['prev_gradient']
+    prev_param_mean = prev_internal_states['own_states']['prev_param_mean']
+    prev_param_var = prev_internal_states['own_states']['prev_param_var']
 
     #Make empty dictionary for storing updates states
     new_internal_states = {}
@@ -311,13 +313,49 @@ def learning_function (
         p_k = p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution)
 
         #Update parameter estimates
+        param_var = param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volatility, volatility_dumy)
+        param_mean = param_mean_update(prev_p_op_mean, prev_param_mean, prev_gradient, p_k, param_var, op_choice)
+
+        ##Do recursive simulating of opponent
+        #Make empty structure for new means and gradients
+        p_op_mean = np.zeros (level)
+        gradient = np.zeros ([level, param_mean.shape[1]])
+
+        #Prepare simulated opponent perspective
+        sim_agent = 1 - agent
+        sim_self_choice, sim_op_choice = op_choice, self_choice #KOMMENTAR
+        
+        #k-ToM simulates an opponent for each level below its own
+        for level_index in range(level):
+
+            #Further preparation of simulated perspective
+            sim_level = level_index
+            sim_internal_states = prev_internal_states['opponent_states'][level_index]
+
+            #
+            sim_params = params
+
+            for estim_param in range(param_mean.shape[1]):
+
+            #Simulate opponent learning
+            estimated_opponent_states = ...
+
+            #Simulate opponent deciding
+            p_op_mean = ...
+
+            #Update gradient 
+            gradient = ... 
+
+            #Save opponent's states
+
+        #Gather own internal states
+        own_states = ...
+
+
 
     return new_internal_states
 
-
-
 #%% Full Function
-
 def k_tom (
     prev_internal_states,
     params,
