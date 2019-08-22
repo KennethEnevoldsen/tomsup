@@ -62,8 +62,13 @@ See [our getting started guide](https://stanfordnlp.github.io/stanfordnlp/instal
 
 ### A todolist:
 
+Final things:
+- check function text
+- check everything works as intended
+
 Need to have
 - rework of WSLS
+- add TFT
 
 Nice to have:
 - Smart initialize ToM

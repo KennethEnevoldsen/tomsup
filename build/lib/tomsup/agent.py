@@ -49,17 +49,13 @@ class Agent():
             self.history = None
         self.op_choice = None                               # Opponent's choice
 
-        # if strategy == "RB": #fjern hvis nedenstående virker
-        #     self.__class__ = RB
-        #     self.__init__(**kwargs)
-        # elif strategy == "WSLS":
-        #     self.__class__ = WSLS
-        #     self.__init__(**kwargs)
-
-        if strategy:
-            self.__class__ = eval(strategy)
+        if strategy == "RB":
+            self.__class__ = RB
             self.__init__(**kwargs)
-        else strategy:
+        elif strategy == "WSLS":
+            self.__class__ = WSLS
+            self.__init__(**kwargs)
+        elif strategy is None:
             self.strategy = None
 
 
@@ -78,21 +74,13 @@ class Agent():
             self.history = self.history.append(kwargs, ignore_index=True)
 
 
-    ### Getters
+    # Get
     def get_start_params(self):
         return self._start_params
 
  
     def get_strategy(self):
         return self.strategy
-
-
-    def get_choice(self):
-        return self.choice
-    
-
-    def get_op_choice(self):
-        return self.op_choice
 
 
     def get_history(self, key = None, format = 'df'):
@@ -203,78 +191,6 @@ class WSLS(Agent):
         self._add_to_history(choice = self.choice)
         return self.choice
 
-
-
-class TFT(Agent):
-    """
-    'TFT': Tit-for-Tat
-
-    Examples:
-    >>> Shelling = TFT(copy_prob = 1)
-    >>> Sheling.choice = 1 #manually setting the first choise
-    """
-    def __init__(self, copy_prob = 1, **kwargs):
-        self.strategy = "TFT"
-        self.copy_prob = copy_prob
-        super().__init__(**kwargs)
-        self._start_params = {copy_prob = copy_prob, **kwargs}
-
-
-    def compete(self, op_choice = None, p_matrix = "prisoners_dilemma", silent = False, **kwargs):
-        """
-        choice_op (0 <= int <= 1): The choice of the oppenent given af a 1 or a 0
-        copy_prop (0 <= float <= 1): The probability of the TFT agent to copy the action of its opponent, hereby introducing noise to
-        the original TFT strategy by Shelling (1981).
-        """
-        if p_matrix != "prisoners_dilemma" and silent is False:
-            warn("Tit-for-Tat is designed for the prisoners dilemma" +
-            " and might not perform as intended with other payoff matrices.", Warning)
-        if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
-            self.choice = 1 #assumes 1 to be cooperate
-        else:  # if a choice have been made apply the TFT strategy
-            if choice_op is None:
-                raise TypeError("choice_op is None, but it is not the first round the agent played." +
-                "Try resetting the agent, e.g. agent.reset()")
-            self.op_choice = op_choice
-            copy = np.random.binomial(1, self.copy_prob)
-            #Calculate resulting choice
-            choice = copy * op_choice + (1 - copy) * (1 - op_choice)
-        self._add_to_history(choice = self.choice, choice_op = op_choice)
-        return self.choice
-
-
-    
-    def get_copy_prop(self):
-        return self.copy_prob
-
-
-"""
-TFT <- function(params, hidden_states = NULL, player = NULL, p_matrix = NULL, choice_self, choice_op, return_hidden_states = F) {
-  #A probabilistic Tit for Tat strategy. Copies the opponent's last choice with a given probability.
-  #INPUT
-  #params: list of 1 element: TFT's choice probability parameter
-  #OUTPUT
-  #TFT's choice
-
-  #The probability of TFT copying opponent's choice
-  copy_prob = params$copy_prob
-
-  if (is.null(choice_op)) { #initial round or missed trial
-    choice <- rbinom(1, 1, 0.5) #make random choice
-  } else {
-    #Decide whether TFT copies opponent
-    copy = rbinom(1, 1, copy_prob)
-    #Calculate resulting choice
-    choice = copy*choice_op + (1-copy)*(1-choice_op)
-  }
-
-  if (return_hidden_states == T){
-    return(list(choice = choice, hidden_states = hidden_states))
-  } else {
-    return(choice)
-  }
-}
-"""
 
 #########################
 ###___ AGENT GROUP ___###

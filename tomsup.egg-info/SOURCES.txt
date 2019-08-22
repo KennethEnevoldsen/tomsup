@@ -1,0 +1,11 @@
+README.md
+setup.py
+tomsup/__init__.py
+tomsup/agent.py
+tomsup/payoffmatrix.py
+tomsup/utils.py
+tomsup.egg-info/PKG-INFO
+tomsup.egg-info/SOURCES.txt
+tomsup.egg-info/dependency_links.txt
+tomsup.egg-info/requires.txt
+tomsup.egg-info/top_level.txt

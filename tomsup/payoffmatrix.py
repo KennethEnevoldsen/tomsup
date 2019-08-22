@@ -15,9 +15,15 @@ class PayoffMatrix():
 
        [[-1,  1],
         [ 1, -1]]])
-    >>> p_matrix.payoff( action_agent0 = 1, action_agent1 = 1 , agent = 0)
+    >>> p_matrix.payoff(action_agent0 = 1, action_agent1 = 1 , agent = 0)
     1
-
+    >>> p_matrix = PayoffMatrix(name="staghunt")
+    >>> p_matrix.payoff(action_agent0 = 1, action_agent1 = 1 , agent = 0)
+    5
+    >>> p_matrix.payoff(action_agent0 = 1, action_agent1 = 0 , agent = 0)
+    0
+    >>> p_matrix.payoff(action_agent0 = 0, action_agent1 = 1 , agent = 0)
+    3
     TODO: 
     - add method to class payoff matrix to fetch value
     - make a nicer print
@@ -28,9 +34,22 @@ class PayoffMatrix():
         # add the remaining payoff matrices
         """
         self.name = name
-        if name == "penny_competitive":
-            self.matrix = np.array(([(1, -1), (-1, 1)],
-                                    [(-1, 1), (1, -1)]))
+        if name == "penny_competitive":            
+            self.matrix = np.array(([(1, -1),
+                                     (-1, 1)],
+                                    [(-1, 1),
+                                     (1, -1)]))
+        if name == "staghunt":
+                          #choice a1: 0  1 - Choice a0
+            self.matrix = np.array(([(3, 3), # 0   --   Payoff matrix for a0
+                                     (0, 5)],# 1
+                                    [(3, 0), #     --   Payoff matrix for a1
+                                     (3, 5)]))
+        if name == "party":
+            self.matrix = np.array(([(5, 0), 
+                                     (0, 10)],
+                                    [(5, 0), 
+                                     (0, 10)]))
         if predefined:
             matrix = np.array(predefined)
             if matrix.shape == (2, 2, 2):
@@ -50,4 +69,9 @@ class PayoffMatrix():
 
     def __call__(self):
         return self.matrix
+
+
+if __name__ == "__main__":
+  import doctest
+  doctest.testmod(verbose=True)
 
