@@ -474,8 +474,61 @@ def k_tom (
     return (choice, new_internal_states)
 
 ##% Initializing function
-def rec_prepare_k_tom ():
-    pass
+def prepare_k_tom (params, level, priors = 'default'):
+    
+    #If no priors are specified
+    if priors == 'default':
+        #Set default priors
+        priors = {
+            'p_op_mean0': 0, #Agnostic
+            'p_op_var0': 0, #Variance = exp(0) = 1
+            'p_op_mean': 0, #Agnostic
+            'param_mean': np.repeat(0,len(params)), #Estimate = exp(0) = 1
+            'param_var': np.repeat(0,len(params)), #Variance = exp(0) = 1
+            'p_k': 1/level, #equal probability for each level
+            'gradient': np.repeat(0,len(params))} #In VBA, if "flag for noisy" is set, one of these = 1
+    
+    #Make empty list for prior internal states
+    internal_states = {}
+    opponent_states = {}
+
+    #Because of zero-indexing, the amount of opponents is level + 1
+    op_amount = level + 1
+
+    #If the (simulated) agent i a 0-ToM
+    if level == 0:
+        #Set priors for choice probability estimate and its uncertainty
+        p_op_var0 = priors['p_op_var0']
+        p_op_mean0 = priors['p_op_mean0']
+
+        #Gather own internal states 
+        own_states = {'p_op_mean0':p_op_mean0, 'p_op_var0':p_op_var0}
+    
+    #If the (simulated) agent is a k-ToM
+    else:
+        #Set priors 
+        p_k = np.repeat(priors['p_k'], op_amount)
+        p_op_mean = np.repeat(priors['p_op_mean'], op_amount)
+        param_var = np.tile(priors['param_var'], (op_amount,1))
+        param_mean = np.tile(priors['param_mean'], (op_amount,1))
+        gradient = np.tile(priors['gradient'], (op_amount,1))
+
+        #k-ToM simulates an opponent for each level below its own
+        for level_index in level:
+            #Simulate opponents to create the recursive data structure
+            sim_new_internal_states = prepare_k_tom(params, level_index, priors)
+            #Save opponent's states
+            opponent_states[level_index] = sim_new_internal_states
+        
+        #Gather own internal states
+        own_states = {'p_k':p_k, 'p_op_mean':p_op_mean, 'param_mean':param_mean, 'param_var':param_var, 'gradient':gradient}
+
+    #Save the updated estimated and own internal states
+    internal_states['opponent_states'] = opponent_states
+    internal_states['own_states'] = own_states
+
+    return internal_states    
+
 
 #%% Other functions
 def logit (p):
