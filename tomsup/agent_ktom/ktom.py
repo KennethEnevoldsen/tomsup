@@ -4,6 +4,23 @@ class TOM(Agent):
     'TOM': Theory of Mind agent
 
     Examples:
+    k_tom(
+    prev_internal_states,
+    params,
+    self_choice,
+    op_choice,
+    level,
+    agent,
+    p_matrix,
+    **kwargs)
+
+
+    prepare_k_tom(params, level, priors = 'default')
+
+
+
+
+
     >>> sirTOM = RB(
         volatility = -2,
         temperature = -10,
@@ -23,7 +40,7 @@ class TOM(Agent):
     >>> sirTOM.get_history(key = 'choice',format = "list")
     [1, 1]
     """
-    def __init__(self, volatility = -2, temperature = -10, bias = 0, dilution = -1, **kwargs):
+    def __init__(self, k, volatility = -2, temperature = -10, bias = 0, dilution = -1, **kwargs):
         self.volatility = volatility
         self.temperature = temperature
         self.bias = bias
