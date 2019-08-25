@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 from warnings import warn
 from itertools import combinations
-from tomsup.ktom_functions import *
+from tomsup.ktom_functions import k_tom, init_k_tom, inv_logit, logit
 
 ###################
 ###___ AGENT ___###
@@ -280,26 +280,9 @@ class TOM(Agent):
     'TOM': Theory of Mind agent
 
     Examples:
-    >>> sirTOM = RB(
-        volatility = -2,
-        b_temp = -10,
-        dilution = -1,
-        bias = 0,
-        save_history = True)
-        #volatility = 1 indicates a standard amount of assumed volatility in the opponent
-        #temperature = -10 indicates a standard amount of behavioural exploration
-        #bias = 0 indicates no bias for either choice
-        #dilution = -1 indicates a standard amount of estimation forgetting
-    >>> len(sirTOM.compete())
-    1
-    >>> sirTOM.get_start_params()
-    {'volatility': 1, 'temperature': 1, 'bias': 0, 'dilution': -1, 'save_history': True}
-    >>> sirTOM.compete()
-    1
-    >>> sirTOM.get_history(key = 'choice',format = "list")
-    [1, 1]
+    >>> Devaine = TOM(level = 0, volatility = -2, b_temp = -1)
     """
-    def __init__(self, level = 0, volatility = -2, b_temp = -10, bias = None, dilution = None,  **kwargs):
+    def __init__(self, level = 0, volatility = -2, b_temp = -1, bias = None, dilution = None,  **kwargs):
         if level > 5:
             warn("It is quite computationally expensive to run a TOM with a level > 5." + 
                  " Make sure this is your intention.", Warning)
@@ -554,8 +537,6 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
     else:
         raise TypeError("Invalid return_val, please use either 'df' or 'list'")
 
-
-    
 
 if __name__ == "__main__":
   import doctest

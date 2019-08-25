@@ -503,13 +503,14 @@ def init_k_tom(params, level, priors='default'):
         #Set default priors
         priors = {
             'p_op_mean0': 0, #Agnostic
-            'p_op_var0': 0, #Variance = exp(0) = 1
-            'p_op_mean': 0, #Agnostic
-            'param_mean': np.repeat(0,len(params)), #Estimate = exp(0) = 1
-            'param_var': np.repeat(0,len(params)), #Variance = exp(0) = 1
-            'p_k': 1/level, #equal probability for each level
-            'gradient': np.repeat(0,len(params))} #In VBA, if "flag for noisy" is set, one of these = 1
-    
+            'p_op_var0': 0}
+        if level > 0: # the following is not used by 0-ToM
+            priors['p_op_mean'] = 0
+            priors['param_mean'] = np.repeat(0,len(params))
+            priors['param_var'] = np.repeat(0,len(params))
+            priors['p_k'] = 1/level
+            priors['gradient'] = np.repeat(0,len(params))
+
     #Make empty list for prior internal states
     internal_states = {}
     opponent_states = {}
