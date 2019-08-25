@@ -204,47 +204,47 @@ class WSLS(Agent):
 
 
 
-class TFT(Agent):
-    """
-    'TFT': Tit-for-Tat
+# class TFT(Agent):
+#     """
+#     'TFT': Tit-for-Tat
 
-    Examples:
-    >>> Shelling = TFT(copy_prob = 1)
-    >>> Sheling.choice = 1 #manually setting the first choise
-    """
-    def __init__(self, copy_prob = 1, **kwargs):
-        self.strategy = "TFT"
-        self.copy_prob = copy_prob
-        super().__init__(**kwargs)
-        self._start_params = {'copy_prob': copy_prob, **kwargs}
-
-
-    def compete(self, op_choice = None, p_matrix = "prisoners_dilemma", silent = False, **kwargs):
-        """
-        choice_op (0 <= int <= 1): The choice of the oppenent given af a 1 or a 0
-        copy_prop (0 <= float <= 1): The probability of the TFT agent to copy the action of its opponent, hereby introducing noise to
-        the original TFT strategy by Shelling (1981).
-        """
-        if p_matrix != "prisoners_dilemma" and silent is False:
-            warn("Tit-for-Tat is designed for the prisoners dilemma" +
-            " and might not perform as intended with other payoff matrices.", Warning)
-        if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
-            self.choice = 1 #assumes 1 to be cooperate
-        else:  # if a choice have been made apply the TFT strategy
-            if choice_op is None:
-                raise TypeError("choice_op is None, but it is not the first round the agent played." +
-                "Try resetting the agent, e.g. agent.reset()")
-            self.op_choice = op_choice
-            copy = np.random.binomial(1, self.copy_prob)
-            #Calculate resulting choice
-            choice = copy * op_choice + (1 - copy) * (1 - op_choice)
-        self._add_to_history(choice = self.choice, choice_op = op_choice)
-        return self.choice
+#     Examples:
+#     >>> Shelling = TFT(copy_prob = 1)
+#     >>> Sheling.choice = 1 #manually setting the first choise
+#     """
+#     def __init__(self, copy_prob = 1, **kwargs):
+#         self.strategy = "TFT"
+#         self.copy_prob = copy_prob
+#         super().__init__(**kwargs)
+#         self._start_params = {'copy_prob': copy_prob, **kwargs}
 
 
+#     def compete(self, op_choice = None, p_matrix = "prisoners_dilemma", silent = False, **kwargs):
+#         """
+#         choice_op (0 <= int <= 1): The choice of the oppenent given af a 1 or a 0
+#         copy_prop (0 <= float <= 1): The probability of the TFT agent to copy the action of its opponent, hereby introducing noise to
+#         the original TFT strategy by Shelling (1981).
+#         """
+#         if p_matrix != "prisoners_dilemma" and silent is False:
+#             warn("Tit-for-Tat is designed for the prisoners dilemma" +
+#             " and might not perform as intended with other payoff matrices.", Warning)
+#         if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
+#             self.choice = 1 #assumes 1 to be cooperate
+#         else:  # if a choice have been made apply the TFT strategy
+#             if choice_op is None:
+#                 raise TypeError("choice_op is None, but it is not the first round the agent played." +
+#                 "Try resetting the agent, e.g. agent.reset()")
+#             self.op_choice = op_choice
+#             copy = np.random.binomial(1, self.copy_prob)
+#             #Calculate resulting choice
+#             choice = copy * op_choice + (1 - copy) * (1 - op_choice)
+#         self._add_to_history(choice = self.choice, choice_op = op_choice)
+#         return self.choice
 
-    def get_copy_prop(self):
-        return self.copy_prob
+
+
+#     def get_copy_prop(self):
+#         return self.copy_prob
 
 
 """
@@ -274,6 +274,107 @@ TFT <- function(params, hidden_states = NULL, player = NULL, p_matrix = NULL, ch
   }
 }
 """
+
+class TOM(Agent):
+    """
+    'TOM': Theory of Mind agent
+
+    Examples:
+    >>> sirTOM = RB(
+        volatility = -2,
+        b_temp = -10,
+        dilution = -1,
+        bias = 0,
+        save_history = True)
+        #volatility = 1 indicates a standard amount of assumed volatility in the opponent
+        #temperature = -10 indicates a standard amount of behavioural exploration
+        #bias = 0 indicates no bias for either choice
+        #dilution = -1 indicates a standard amount of estimation forgetting
+    >>> len(sirTOM.compete())
+    1
+    >>> sirTOM.get_start_params()
+    {'volatility': 1, 'temperature': 1, 'bias': 0, 'dilution': -1, 'save_history': True}
+    >>> sirTOM.compete()
+    1
+    >>> sirTOM.get_history(key = 'choice',format = "list")
+    [1, 1]
+    """
+    def __init__(self, level = 0, volatility = -2, b_temp = -10, bias = None, dilution = None,  **kwargs):
+        if level > 5:
+            warn("It is quite computationally expensive to run a TOM with a level > 5." + 
+                 " Make sure this is your intention.", Warning)
+
+
+        self.volatility = volatility
+        self.b_temp = b_temp
+        self.bias = bias
+        self.dilution = dilution
+        self.level = level
+        self.strategy = str(level) + '-TOM'
+
+        priors = 'default' if 'priors' not in kwargs else kwargs['priors']
+
+        params = {'volatility': volatility, 'b_temp': b_temp} 
+        if dilution:
+            params['dilution'] = dilution
+        if bias:
+            params['bias'] = bias
+        
+        self.params = params
+        self.internal = init_k_tom(params, level, priors)
+
+        super().__init__(**kwargs)
+
+        self._start_params = {'volatility': volatility, 'level': level,'b_temp': b_temp, 
+                              'bias': bias, 'dilution': dilution, **kwargs}
+
+
+    def compete(self, op_choice, p_matrix, agent_perspective, **kwargs):
+        """
+        
+        """
+        self.op_choice = op_choice
+        self.choice, self.internal = k_tom(
+                                        self.internal,
+                                        self.params,
+                                        self.choice,
+                                        op_choice,
+                                        self.level,
+                                        agent_perspective,
+                                        p_matrix,
+                                        **kwargs)
+        self._add_to_history(choice = self.choice, op_choice = op_choice, 
+                             internal_states = self.internal)
+        return self.choice
+
+
+    # Define getters
+    def get_volatility(self):
+        return self.volatility
+
+    def get_behav_temperature(self):
+        return self.b_temp
+
+    def get_bias(self):
+        if self.bias is None:
+             print("TOM does not have a bias.")
+        return self.bias
+    
+    def get_dilution(self):
+        if self.get_dilution is None:
+            print("TOM does not have a dilution parameter.")
+        return self.get_dilution
+
+    def get_level(self):
+        return self.level
+
+    def get_internal_states(self):
+        return self.internal
+
+    def get_parameters(self):
+        return self.params
+
+
 
 #########################
 ###___ AGENT GROUP ___###
@@ -379,7 +480,6 @@ class AgentGroup():
         if not silent:
             print("Simulation complete")
         return pd.concat(result) #concatenate into one df
-        
 
 
 ###################
@@ -454,69 +554,8 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
     else:
         raise TypeError("Invalid return_val, please use either 'df' or 'list'")
 
-def logit(p):
-    return np.log(p) - np.log(1 - p)
 
-def inv_logit(p):
-    return np.exp(p) / (1 + np.exp(p))
-
-
-class TOM(Agent):
-    """
-    'TOM': Theory of Mind agent
-
-    Examples:
-    >>> sirTOM = RB(
-        volatility = -2,
-        b_temp = -10,
-        dilution = -1,
-        bias = 0,
-        save_history = True)
-        #volatility = 1 indicates a standard amount of assumed volatility in the opponent
-        #temperature = -10 indicates a standard amount of behavioural exploration
-        #bias = 0 indicates no bias for either choice
-        #dilution = -1 indicates a standard amount of estimation forgetting
-    >>> len(sirTOM.compete())
-    1
-    >>> sirTOM.get_start_params()
-    {'volatility': 1, 'temperature': 1, 'bias': 0, 'dilution': -1, 'save_history': True}
-    >>> sirTOM.compete()
-    1
-    >>> sirTOM.get_history(key = 'choice',format = "list")
-    [1, 1]
-    """
-    def __init__(self, k_level = 0, volatility = -2, temperature = -10, bias = 0, dilution = -1, **kwargs):
-        """
-        """
-
-        self.volatility = volatility
-        self.temperature = temperature
-        self.bias = bias
-        self.dilution = dilution
-        self.strategy = str(k_level) + '-TOM'
-        self.internal = self.init_tom() #TODO What's the input
-
-        if k_level is
-
-        super().__init__(**kwargs)
-        self._start_params = {'volatility': volatility, 'temperature': temperature, 
-                              'bias': bias, 'dilution': dilution, **kwargs}
-
-
-    def compete(self, op_choice, p_matrix, **kwargs):
-        """
-        
-        """
-        self.op_choice = op_choice
-        self.choice, internal_states = TOM_strategy(op_choice, internal_states)
-        self._add_to_history(choice = self.choice, op_choice = op_choice, 
-                             internal_states = internal_states)
-        return self.choice
-
-
-    def init_tom()
-
-
+    
 
 if __name__ == "__main__":
   import doctest

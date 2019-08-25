@@ -8,8 +8,8 @@ Parameter Order:
 [3] Dilution
 [4] Bias
 """
-#%% Learning subfunctions
-def p_op_var0_update (prev_p_op_mean0, prev_p_op_var0, volatility):
+# Learning subfunctions
+def p_op_var0_update(prev_p_op_mean0, prev_p_op_var0, volatility):
     """ 
     0-ToM updates variance / uncertainty on choice probability estimate
 
@@ -41,7 +41,7 @@ def p_op_var0_update (prev_p_op_mean0, prev_p_op_var0, volatility):
     return new_p_op_var0
 
 
-def p_op_mean0_update (prev_p_op_mean0, p_op_var0, op_choice):
+def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
     """
     0-ToM updates mean choice probability estimate
     """
@@ -54,7 +54,8 @@ def p_op_mean0_update (prev_p_op_mean0, p_op_var0, op_choice):
     
     return new_p_op_mean0
 
-def p_opk_approx_fun (prev_p_op_mean, prev_p_op_var, prev_gradient, level):
+
+def p_opk_approx_fun(prev_p_op_mean, prev_p_op_var, prev_gradient, level):
     """
     k-ToM
     Approximates the estimated choice probability of the opponent on the previous round. 
@@ -82,6 +83,7 @@ def p_opk_approx_fun (prev_p_op_mean, prev_p_op_var, prev_gradient, level):
     p_opk_approx = np.log(p_opk_approx)
 
     return p_opk_approx
+
 
 def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution = None):
     """
@@ -111,7 +113,8 @@ def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution = None):
 
     return new_p_k
 
-def param_var_update (prev_param_mean, prev_param_var, prev_gradient, p_k, volatility, volatility_dummy = None):
+
+def param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volatility, volatility_dummy = None):
     """
     k-ToM updates its uncertainty / variance on its estimates of opponent's parameter values
     """
@@ -136,7 +139,8 @@ def param_var_update (prev_param_mean, prev_param_var, prev_gradient, p_k, volat
 
     return new_var
 
-def param_mean_update (prev_p_op_mean, prev_param_mean, prev_gradient, p_k, param_var, op_choice):
+
+def param_mean_update(prev_p_op_mean, prev_param_mean, prev_gradient, p_k, param_var, op_choice):
     """
     k-ToM updates its estimates of opponent's parameter values
     """
@@ -147,6 +151,7 @@ def param_mean_update (prev_p_op_mean, prev_param_mean, prev_gradient, p_k, para
     new_param_mean = prev_param_mean + p_k * param_var * (op_choice - inv_logit(prev_param_mean))
 
     return new_param_mean
+
 
 def gradient_update(
     params,
@@ -203,8 +208,8 @@ def gradient_update(
     return gradient
 
 
-#%% Decision subfunctions
-def p_op0_fun (p_op_mean0, p_op_var0):
+# Decision subfunctions
+def p_op0_fun(p_op_mean0, p_op_var0):
     """
     0-ToM combines the mean and variance of its parameter estimate into a final choice probability estimate.
     NB: This is the function taken from the VBA package (Daunizeau 2014), which does not use 0-ToM's volatility parameter to avoid unidentifiability problems.
@@ -223,7 +228,8 @@ def p_op0_fun (p_op_mean0, p_op_var0):
 
     return p_op0
 
-def p_opk_fun (p_op_mean, param_var, gradient):
+
+def p_opk_fun(p_op_mean, param_var, gradient):
     """
     k-ToM combines the mean choice probability estimate and the variances of its parameter estimates into a final choice probability estimate.
     NB: this is the function taken from the VBA package (Daunizeau 2014), which does not use k-ToM's volatility parameter to avoid unidentifiability issues.
@@ -245,7 +251,8 @@ def p_opk_fun (p_op_mean, param_var, gradient):
 
     return p_opk
 
-def expected_payoff_fun (p_op, agent, p_matrix):
+
+def expected_payoff_fun(p_op, agent, p_matrix):
     """
     Calculate expected payoff of choosing 1 over 0
 
@@ -259,7 +266,8 @@ def expected_payoff_fun (p_op, agent, p_matrix):
 
     return expected_payoff
 
-def softmax (expected_payoff, b_temp): 
+
+def softmax(expected_payoff, b_temp): 
     """
     Softmax function for calculating own probability of choosing 1
     """
@@ -280,8 +288,8 @@ def softmax (expected_payoff, b_temp):
     return p_self
 
 
-#%% Full learning and decision functions
-def learning_function (
+# Full learning and decision functions
+def learning_function(
     prev_internal_states,
     params,
     self_choice,
@@ -397,7 +405,7 @@ def learning_function (
     return new_internal_states
 
 
-def decision_function (
+def decision_function(
         new_internal_states,
         params,
         agent,
@@ -446,8 +454,8 @@ def decision_function (
     return p_self
 
 
-#%% Full k-ToM Function
-def k_tom (
+# Full k-ToM Function
+def k_tom(
     prev_internal_states,
     params,
     self_choice,
@@ -487,8 +495,8 @@ def k_tom (
 
     return (choice, new_internal_states)
 
-##% Initializing function
-def prepare_k_tom (params, level, priors = 'default'):
+# Initializing function
+def init_k_tom(params, level, priors='default'):
     
     #If no priors are specified
     if priors == 'default':
@@ -530,7 +538,7 @@ def prepare_k_tom (params, level, priors = 'default'):
         #k-ToM simulates an opponent for each level below its own
         for level_index in level:
             #Simulate opponents to create the recursive data structure
-            sim_new_internal_states = prepare_k_tom(params, level_index, priors)
+            sim_new_internal_states = init_k_tom(params, level_index, priors)
             #Save opponent's states
             opponent_states[level_index] = sim_new_internal_states
         
@@ -544,7 +552,7 @@ def prepare_k_tom (params, level, priors = 'default'):
     return internal_states    
 
 
-#%% Other functions
+# Other functions
 def logit (p):
     return np.log(p) - np.log(1 - p)
 
