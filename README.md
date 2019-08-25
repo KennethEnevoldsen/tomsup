@@ -29,18 +29,19 @@ To ask questions, report issues or request features, please use the [GitHub Issu
 
 ## Setup
 
-tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from Github as it is the most recent version. This is done by running the following:
+tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [here](https://pip.pypa.io/en/stable/installing/), otherwise simply run
+```bash
+pip3 install tomsup
+```
+
+However you can also install it directly from github by simply running:
 ```bash
 git clone https://github.com/KennethEnevoldsen/tomsup.git
 cd tomsup
 pip3 install -e .
 ```
 
-Assuming you have pip install 
-However you can also install from pip. If you haven't installed pip you can install it from [here](https://pip.pypa.io/en/stable/installing/), otherwise simply run:
-```bash
-pip3 install tomsup
-```
+
 
 
 ## Getting Started with tomsup
