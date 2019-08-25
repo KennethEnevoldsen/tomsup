@@ -515,9 +515,6 @@ def init_k_tom(params, level, priors='default'):
     internal_states = {}
     opponent_states = {}
 
-    #Because of zero-indexing, the amount of opponents is level + 1
-    op_amount = level + 1
-
     #If the (simulated) agent i a 0-ToM
     if level == 0:
         #Set priors for choice probability estimate and its uncertainty
@@ -530,11 +527,11 @@ def init_k_tom(params, level, priors='default'):
     #If the (simulated) agent is a k-ToM
     else:
         #Set priors 
-        p_k = np.repeat((1/level), op_amount)
-        p_op_mean = np.repeat(priors['p_op_mean'], op_amount)
-        param_var = np.tile(priors['param_var'], (op_amount,1))
-        param_mean = np.tile(priors['param_mean'], (op_amount,1))
-        gradient = np.tile(priors['gradient'], (op_amount,1))
+        p_k = np.repeat((1/level), level)
+        p_op_mean = np.repeat(priors['p_op_mean'], level)
+        param_var = np.tile(priors['param_var'], (level,1))
+        param_mean = np.tile(priors['param_mean'], (level,1))
+        gradient = np.tile(priors['gradient'], (level,1))
 
         #k-ToM simulates an opponent for each level below its own
         for level_index in range(level):

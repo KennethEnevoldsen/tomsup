@@ -281,6 +281,7 @@ class TOM(Agent):
     Examples:
     >>> Devaine = TOM(level = 0, volatility = -2, b_temp = -1)
     >>> Devaine = TOM(level = 2, volatility = -2, b_temp = -1)
+    >>> Devaine = TOM(level = 4, volatility = -2, b_temp = -1)
     >>> Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.5, bias = 0.3)
     """
     def __init__(self, level = 0, volatility = -2, b_temp = -1, bias = None, dilution = None,  **kwargs):
