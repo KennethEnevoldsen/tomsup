@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 from warnings import warn
 from itertools import combinations
+from tomsup.ktom_functions import *
 
 ###################
 ###___ AGENT ___###
@@ -48,19 +49,17 @@ class Agent():
         else:
             self.history = None
         self.op_choice = None                               # Opponent's choice
-
-        # if strategy == "RB": #fjern hvis nedenstående virker
+        if strategy:
+            self.__class__ = eval(strategy)
+            self.__init__(**kwargs)
+        else:
+            self.strategy = None
+        # if strategy == "RB": #fjern hvis ovenstående virker
         #     self.__class__ = RB
         #     self.__init__(**kwargs)
         # elif strategy == "WSLS":
         #     self.__class__ = WSLS
         #     self.__init__(**kwargs)
-
-        if strategy:
-            self.__class__ = eval(strategy)
-            self.__init__(**kwargs)
-        else strategy:
-            self.strategy = None
 
 
     def reset(self):
@@ -217,7 +216,7 @@ class TFT(Agent):
         self.strategy = "TFT"
         self.copy_prob = copy_prob
         super().__init__(**kwargs)
-        self._start_params = {copy_prob = copy_prob, **kwargs}
+        self._start_params = {'copy_prob': copy_prob, **kwargs}
 
 
     def compete(self, op_choice = None, p_matrix = "prisoners_dilemma", silent = False, **kwargs):
@@ -486,13 +485,19 @@ class TOM(Agent):
     >>> sirTOM.get_history(key = 'choice',format = "list")
     [1, 1]
     """
-    def __init__(self, volatility = -2, temperature = -10, bias = 0, dilution = -1, **kwargs):
+    def __init__(self, k_level = 0, volatility = -2, temperature = -10, bias = 0, dilution = -1, **kwargs):
+        """
+        """
+
         self.volatility = volatility
         self.temperature = temperature
         self.bias = bias
         self.dilution = dilution
-        self.strategy = 'TOM'
+        self.strategy = str(k_level) + '-TOM'
         self.internal = self.init_tom() #TODO What's the input
+
+        if k_level is
+
         super().__init__(**kwargs)
         self._start_params = {'volatility': volatility, 'temperature': temperature, 
                               'bias': bias, 'dilution': dilution, **kwargs}
