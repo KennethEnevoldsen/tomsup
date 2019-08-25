@@ -281,6 +281,8 @@ class TOM(Agent):
 
     Examples:
     >>> Devaine = TOM(level = 0, volatility = -2, b_temp = -1)
+    >>> Devaine = TOM(level = 2, volatility = -3, b_temp = 0)
+    >>> Devaine = TOM(level = 2, volatility = -3, b_temp = 0)
     """
     def __init__(self, level = 0, volatility = -2, b_temp = -1, bias = None, dilution = None,  **kwargs):
         if level > 5:
@@ -538,9 +540,8 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
         raise TypeError("Invalid return_val, please use either 'df' or 'list'")
 
 
+
+#%%
 if __name__ == "__main__":
   import doctest
   doctest.testmod(verbose=True)
-
-
-#%%
