@@ -178,6 +178,7 @@ def gradient_update(
 
     #The gradient is calculated for each parameter one at a time
     for param in range(len(param_mean)):
+
         #Calculate increment
         increment = max(abs(1e-4 * param_mean[param]), 1e-4)
         #Use normal parameter estimates
@@ -327,7 +328,7 @@ def learning_function(
     #If the (simulated) agent is a 0-ToM
     if level == 0:
         #Extract needed variables
-        prev_p_op_mean0 = prev_internal_states['own_states']['prev_p_op_mean0']
+        prev_p_op_mean0 = prev_internal_states['own_states']['p_op_mean0']
         prev_p_op_var0 = prev_internal_states['own_states']['p_op_var0']
 
         #Update 0-ToM's uncertainty of opponent choice probability
@@ -399,8 +400,8 @@ def learning_function(
             #Update gradient (recursive)
             gradient[level_index] = gradient_update(
                 params,
-                p_op_mean,
-                param_mean,
+                p_op_mean[level_index],
+                param_mean[level_index],
                 sim_prev_internal_states,
                 sim_self_choice,
                 sim_op_choice,
