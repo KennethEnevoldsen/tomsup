@@ -15,7 +15,6 @@ from tomsup.ktom_functions import k_tom, init_k_tom, inv_logit, logit
 
 class Agent():
     """
-
     TODO:
     make a create_agent(strategy = "RB") i stedet for at bruge super class'en
 
@@ -281,8 +280,8 @@ class TOM(Agent):
 
     Examples:
     >>> Devaine = TOM(level = 0, volatility = -2, b_temp = -1)
-    >>> Devaine = TOM(level = 2, volatility = -3, b_temp = 0)
-    >>> Devaine = TOM(level = 2, volatility = -3, b_temp = 0)
+    >>> Devaine = TOM(level = 2, volatility = -2, b_temp = -1)
+    >>> Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.5, bias = 0.3)
     """
     def __init__(self, level = 0, volatility = -2, b_temp = -1, bias = None, dilution = None,  **kwargs):
         if level > 5:
