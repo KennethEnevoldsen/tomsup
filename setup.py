@@ -14,7 +14,7 @@ setup(
    author_email='kennethcenevoldsen@gmail.com',
    url="https://github.com/KennethEnevoldsen/tomsup",
    packages=['tomsup'],  #same as name
-   install_requires=['numpy', 'pandas'], #external packages as dependencies
+   install_requires=['numpy', 'pandas', 'scipy'], #external packages as dependencies
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
