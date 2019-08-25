@@ -1,3 +1,4 @@
+#%%
 from warnings import warn
 import numpy as np
 
@@ -550,7 +551,6 @@ def init_k_tom(params, level, priors='default'):
     internal_states['own_states'] = own_states
 
     return internal_states    
-
 
 # Other functions
 def logit (p):
