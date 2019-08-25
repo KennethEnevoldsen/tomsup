@@ -76,7 +76,7 @@ class ReversedWSLS(ts.Agent):
         self._start_params = {'first_move': first_move, **kwargs}  # save any starting parameters used when the agent is reset
 
 
-    def compete(self, op_choice = None, p_matrix):
+    def compete(self, p_matrix, op_choice = None):
         if self.choice is None: # if a choice haven't been made: Choose the redifined first move
             self.choice = self.first_move #fetch from self
         else:  # if a choice have been made:
@@ -113,6 +113,8 @@ class WSLS(ts.Agent):
     """
     def __init__(self, prob_stay = 1, prob_switch = 1, **kwargs):
         self.strategy = "WSLS"
+        self.prob_switch = prob_switch
+        self.prob_stay = prob_stay
         super().__init__(**kwargs)
         self._start_params = {'prob_stay': prob_stay, 'prob_switch':  prob_switch, **kwargs}
 
@@ -163,13 +165,13 @@ class TFT(ts.Agent):
         if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
             self.choice = 1 #assumes 1 to be cooperate
         else:  # if a choice have been made apply the TFT strategy
-            if choice_op is None:
+            if op_choice is None:
                 raise TypeError("choice_op is None, but it is not the first round the agent played." +
                 "Try resetting the agent, e.g. agent.reset()")
             self.op_choice = op_choice
             copy = np.random.binomial(1, self.copy_prob)
             #Calculate resulting choice
-            choice = copy * op_choice + (1 - copy) * (1 - op_choice)
+            self.choice = copy * op_choice + (1 - copy) * (1 - op_choice)
         self._add_to_history(choice = self.choice, choice_op = op_choice)
         return self.choice
 
@@ -178,9 +180,3 @@ class TFT(ts.Agent):
     def get_copy_prop(self):
         return self.copy_prob
 
-
-print(np.nan)
-
-from scipy.special import expit as inv_logit
-
-inv_logit
