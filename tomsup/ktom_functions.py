@@ -1,8 +1,3 @@
-#%%
-from warnings import warn
-import numpy as np
-from tomsup.payoffmatrix import PayoffMatrix
-
 """
 Parameter Order:
 [1] Volatility
@@ -10,6 +5,15 @@ Parameter Order:
 [3] Dilution
 [4] Bias
 """
+#%%
+
+from warnings import warn
+import numpy as np
+from tomsup.payoffmatrix import PayoffMatrix
+from scipy.special import expit as inv_logit
+from scipy.special import logit
+
+
 # Learning subfunctions
 def p_op_var0_update(prev_p_op_mean0, prev_p_op_var0, volatility):
     """ 
@@ -27,6 +31,7 @@ def p_op_var0_update(prev_p_op_mean0, prev_p_op_var0, volatility):
     >>> p_op_var0_update(1, 0.45, 1) < p_op_var0_update (1, 0.2, 2)
     True
     """
+
     #Input variable transforms
     volatility = np.exp(volatility)
     prev_p_op_var0 = np.exp(prev_p_op_var0)
@@ -73,9 +78,10 @@ def p_opk_approx_fun(prev_p_op_mean, prev_p_op_var, prev_gradient, level):
     prev_p_op_var = np.exp(prev_p_op_var)
 
     #Prepare variance by weighing with gradient
-    prev_var_prepped = []
-    for level_index in range(level):
-        prev_var_prepped[level_index] = prev_p_op_var[level,:].T.dot(prev_gradient[level,:]**2) 
+    prev_var_prepped = np.zeros(level)
+    for level_idx in range(level):
+        prev_var_prepped[level_idx] = prev_p_op_var[level -1 ,:].T.dot(prev_gradient[level - 1,:]**2)
+
 
     #Equation
     p_opk_approx = inv_logit (
@@ -167,7 +173,6 @@ def gradient_update(
     p_matrix):
     """
     """
-    
     #Make empty list for fillin in gradients
     gradient = np.zeros(len(param_mean))
 
@@ -474,7 +479,7 @@ def k_tom(
     **kwargs):
     
     #Update estimates of opponent based on behaviour
-    if self_choice:
+    if self_choice is not None:
         new_internal_states = learning_function(
         prev_internal_states,
         params,
@@ -560,14 +565,51 @@ def init_k_tom(params, level, priors='default'):
     return internal_states    
 
 # Other functions
-def logit (p):
-    return np.log(p) - np.log(1 - p)
+# def logit (p):
+#     print('logit in', p)
+#     out = np.log(p) - np.log(1 - p)
+#     print ('logit out', out)
+#     return out
 
-def inv_logit(p):
-    return np.exp(p) / (1 + np.exp(p))
+# def inv_logit(p):
+    
+#     print('invlogit in', p)
+#     out = np.exp(p) / (1 + np.exp(p))
+#     print ('invlogit out', out)
+#     return out
+
+# Testing function
+#if __name__ == "__main__":
+#  import doctest
+#  doctest.testmod(verbose=True)
 
 
-#%% Testing function
-if __name__ == "__main__":
-  import doctest
-  doctest.testmod(verbose=True)
+
+#%%
+
+# STATES = {'opponent_states': {0: {'opponent_states': {},
+#    'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}},
+# 'own_states': {'p_k': np.array([1.]),
+#   'p_op_mean': np.array([0]),
+#   'param_mean': np.array([[0, 0]]),
+#   'param_var': np.array([[0, 0]]),
+#   'gradient': np.array([[0, 0]])}}
+
+# C = 1
+
+# penny = PayoffMatrix(name = 'penny_competitive')
+
+# PARAMS = {'volatility': -2, 'b_temp': -1}
+
+# for i in range(100):
+#     C, STATES = k_tom(
+#                     STATES,
+#                     PARAMS,
+#                     C,
+#                     1,
+#                     1,
+#                     1,
+#                     penny)
+    
+
+#%%
