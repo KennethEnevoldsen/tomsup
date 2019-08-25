@@ -1,15 +1,20 @@
-#%%
-from warnings import warn
-import numpy as np
-from tomsup.payoffmatrix import PayoffMatrix
-
 """
+Docstring
+
+
+
+
 Parameter Order:
 [1] Volatility
 [2] Behavioural temperature
 [3] Dilution
 [4] Bias
 """
+
+from warnings import warn
+import numpy as np
+from tomsup.payoffmatrix import PayoffMatrix
+
 # Learning subfunctions
 def p_op_var0_update(prev_p_op_mean0, prev_p_op_var0, volatility):
     """ 
@@ -73,13 +78,13 @@ def p_opk_approx_fun(prev_p_op_mean, prev_p_op_var, prev_gradient, level):
     prev_p_op_var = np.exp(prev_p_op_var)
 
     #Prepare variance by weighing with gradient
-    prev_var_prepped = []
-    for level_index in range(level):
-        prev_var_prepped[level_index] = prev_p_op_var[level,:].T.dot(prev_gradient[level,:]**2) 
+    prev_var_prepped = np.zeros(level)
+    for level_idx in range(level):
+        prev_var_prepped[level_idx] = prev_p_op_var[level_idx,:].T.dot(prev_gradient[level_idx,:]**2)
 
     #Equation
     p_opk_approx = inv_logit (
-        (prev_p_op_mean + b * prev_var_prepped^c) / np.sqrt(1 + a * prev_var_prepped^d))
+        (prev_p_op_mean + b * prev_var_prepped**c) / np.sqrt(1 + a * prev_var_prepped**d))
 
     #Output variable transform
     p_opk_approx = np.log(p_opk_approx)
@@ -122,7 +127,7 @@ def param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volati
     """
     #Dummy constant: sets volatility to 0 for all except volatility opponent parameter estimates
     if volatility_dummy is None:
-        volatility_dummy = np.zeros(prev_param_mean.shape(1))
+        volatility_dummy = np.zeros(prev_param_mean.shape[1] -1)
         volatility_dummy = np.concatenate(([1], volatility_dummy), axis = None)
 
     #Input variable transforms
@@ -337,11 +342,11 @@ def learning_function(
     #If the (simulated) agent is a k-ToM
     else:
         #Extract needed variables
-        prev_p_k = prev_internal_states['own_states']['prev_p_k']
-        prev_p_op_mean = prev_internal_states['own_states']['prev_p_op_mean']
-        prev_param_mean = prev_internal_states['own_states']['prev_param_mean']
-        prev_param_var = prev_internal_states['own_states']['prev_param_var']
-        prev_gradient = prev_internal_states['own_states']['prev_gradient']
+        prev_p_k = prev_internal_states['own_states']['p_k']
+        prev_p_op_mean = prev_internal_states['own_states']['p_op_mean']
+        prev_param_mean = prev_internal_states['own_states']['param_mean']
+        prev_param_var = prev_internal_states['own_states']['param_var']
+        prev_gradient = prev_internal_states['own_states']['gradient']
 
         #Update opponent level probabilities
         p_opk_approx = p_opk_approx_fun(prev_p_op_mean, prev_param_var, prev_gradient, level)
@@ -570,7 +575,7 @@ def inv_logit(p):
     return np.exp(p) / (1 + np.exp(p))
 
 
-#%% Testing function
+# Testing function
 if __name__ == "__main__":
   import doctest
   doctest.testmod(verbose=True)

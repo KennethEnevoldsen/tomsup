@@ -547,6 +547,15 @@ penny = PayoffMatrix(name = "penny_competitive")
 Devaine.compete(1, 1, penny)
 STATES = Devaine.get_internal_states()
 
+k_tom(
+    Devaine.internal,
+    Devaine.params,
+    Devaine.choice,
+    1,
+    2,
+    1,
+    penny)
+
 #%%
 if __name__ == "__main__":
   import doctest
