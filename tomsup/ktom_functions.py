@@ -1,3 +1,4 @@
+#%%
 from warnings import warn
 import numpy as np
 from tomsup.payoffmatrix import PayoffMatrix
@@ -515,7 +516,6 @@ def init_k_tom(params, level, priors='default'):
             priors['p_op_mean'] = 0
             priors['param_mean'] = np.repeat(0,len(params))
             priors['param_var'] = np.repeat(0,len(params))
-            priors['p_k'] = 1/level
             priors['gradient'] = np.repeat(0,len(params))
 
     #Make empty list for prior internal states
@@ -537,14 +537,14 @@ def init_k_tom(params, level, priors='default'):
     #If the (simulated) agent is a k-ToM
     else:
         #Set priors 
-        p_k = np.repeat(priors['p_k'], op_amount)
+        p_k = np.repeat((1/level), op_amount)
         p_op_mean = np.repeat(priors['p_op_mean'], op_amount)
         param_var = np.tile(priors['param_var'], (op_amount,1))
         param_mean = np.tile(priors['param_mean'], (op_amount,1))
         gradient = np.tile(priors['gradient'], (op_amount,1))
 
         #k-ToM simulates an opponent for each level below its own
-        for level_index in level:
+        for level_index in range(level):
             #Simulate opponents to create the recursive data structure
             sim_new_internal_states = init_k_tom(params, level_index, priors)
             #Save opponent's states
@@ -558,7 +558,6 @@ def init_k_tom(params, level, priors='default'):
     internal_states['own_states'] = own_states
 
     return internal_states    
-
 
 # Other functions
 def logit (p):
