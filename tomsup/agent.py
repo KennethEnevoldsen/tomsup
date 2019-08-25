@@ -7,7 +7,9 @@ import pandas as pd
 import numpy as np
 from warnings import warn
 from itertools import combinations
-from tomsup.ktom_functions import k_tom, init_k_tom, inv_logit, logit
+from tomsup.ktom_functions import k_tom, init_k_tom
+from scipy.special import expit as inv_logit
+from scipy.special import logit
 
 ###################
 ###___ AGENT ___###
@@ -47,7 +49,6 @@ class Agent():
             self.history = pd.DataFrame()                  # history of choices
         else:
             self.history = None
-        self.op_choice = None                               # Opponent's choice
         if strategy:
             self.__class__ = eval(strategy)
             self.__init__(**kwargs)
@@ -87,10 +88,6 @@ class Agent():
 
     def get_choice(self):
         return self.choice
-    
-
-    def get_op_choice(self):
-        return self.op_choice
 
 
     def get_history(self, key = None, format = 'df'):
@@ -313,11 +310,10 @@ class TOM(Agent):
                               'bias': bias, 'dilution': dilution, **kwargs}
 
 
-    def compete(self, op_choice, agent_perspective, p_matrix, **kwargs):
+    def compete(self, p_matrix, agent_perspective, op_choice = None, **kwargs):
         """
         
         """
-
         self.op_choice = op_choice
         self.choice, self.internal = k_tom(
                                         self.internal,
@@ -328,8 +324,7 @@ class TOM(Agent):
                                         agent_perspective,
                                         p_matrix,
                                         **kwargs)
-        self._add_to_history(choice = self.choice, op_choice = op_choice, 
-                             internal_states = self.internal)
+        self._add_to_history(choice = self.choice, internal_states = self.internal)
         return self.choice
 
 
@@ -542,19 +537,21 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
 
 
 #%%
-Devaine = TOM(level = 2, volatility = -2, b_temp = -1)
+Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
+#Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.2, bias = 0.3)
 penny = PayoffMatrix(name = "penny_competitive")
-Devaine.compete(1, 1, penny)
+Devaine.compete(penny, agent_perspective = 1, op_choice = None)
 STATES = Devaine.get_internal_states()
 
-k_tom(
-    Devaine.internal,
-    Devaine.params,
-    Devaine.choice,
-    1,
-    2,
-    1,
-    penny)
+
+for i in range (100):
+    print(i)
+    Devaine.compete(penny, agent_perspective = 1, op_choice = 1)
+    Devaine.compete(penny, agent_perspective = 1, op_choice = 0)
+
+#output = Devaine.get_history()
+#output
+#output['internal_states'][1]
 
 #%%
 if __name__ == "__main__":
