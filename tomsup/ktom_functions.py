@@ -1,6 +1,7 @@
 #%%
 from warnings import warn
 import numpy as np
+from tomsup.payoffmatrix import PayoffMatrix
 
 """
 Parameter Order:
@@ -255,15 +256,21 @@ def p_opk_fun(p_op_mean, param_var, gradient):
 
 def expected_payoff_fun(p_op, agent, p_matrix):
     """
+    p_op (0 <= float <= 1): The probability of the opponent choosing 1
+    agent (0 <= int <= 1): the perspective of the agent
+    p_matrix (PayoffMatix): a payoff matrix
+
     Calculate expected payoff of choosing 1 over 0
 
     Examples:
-    >>> 
+    >>> staghunt = PayoffMatrix(name = 'staghunt')
+    >>> expected_payoff_fun(1, agent = 0, p_matrix = staghunt)
+    2
     """
     #Calculate
     expected_payoff = (
-        p_op * (p_matrix.outcome(1, 1, agent) - p_matrix.outcome(0, 1, agent)) + 
-        (1 - p_op) * (p_matrix.outcome(1, 0, agent) - p_matrix.outcome(0, 0, agent)))
+        p_op * (p_matrix.payoff(1, 1, agent) - p_matrix.payoff(0, 1, agent)) + 
+        (1 - p_op) * (p_matrix.payoff(1, 0, agent) - p_matrix.payoff(0, 0, agent)))
 
     return expected_payoff
 
