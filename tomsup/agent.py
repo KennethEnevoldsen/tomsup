@@ -289,7 +289,6 @@ class TOM(Agent):
             warn("It is quite computationally expensive to run a TOM with a level > 5." + 
                  " Make sure this is your intention.", Warning)
 
-
         self.volatility = volatility
         self.b_temp = b_temp
         self.bias = bias
@@ -314,10 +313,11 @@ class TOM(Agent):
                               'bias': bias, 'dilution': dilution, **kwargs}
 
 
-    def compete(self, op_choice, p_matrix, agent_perspective, **kwargs):
+    def compete(self, op_choice, agent_perspective, p_matrix, **kwargs):
         """
         
         """
+
         self.op_choice = op_choice
         self.choice, self.internal = k_tom(
                                         self.internal,
@@ -540,6 +540,12 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
         raise TypeError("Invalid return_val, please use either 'df' or 'list'")
 
 
+
+#%%
+Devaine = TOM(level = 2, volatility = -2, b_temp = -1)
+penny = PayoffMatrix(name = "penny_competitive")
+Devaine.compete(1, 1, penny)
+STATES = Devaine.get_internal_states()
 
 #%%
 if __name__ == "__main__":

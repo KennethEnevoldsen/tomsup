@@ -314,14 +314,6 @@ def learning_function(
         dilution = params['dilution']
     else:
         dilution = None
-    #And variables
-    prev_p_op_mean0 = prev_internal_states['own_states']['prev_p_op_mean0']
-    prev_p_op_var0 = prev_internal_states['own_states']['p_op_var0']
-    prev_p_k = prev_internal_states['own_states']['prev_p_k']
-    prev_p_op_mean = prev_internal_states['own_states']['prev_p_op_mean']
-    prev_param_mean = prev_internal_states['own_states']['prev_param_mean']
-    prev_param_var = prev_internal_states['own_states']['prev_param_var']
-    prev_gradient = prev_internal_states['own_states']['prev_gradient']
 
     #Make empty dictionary for storing updates states
     new_internal_states = {}
@@ -329,6 +321,10 @@ def learning_function(
 
     #If the (simulated) agent is a 0-ToM
     if level == 0:
+        #Extract needed variables
+        prev_p_op_mean0 = prev_internal_states['own_states']['prev_p_op_mean0']
+        prev_p_op_var0 = prev_internal_states['own_states']['p_op_var0']
+
         #Update 0-ToM's uncertainty of opponent choice probability
         p_op_var0 = p_op_var0_update (prev_p_op_mean0, prev_p_op_var0, volatility)
 
@@ -340,6 +336,13 @@ def learning_function(
 
     #If the (simulated) agent is a k-ToM
     else:
+        #Extract needed variables
+        prev_p_k = prev_internal_states['own_states']['prev_p_k']
+        prev_p_op_mean = prev_internal_states['own_states']['prev_p_op_mean']
+        prev_param_mean = prev_internal_states['own_states']['prev_param_mean']
+        prev_param_var = prev_internal_states['own_states']['prev_param_var']
+        prev_gradient = prev_internal_states['own_states']['prev_gradient']
+
         #Update opponent level probabilities
         p_opk_approx = p_opk_approx_fun(prev_p_op_mean, prev_param_var, prev_gradient, level)
         p_k = p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution)
@@ -422,24 +425,27 @@ def decision_function(
     """
     """
     #Extract needed parameters
-    b_temp = params['behavioural_temperature']
+    b_temp = params['b_temp']
     if 'bias' in params:
         bias = params['bias']
-    #And variables
-    p_op_mean0 = new_internal_states['own_states']['p_op_mean0']
-    p_op_var0 = new_internal_states['own_states']['p_op_var0']
-    p_op_mean = new_internal_states['own_states']['p_op_mean']
-    param_var = new_internal_states['own_states']['param_var']
-    gradient = new_internal_states['own_states']['gradient']
-    p_k = new_internal_states['own_states']['p_k']
 
     #If (simulated) agent is a 0-ToM
     if level == 0:
+        #Extract needed variables
+        p_op_mean0 = new_internal_states['own_states']['p_op_mean0']
+        p_op_var0 = new_internal_states['own_states']['p_op_var0']
+
         #Estimate probability of opponent choice
         p_op = p_op0_fun(p_op_mean0, p_op_var0)
 
     #If the (simulated) agent is a k-ToM
     else: 
+        #Extract needed variables
+        p_op_mean = new_internal_states['own_states']['p_op_mean']
+        param_var = new_internal_states['own_states']['param_var']
+        gradient = new_internal_states['own_states']['gradient']
+        p_k = new_internal_states['own_states']['p_k']
+
         #Estimate probability of opponent choice for each simulated level
         p_opk = p_opk_fun(p_op_mean, param_var, gradient)
 
@@ -450,7 +456,7 @@ def decision_function(
     expected_payoff = expected_payoff_fun(p_op, agent, p_matrix)
 
     #Add bias
-    if bias:
+    if 'bias' in params:
         expected_payoff = expected_payoff + bias
 
     #Softmax
