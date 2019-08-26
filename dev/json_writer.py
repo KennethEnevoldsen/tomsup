@@ -21,20 +21,24 @@ agent_dict = {
      'reference': 'Nowak & Sigmund (1993)', 
      'strategy': 'If it win it chooses the same option again, if it lose it change to another'},
     'TFT': {
-     'name': 'Tit-for-Tat'
+     'name': 'Tit-for-Tat',
      'shorthand': 'TFT',
      'example': 'TFT()',
      'reference': 'Shelling (1981)',
      'strategy': 'Intended the prisoners dilemma. It starts out cooperating and then simply copies it opponents action.'},
-    } 
-    
+    'TOM': {
+     'name': 'Theory of Mind',
+     'shorthand': 'TOM',
+     'example': 'TOM(level = 2)', 
+     'reference': 'Devaine, et al. (2017)', 
+     'strategy': 'Recursively estimated its opponent choice probability and model parameters.'}
     }
 
 
-with open('../siptom/agent_info.json', 'w') as fp:
+with open('../tomsup/agent_info.json', 'w') as fp:
     json.dump(agent_dict, fp)
 
-with open('agent_info.json', 'r') as fp:
+with open('../tomsup/agent_info.json', 'r') as fp:
     data = json.load(fp)
 
 

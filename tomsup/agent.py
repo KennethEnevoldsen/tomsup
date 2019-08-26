@@ -278,13 +278,13 @@ class TOM(Agent):
     Examples:
     >>> Devaine = TOM(level = 0, volatility = -2, b_temp = -1)
     >>> Devaine = TOM(level = 2, volatility = -2, b_temp = -1)
-    >>> Devaine = TOM(level = 4, volatility = -2, b_temp = -1)
     >>> Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.5, bias = 0.3)
     """
     def __init__(self, level = 0, volatility = -2, b_temp = -1, bias = None, dilution = None,  **kwargs):
         if level > 5:
             warn("It is quite computationally expensive to run a TOM with a level > 5." + 
                  " Make sure this is your intention.", Warning)
+
 
         self.volatility = volatility
         self.b_temp = b_temp
@@ -537,21 +537,22 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
 
 
 #%%
-Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
-#Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.2, bias = 0.3)
-penny = PayoffMatrix(name = "penny_competitive")
-Devaine.compete(penny, agent_perspective = 1, op_choice = None)
-STATES = Devaine.get_internal_states()
+if __name__ == "__main__":
+    Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
+    #Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.2, bias = 0.3)
+    penny = PayoffMatrix(name = "penny_competitive")
+    Devaine.compete(penny, agent_perspective = 1, op_choice = None)
+    STATES = Devaine.get_internal_states()
 
 
-for i in range (100):
-    print(i)
-    Devaine.compete(penny, agent_perspective = 1, op_choice = 1)
-    Devaine.compete(penny, agent_perspective = 1, op_choice = 0)
+    for i in range (100):
+        print(i)
+        Devaine.compete(penny, agent_perspective = 1, op_choice = 1)
+        Devaine.compete(penny, agent_perspective = 1, op_choice = 0)
 
-#output = Devaine.get_history()
-#output
-#output['internal_states'][1]
+    #output = Devaine.get_history()
+    #output
+    #output['internal_states'][1]
 
 #%%
 if __name__ == "__main__":
