@@ -1,16 +1,13 @@
-#%%
-from warnings import warn
-import numpy as np
-from tomsup.payoffmatrix import PayoffMatrix
-
 """
+docstring
+
+
 Parameter Order:
 [1] Volatility
 [2] Behavioural temperature
 [3] Dilution
 [4] Bias
 """
-
 #%%
 
 from warnings import warn
