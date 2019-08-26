@@ -82,21 +82,6 @@ Which should e.g. return
 SirRB chose 1 and his probability for choosing 1 was 0.7.
 ```
 
-<!--  # NOT RENDERED
-### A todolist:
-
-Final things:
-- check function text
-- check everything works as intended
-
-Need to have
-- rework of WSLS
-- add TFT
-
-Nice to have:
-- Smart initialize ToM
-- reinforcement learner agent
--->
 
 ## LICENSE
 tomsup is released under the Apache [License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
