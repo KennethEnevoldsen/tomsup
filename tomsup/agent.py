@@ -50,6 +50,10 @@ class Agent():
         else:
             self.history = None
         if strategy:
+            if 'tom' in strategy:
+                k = strategy.split('-')[0]
+                kwargs['level'] = int(k)
+                strategy = strategy.split('-')[1].upper()
             self.__class__ = eval(strategy)
             self.__init__(**kwargs)
         else:
@@ -555,23 +559,37 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
 
 #%%
 if __name__ == "__main__":
-    Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
-    # Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.2, bias = 0.3)
     penny = PayoffMatrix(name = "penny_competitive")
+    
+    # Devaine = TOM(level = 4, volatility = -2, b_temp = -1, save_history = True)
+    Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
+    Riccardo = TOM(level = 2, volatility = -2, b_temp = -1.5, dilution = 0.2, bias = 0, save_history = True)
+    Friston = TOM(level = 3, volatility = -2.5, b_temp = -1, dilution = 0.05, bias = 0.2, save_history = True)
+    
     Devaine.compete(penny, agent_perspective = 1, op_choice = None)
-    Devaine.get_internal_states()
 
-    for i in range (100):
-        print(i)
-        Devaine.compete(penny, agent_perspective = 1, op_choice = np.random.binomial(1,0.5))
+    for _ in range(1):
+        print(_)
+        Devaine.reset()
+        for i in range (100):
+            Devaine.compete(penny, agent_perspective = 1, op_choice = np.random.binomial(1,0.9))
 
+    print("DONE")
     output = Devaine.get_history()
+    x = output['internal_states'][1:].apply(lambda d: d['own_states']['param_mean'][:,3])
+    import matplotlib.pyplot as plt
+    #fig = plt.figure()
+    plt.plot(x)
+
+    output['choice'].mean()
+
     #output['internal_states'][1]
 
+    Devie = Agent("1-TOM", volatility = -2, b_temp = -1)
+    round_table = AgentGroup(agents = ['RB']*2, start_params = [{'bias': 1}]*2)
+    x = input()
 
 #%%
 if __name__ == "__main__":
   import doctest
   doctest.testmod(verbose=True)
-
-#%%

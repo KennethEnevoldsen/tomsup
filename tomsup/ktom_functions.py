@@ -154,17 +154,17 @@ def param_mean_update(prev_p_op_mean, prev_param_mean, prev_gradient, p_k, param
     k-ToM updates its estimates of opponent's parameter values
     """
     #Input variable transforms 
-    param_var = np.exp(param_var)
+    param_var = np.exp(param_var) * prev_gradient
 
     #Calculate
-    new_param_mean = prev_param_mean + p_k[:, np.newaxis] * param_var * (op_choice - inv_logit(prev_param_mean))
+    new_param_mean = prev_param_mean + p_k[:, np.newaxis] * param_var * (op_choice - inv_logit(prev_p_op_mean))[:, np.newaxis]
 
     #Used for numerical purposes in the VBA package
     #new_param_mean = inv_logit(logit(new_param_mean))
 
     return new_param_mean
 
-
+#!#
 def gradient_update(
     params,
     p_op_mean,
@@ -224,6 +224,9 @@ def p_op0_fun(p_op_mean0, p_op_var0):
     """
     0-ToM combines the mean and variance of its parameter estimate into a final choice probability estimate.
     NB: This is the function taken from the VBA package (Daunizeau 2014), which does not use 0-ToM's volatility parameter to avoid unidentifiability problems.
+
+    >>> p_op0_fun(p_op_mean0 = 0.7, p_op_var0 = 0.3)
+    0.6397417553178626
     """
     #Constants
     a = 0.36
@@ -576,19 +579,19 @@ def init_k_tom(params, level, priors='default'):
     return internal_states 
 
 #Adding bounds to the logit functions to avoid infinite values and rounding
-def bounded_inv_logit(func):
-    def _bounded(x):
-        x = 10_000 if x > 10_000 else x
-        x = -10_000 if x < -10_000 else x
-        return func(x)
-    return _bounded
+    # def bound_inv_logit(func):
+    #     def _bounded(x):
+    #         x = 10_000 if x > 10_000 else x
+    #         x = -10_000 if x < -10_000 else x
+    #         return func(x)
+    #     return _bounded
 
-def bounded_logit(func):
-    def _bounded(x):
-        x = 0.9999 if x > 0.9999 else x
-        x = 0.0001 if x < 0.0001 else x
-        return func(x)
-    return _bounded
+    # def bounded_logit(func):
+        # def _bounded(x):
+        #     x = 0.9999 if x > 0.9999 else x
+        #     x = 0.0001 if x < 0.0001 else x
+        #     return func(x)
+        # return _bounded
 
 
 #%%
