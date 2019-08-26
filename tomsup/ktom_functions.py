@@ -58,10 +58,9 @@ def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
     """
     #Input variable transforms
     p_op_var0 = np.exp(p_op_var0)
-    prev_p_op_mean0 = inv_logit(prev_p_op_mean0)
     
     #Update
-    new_p_op_mean0 = prev_p_op_mean0 + p_op_var0 * (op_choice - prev_p_op_mean0)
+    new_p_op_mean0 = prev_p_op_mean0 + p_op_var0 * (op_choice - inv_logit(prev_p_op_mean0))
     
     return new_p_op_mean0
 
@@ -604,7 +603,7 @@ if __name__ == "__main__":
 
     C = 1
 
-    penny = PayoffMatrix(name = 'penny_competitive')
+    P_MATRIX = PayoffMatrix(name = 'penny_competitive')
 
     PARAMS = {'volatility': -2, 'b_temp': -1}
 
@@ -616,7 +615,7 @@ if __name__ == "__main__":
                         op_choice = 1,
                         level = 1,
                         agent = 1,
-                        p_matrix = penny)
+                        p_matrix = P_MATRIX)
         
 
 #%%
