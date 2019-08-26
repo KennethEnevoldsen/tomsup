@@ -587,32 +587,33 @@ def init_k_tom(params, level, priors='default'):
 #  doctest.testmod(verbose=True)
 
 
-
+if __name__ == "__main__":
 #%%
 
-# STATES = {'opponent_states': {0: {'opponent_states': {},
-#    'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}},
-# 'own_states': {'p_k': np.array([1.]),
-#   'p_op_mean': np.array([0]),
-#   'param_mean': np.array([[0, 0]]),
-#   'param_var': np.array([[0, 0]]),
-#   'gradient': np.array([[0, 0]])}}
+    STATES = {'opponent_states': {0: {'opponent_states': {},
+    'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}},
+    'own_states': {'p_k': np.array([1.]),
+    'p_op_mean': np.array([0]),
+    'param_mean': np.array([[0, 0]]),
+    'param_var': np.array([[0, 0]]),
+    'gradient': np.array([[0, 0]])}}
 
-# C = 1
+    C = 1
 
-# penny = PayoffMatrix(name = 'penny_competitive')
+    penny = PayoffMatrix(name = 'penny_competitive')
 
-# PARAMS = {'volatility': -2, 'b_temp': -1}
+    PARAMS = {'volatility': -2, 'b_temp': -1}
 
-# for i in range(100):
-#     C, STATES = k_tom(
-#                     STATES,
-#                     PARAMS,
-#                     C,
-#                     1,
-#                     1,
-#                     1,
-#                     penny)
-    
+    for i in range(100):
+        print(i)
+        C, STATES = k_tom(
+                        STATES,
+                        PARAMS,
+                        C,
+                        1,
+                        1,
+                        1,
+                        penny)
+        
 
 #%%
