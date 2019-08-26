@@ -99,7 +99,7 @@ def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution = None):
     k-ToM updates its estimate of opponents sophistication level.
     If k-ToM has a dilution parameter, it does a partial forgetting of learned estimates.
     """
-    
+
     #Input variable transforms
     p_opk_approx = np.exp(p_opk_approx)
     if dilution:

@@ -50,7 +50,7 @@ class Agent():
         else:
             self.history = None
         if strategy:
-            if 'tom' in strategy:
+            if 'TOM' in strategy.upper():
                 k = strategy.split('-')[0]
                 kwargs['level'] = int(k)
                 strategy = strategy.split('-')[1].upper()
@@ -314,7 +314,7 @@ class TOM(Agent):
                               'bias': bias, 'dilution': dilution, **kwargs}
 
 
-    def compete(self, p_matrix, agent_perspective, op_choice = None, **kwargs):
+    def compete(self, p_matrix, agent, op_choice = None, **kwargs):
         """
         
         """
@@ -325,7 +325,7 @@ class TOM(Agent):
                                         self.choice,
                                         op_choice,
                                         self.level,
-                                        agent_perspective,
+                                        agent,
                                         p_matrix,
                                         **kwargs)
         self._add_to_history(choice = self.choice, internal_states = self.internal)
@@ -358,6 +358,36 @@ class TOM(Agent):
     def get_parameters(self):
         return self.params
 
+
+    def print_internal(self, keys_to_print = None, silent = False):
+        """
+        keys_to_print (list) is the keys which you desire to print. If key is None all keys will be printed.
+        """
+
+        # Convert all elements to string
+        if keys_to_print:
+            keys_to_print = [str(key) for key in keys_to_print]
+            # if sum(key not in keys_to_print for key in ['opponent_states', 'own_states']) != 0:
+            #     if not silent:
+            #         print("You haven't added 'opponent_states' and/or 'own_states' to keys_to_print." + 
+            #               " If any of the keys_to_print is within one")
+
+        def _print_internal(d, n = 0, keys_to_print = None):
+            for key in d:
+                p_key = str(key) + '-ToM' if isinstance(key, int) else key
+                p_str = '|   '*n + str(p_key)
+                # print('|---'*n, key, sep = "", end = '')
+                if isinstance(d[key], dict) is False:
+                    x = d[key].tolist() if isinstance(d[key], np.ndarray) else d[key]
+                    p_str = p_str + ":" + " "*(12-len(p_key)) + str(x)
+                if keys_to_print is None or str(key) in keys_to_print:
+                    #continue
+                    print(p_str)
+
+                if isinstance(d[key], dict):
+                    _print_internal(d[key], n+1, keys_to_print)
+
+        _print_internal(self.internal, n = 0, keys_to_print = keys_to_print)
 
 
 #########################
@@ -520,11 +550,11 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
                 agent_1.reset()
 
     else:      
-        payoff = [None, None]
+        a_0, a_1 = None, None
         result = []
         for i in range(n_rounds):
-            a_0 = agent_0.compete(p_matrix = p_matrix, payoff = payoff[0]) #a for action
-            a_1 = agent_1.compete(p_matrix = p_matrix, payoff = payoff[1])
+            a_0 = agent_0.compete(p_matrix = p_matrix, agent = 0, op_choice = a_1) #a for action
+            a_1 = agent_1.compete(p_matrix = p_matrix, agent = 1, op_choice = a_0)
             
             payoff = p_matrix()[:, a_0, a_1] #[agent_0, agent_1]
             result.append((i, a_0, a_1, payoff[0], payoff[1]))
@@ -562,32 +592,53 @@ if __name__ == "__main__":
     penny = PayoffMatrix(name = "penny_competitive")
     
     # Devaine = TOM(level = 4, volatility = -2, b_temp = -1, save_history = True)
-    Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
-    Riccardo = TOM(level = 2, volatility = -2, b_temp = -1.5, dilution = 0.2, bias = 0, save_history = True)
-    Friston = TOM(level = 3, volatility = -2.5, b_temp = -1, dilution = 0.05, bias = 0.2, save_history = True)
+    #Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
     
-    Devaine.compete(penny, agent_perspective = 1, op_choice = None)
+    # Devaine.compete(penny, agent = 0, op_choice = None)
 
-    for _ in range(1):
-        print(_)
-        Devaine.reset()
-        for i in range (100):
-            Devaine.compete(penny, agent_perspective = 1, op_choice = np.random.binomial(1,0.9))
+    # for _ in range(1):
+    #     print(_)
+    #     Devaine.reset()
+    #     for i in range (100):
+    #         Devaine.compete(penny, agent= 0, op_choice = np.random.binomial(1,0.9))
 
-    print("DONE")
-    output = Devaine.get_history()
-    x = output['internal_states'][1:].apply(lambda d: d['own_states']['param_mean'][:,3])
-    import matplotlib.pyplot as plt
-    #fig = plt.figure()
-    plt.plot(x)
+    # print("DONE")
+    # output = Devaine.get_history()
+    # x = output['internal_states'][1:].apply(lambda d: d['own_states']['param_mean'][:,3])
+    # import matplotlib.pyplot as plt
+    # #fig = plt.figure()
+    # plt.plot(x)
 
-    output['choice'].mean()
+    # output['choice'].mean()
 
-    #output['internal_states'][1]
+    # #output['internal_states'][1]
 
-    Devie = Agent("1-TOM", volatility = -2, b_temp = -1)
-    round_table = AgentGroup(agents = ['RB']*2, start_params = [{'bias': 1}]*2)
-    x = input()
+    # Devie = Agent("1-TOM", volatility = -2, b_temp = -1)
+    # Devie.get_behav_temperature()
+
+    # party = AgentGroup(agents = ['2-tom', '3-tom'], start_params = [{}]*2)
+    # party.set_env('round_robin')
+    # party.pairing
+    # penny = PayoffMatrix(name = "penny_competitive")
+    # party.compete(penny)
+
+    Devaine = TOM(level = 2, b_temp= -10)
+    Friston = TOM(level = 1, b_temp= -10)
+
+    output = compete(agent_0 = Devaine, 
+                        agent_1 = Friston, 
+                        p_matrix = 'penny_competitive', 
+                        n_rounds = 50, 
+                        n_sim = 100, 
+                        reset_agent = True, 
+                        return_val = 'df', 
+                        silent = False)
+
+    m = output['payoff_agent0'].mean()
+    s = output['payoff_agent0'].std()
+
+    print(f"mean: {m}, std: {s}")
+    
 
 #%%
 if __name__ == "__main__":
