@@ -556,25 +556,22 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
 #%%
 if __name__ == "__main__":
     Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
-    #Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.2, bias = 0.3)
+    # Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.2, bias = 0.3)
     penny = PayoffMatrix(name = "penny_competitive")
     Devaine.compete(penny, agent_perspective = 1, op_choice = None)
-    STATES = Devaine.get_internal_states()
-
+    Devaine.get_internal_states()
 
     for i in range (100):
         print(i)
         Devaine.compete(penny, agent_perspective = 1, op_choice = np.random.binomial(1,0.5))
-        #Devaine.compete(penny, agent_perspective = 1, op_choice = 0)
 
     output = Devaine.get_history()
-    output['internal_states'][1]
-
-Devaine.internal
-Devaine.choice
+    #output['internal_states'][1]
 
 
 #%%
 if __name__ == "__main__":
   import doctest
   doctest.testmod(verbose=True)
+
+#%%

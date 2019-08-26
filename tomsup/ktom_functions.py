@@ -39,9 +39,7 @@ def p_op_var0_update(prev_p_op_mean0, prev_p_op_var0, volatility):
     volatility = np.exp(volatility)
     prev_p_op_var0 = np.exp(prev_p_op_var0)
 
-    print('p_op_var0_update inv_logit in', prev_p_op_mean0)
     prev_p_op_mean0 = inv_logit(prev_p_op_mean0)
-    print('p_op_var0_update inv_logit out', prev_p_op_mean0)
 
     #Update
     new_p_op_var0 = ( 1 / (
@@ -60,9 +58,7 @@ def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
     """
     #Input variable transforms
     p_op_var0 = np.exp(p_op_var0)
-    print('p_op_mean0_update inv_logit in', prev_p_op_mean0)
     prev_p_op_mean0 = inv_logit(prev_p_op_mean0)
-    print('p_op_mean0_update inv_logit out', prev_p_op_mean0)
     
     #Update
     new_p_op_mean0 = prev_p_op_mean0 + p_op_var0 * (op_choice - prev_p_op_mean0)
@@ -108,9 +104,7 @@ def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution = None):
     #Input variable transforms
     p_opk_approx = np.exp(p_opk_approx)
     if dilution:
-        print('p_k_udpate inv_logit in', dilution)
         dilution = inv_logit(dilution)
-        print('p_k_udpate inv_logit out', dilution)
     
     #Do partial forgetting 
     if dilution:
@@ -140,9 +134,7 @@ def param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volati
         volatility_dummy = np.concatenate(([1], volatility_dummy), axis = None)
 
     #Input variable transforms
-    print('param_var_update inv_logit in', prev_param_mean)
     prev_param_mean = inv_logit(prev_param_mean)
-    print('param_var_update inv_logit out', prev_param_mean)
     prev_param_var = np.exp(prev_param_var)
     volatility = np.exp(volatility) * volatility_dummy
 
@@ -150,7 +142,7 @@ def param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volati
     new_var = (
         1/
         (1 / (prev_param_var + volatility) +
-        p_k * prev_param_mean * (1 - prev_param_mean) * prev_gradient**2))
+        p_k[:, np.newaxis] * prev_param_mean * (1 - prev_param_mean) * prev_gradient**2))
 
     #Output variable transform
     new_var = np.log(new_var)
@@ -166,7 +158,10 @@ def param_mean_update(prev_p_op_mean, prev_param_mean, prev_gradient, p_k, param
     param_var = np.exp(param_var)
 
     #Calculate
-    new_param_mean = prev_param_mean + p_k * param_var * (op_choice - inv_logit(prev_param_mean))
+    new_param_mean = prev_param_mean + p_k[:, np.newaxis] * param_var * (op_choice - inv_logit(prev_param_mean))
+
+    #Used for numerical purposes in the VBA package
+    #new_param_mean = inv_logit(logit(new_param_mean))
 
     return new_param_mean
 
@@ -241,9 +236,7 @@ def p_op0_fun(p_op_mean0, p_op_var0):
     p_op0 = p_op_mean0 / np.sqrt(1 + a * p_op_var0)
 
     #Output variable transforms
-    print('p_op0_fun inv_logit in', p_op0)
     p_op0 = inv_logit(p_op0)
-    print('p_op0_fun inv_logit out', p_op0)
 
     return p_op0
 
@@ -266,9 +259,7 @@ def p_opk_fun(p_op_mean, param_var, gradient):
     p_opk = p_op_mean / np.sqrt(1 + a * var_prepped)
 
     #Output variable transform
-    print('p_opk_fun inv_logit in', p_opk)
     p_opk = inv_logit(p_opk)
-    print('p_opk_fun inv_logit out', p_opk)
 
     return p_opk
 
@@ -482,9 +473,7 @@ def decision_function(
     p_self = softmax(expected_payoff, b_temp)
 
     #Output variable transform
-    print("decision function - in (logit):", p_self)
     p_self = logit(p_self)
-    print("decision function - out (logit):", p_self)
 
     return p_self
 
@@ -527,11 +516,8 @@ def k_tom(
         p_matrix)
 
     #Probability transform
-    print('k_tom inv_logit in', p_self)
     p_self = inv_logit(p_self)
-    print('k_tom inv_logit out', p_self)
     
-
     #Make decision
     choice = np.random.binomial(1, p_self)
 
@@ -556,9 +542,6 @@ def init_k_tom(params, level, priors='default'):
     internal_states = {}
     opponent_states = {}
 
-    #Because of zero-indexing, the amount of opponents is level + 1
-    op_amount = level + 1
-
     #If the (simulated) agent i a 0-ToM
     if level == 0:
         #Set priors for choice probability estimate and its uncertainty
@@ -571,11 +554,11 @@ def init_k_tom(params, level, priors='default'):
     #If the (simulated) agent is a k-ToM
     else:
         #Set priors 
-        p_k = np.repeat((1/level), op_amount)
-        p_op_mean = np.repeat(priors['p_op_mean'], op_amount)
-        param_var = np.tile(priors['param_var'], (op_amount,1))
-        param_mean = np.tile(priors['param_mean'], (op_amount,1))
-        gradient = np.tile(priors['gradient'], (op_amount,1))
+        p_k = np.repeat((1/level), level)
+        p_op_mean = np.repeat(priors['p_op_mean'], level)
+        param_var = np.tile(priors['param_var'], (level,1))
+        param_mean = np.tile(priors['param_mean'], (level,1))
+        gradient = np.tile(priors['gradient'], (level,1))
 
         #k-ToM simulates an opponent for each level below its own
         for level_index in range(level):
@@ -591,27 +574,22 @@ def init_k_tom(params, level, priors='default'):
     internal_states['opponent_states'] = opponent_states
     internal_states['own_states'] = own_states
 
-    return internal_states    
+    return internal_states 
 
-## Other functions
-# def logit (p):
-#     print('logit in', p)
-#     out = np.log(p) - np.log(1 - p)
-#     print ('logit out', out)
-#     return out
+#Adding bounds to the logit functions to avoid infinite values and rounding
+def bounded_inv_logit(func):
+    def _bounded(x):
+        x = 10_000 if x > 10_000 else x
+        x = -10_000 if x < -10_000 else x
+        return func(x)
+    return _bounded
 
-# def inv_logit(p):
-    
-#     print('invlogit in', p)
-#     out = np.exp(p) / (1 + np.exp(p))
-#     print ('invlogit out', out)
-#     return out
-
-# Testing function
-#if __name__ == "__main__":
-#  import doctest
-#  doctest.testmod(verbose=True)
-
+def bounded_logit(func):
+    def _bounded(x):
+        x = 0.9999 if x > 0.9999 else x
+        x = 0.0001 if x < 0.0001 else x
+        return func(x)
+    return _bounded
 
 
 #%%
@@ -642,3 +620,8 @@ if __name__ == "__main__":
         
 
 #%%
+
+# Testing function
+#if __name__ == "__main__":
+#  import doctest
+#  doctest.testmod(verbose=True)
