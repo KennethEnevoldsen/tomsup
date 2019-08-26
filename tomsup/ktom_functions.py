@@ -38,7 +38,10 @@ def p_op_var0_update(prev_p_op_mean0, prev_p_op_var0, volatility):
     #Input variable transforms
     volatility = np.exp(volatility)
     prev_p_op_var0 = np.exp(prev_p_op_var0)
+
+    print('p_op_var0_update inv_logit in', prev_p_op_mean0)
     prev_p_op_mean0 = inv_logit(prev_p_op_mean0)
+    print('p_op_var0_update inv_logit out', prev_p_op_mean0)
 
     #Update
     new_p_op_var0 = ( 1 / (
@@ -57,7 +60,9 @@ def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
     """
     #Input variable transforms
     p_op_var0 = np.exp(p_op_var0)
+    print('p_op_mean0_update inv_logit in', prev_p_op_mean0)
     prev_p_op_mean0 = inv_logit(prev_p_op_mean0)
+    print('p_op_mean0_update inv_logit out', prev_p_op_mean0)
     
     #Update
     new_p_op_mean0 = prev_p_op_mean0 + p_op_var0 * (op_choice - prev_p_op_mean0)
@@ -65,7 +70,7 @@ def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
     return new_p_op_mean0
 
 
-def p_opk_approx_fun(prev_p_op_mean, prev_p_op_var, prev_gradient, level):
+def p_opk_approx_fun(prev_p_op_mean, prev_param_var, prev_gradient, level):
     """
     k-ToM
     Approximates the estimated choice probability of the opponent on the previous round. 
@@ -78,19 +83,18 @@ def p_opk_approx_fun(prev_p_op_mean, prev_p_op_var, prev_gradient, level):
     d = 0.870
 
     #Input variable transforms
-    prev_p_op_var = np.exp(prev_p_op_var)
+    prev_param_var = np.exp(prev_param_var)
 
     #Prepare variance by weighing with gradient
     prev_var_prepped = np.zeros(level)
     for level_idx in range(level):
-        prev_var_prepped[level_idx] = prev_p_op_var[level -1 ,:].T.dot(prev_gradient[level - 1,:]**2)
+        prev_var_prepped[level_idx] = prev_param_var[level - 1 ,:].T.dot(prev_gradient[level - 1,:]**2)
 
     #Equation
-    p_opk_approx = inv_logit (
-        (prev_p_op_mean + b * prev_var_prepped^c) / np.sqrt(1 + a * prev_var_prepped^d))
+    p_opk_approx = (prev_p_op_mean + b * prev_var_prepped**c) / np.sqrt(1 + a * prev_var_prepped**d)
 
     #Output variable transform
-    p_opk_approx = np.log(p_opk_approx)
+    p_opk_approx = np.log(inv_logit(p_opk_approx))
 
     return p_opk_approx
 
@@ -104,7 +108,9 @@ def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution = None):
     #Input variable transforms
     p_opk_approx = np.exp(p_opk_approx)
     if dilution:
+        print('p_k_udpate inv_logit in', dilution)
         dilution = inv_logit(dilution)
+        print('p_k_udpate inv_logit out', dilution)
     
     #Do partial forgetting 
     if dilution:
@@ -130,11 +136,13 @@ def param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volati
     """
     #Dummy constant: sets volatility to 0 for all except volatility opponent parameter estimates
     if volatility_dummy is None:
-        volatility_dummy = np.zeros(prev_param_mean.shape(1))
+        volatility_dummy = np.zeros(prev_param_mean.shape[1] - 1)
         volatility_dummy = np.concatenate(([1], volatility_dummy), axis = None)
 
     #Input variable transforms
+    print('param_var_update inv_logit in', prev_param_mean)
     prev_param_mean = inv_logit(prev_param_mean)
+    print('param_var_update inv_logit out', prev_param_mean)
     prev_param_var = np.exp(prev_param_var)
     volatility = np.exp(volatility) * volatility_dummy
 
@@ -233,7 +241,9 @@ def p_op0_fun(p_op_mean0, p_op_var0):
     p_op0 = p_op_mean0 / np.sqrt(1 + a * p_op_var0)
 
     #Output variable transforms
+    print('p_op0_fun inv_logit in', p_op0)
     p_op0 = inv_logit(p_op0)
+    print('p_op0_fun inv_logit out', p_op0)
 
     return p_op0
 
@@ -256,7 +266,9 @@ def p_opk_fun(p_op_mean, param_var, gradient):
     p_opk = p_op_mean / np.sqrt(1 + a * var_prepped)
 
     #Output variable transform
+    print('p_opk_fun inv_logit in', p_opk)
     p_opk = inv_logit(p_opk)
+    print('p_opk_fun inv_logit out', p_opk)
 
     return p_opk
 
@@ -321,14 +333,6 @@ def learning_function(
         dilution = params['dilution']
     else:
         dilution = None
-    #And variables
-    prev_p_op_mean0 = prev_internal_states['own_states']['prev_p_op_mean0']
-    prev_p_op_var0 = prev_internal_states['own_states']['p_op_var0']
-    prev_p_k = prev_internal_states['own_states']['prev_p_k']
-    prev_p_op_mean = prev_internal_states['own_states']['prev_p_op_mean']
-    prev_param_mean = prev_internal_states['own_states']['prev_param_mean']
-    prev_param_var = prev_internal_states['own_states']['prev_param_var']
-    prev_gradient = prev_internal_states['own_states']['prev_gradient']
 
     #Make empty dictionary for storing updates states
     new_internal_states = {}
@@ -336,6 +340,10 @@ def learning_function(
 
     #If the (simulated) agent is a 0-ToM
     if level == 0:
+        #Extract needed variables
+        prev_p_op_mean0 = prev_internal_states['own_states']['p_op_mean0']
+        prev_p_op_var0 = prev_internal_states['own_states']['p_op_var0']
+        
         #Update 0-ToM's uncertainty of opponent choice probability
         p_op_var0 = p_op_var0_update (prev_p_op_mean0, prev_p_op_var0, volatility)
 
@@ -347,6 +355,13 @@ def learning_function(
 
     #If the (simulated) agent is a k-ToM
     else:
+        #Extract needed variables
+        prev_p_k = prev_internal_states['own_states']['p_k']
+        prev_p_op_mean = prev_internal_states['own_states']['p_op_mean']
+        prev_param_mean = prev_internal_states['own_states']['param_mean']
+        prev_param_var = prev_internal_states['own_states']['param_var']
+        prev_gradient = prev_internal_states['own_states']['gradient']
+
         #Update opponent level probabilities
         p_opk_approx = p_opk_approx_fun(prev_p_op_mean, prev_param_var, prev_gradient, level)
         p_k = p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution)
@@ -398,8 +413,8 @@ def learning_function(
             #Update gradient (recursive)
             gradient[level_index] = gradient_update(
                 params,
-                p_op_mean,
-                param_mean,
+                p_op_mean[level_index],
+                param_mean[level_index],
                 sim_prev_internal_states,
                 sim_self_choice,
                 sim_op_choice,
@@ -429,24 +444,27 @@ def decision_function(
     """
     """
     #Extract needed parameters
-    b_temp = params['behavioural_temperature']
+    b_temp = params['b_temp']
     if 'bias' in params:
         bias = params['bias']
-    #And variables
-    p_op_mean0 = new_internal_states['own_states']['p_op_mean0']
-    p_op_var0 = new_internal_states['own_states']['p_op_var0']
-    p_op_mean = new_internal_states['own_states']['p_op_mean']
-    param_var = new_internal_states['own_states']['param_var']
-    gradient = new_internal_states['own_states']['gradient']
-    p_k = new_internal_states['own_states']['p_k']
 
     #If (simulated) agent is a 0-ToM
     if level == 0:
+        #Extract needed variables
+        p_op_mean0 = new_internal_states['own_states']['p_op_mean0']
+        p_op_var0 = new_internal_states['own_states']['p_op_var0']
+
         #Estimate probability of opponent choice
         p_op = p_op0_fun(p_op_mean0, p_op_var0)
 
     #If the (simulated) agent is a k-ToM
     else: 
+        #Extract needed variables
+        p_op_mean = new_internal_states['own_states']['p_op_mean']
+        param_var = new_internal_states['own_states']['param_var']
+        gradient = new_internal_states['own_states']['gradient']
+        p_k = new_internal_states['own_states']['p_k']
+
         #Estimate probability of opponent choice for each simulated level
         p_opk = p_opk_fun(p_op_mean, param_var, gradient)
 
@@ -457,14 +475,16 @@ def decision_function(
     expected_payoff = expected_payoff_fun(p_op, agent, p_matrix)
 
     #Add bias
-    if bias:
+    if 'bias' in params:
         expected_payoff = expected_payoff + bias
 
     #Softmax
     p_self = softmax(expected_payoff, b_temp)
 
     #Output variable transform
+    print("decision function - in (logit):", p_self)
     p_self = logit(p_self)
+    print("decision function - out (logit):", p_self)
 
     return p_self
 
@@ -479,7 +499,11 @@ def k_tom(
     agent,
     p_matrix,
     **kwargs):
-    
+
+    #assert prev_internal_states['own_states']['param_mean'].shape == (level, len(params)), (
+    #            "The inputted internal states have the wrong" + 
+    #            " dimensions, check if the agent was initalized corectly.")
+
     #Update estimates of opponent based on behaviour
     if self_choice is not None:
         new_internal_states = learning_function(
@@ -503,7 +527,10 @@ def k_tom(
         p_matrix)
 
     #Probability transform
+    print('k_tom inv_logit in', p_self)
     p_self = inv_logit(p_self)
+    print('k_tom inv_logit out', p_self)
+    
 
     #Make decision
     choice = np.random.binomial(1, p_self)
@@ -566,7 +593,7 @@ def init_k_tom(params, level, priors='default'):
 
     return internal_states    
 
-# Other functions
+## Other functions
 # def logit (p):
 #     print('logit in', p)
 #     out = np.log(p) - np.log(1 - p)
@@ -605,13 +632,13 @@ if __name__ == "__main__":
 
     for i in range(100):
         C, STATES = k_tom(
-                        STATES,
-                        PARAMS,
-                        C,
-                        1,
-                        1,
-                        1,
-                        penny)
+                        prev_internal_states = STATES,
+                        params = PARAMS,
+                        self_choice = C,
+                        op_choice = 1,
+                        level = 1,
+                        agent = 1,
+                        p_matrix = penny)
         
 
 #%%

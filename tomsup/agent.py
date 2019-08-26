@@ -564,12 +564,15 @@ if __name__ == "__main__":
 
     for i in range (100):
         print(i)
-        Devaine.compete(penny, agent_perspective = 1, op_choice = 1)
-        Devaine.compete(penny, agent_perspective = 1, op_choice = 0)
+        Devaine.compete(penny, agent_perspective = 1, op_choice = np.random.binomial(1,0.5))
+        #Devaine.compete(penny, agent_perspective = 1, op_choice = 0)
 
-    #output = Devaine.get_history()
-    #output
-    #output['internal_states'][1]
+    output = Devaine.get_history()
+    output['internal_states'][1]
+
+Devaine.internal
+Devaine.choice
+
 
 #%%
 if __name__ == "__main__":
