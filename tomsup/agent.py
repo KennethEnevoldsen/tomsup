@@ -44,7 +44,6 @@ class Agent():
             - ToM   
         """
         self.choice = None                                  # the last choice of the agent
-        self._start_params = None                           # starting parameters of the agent
         if save_history:
             self.history = pd.DataFrame()                  # history of choices
         else:
@@ -165,6 +164,7 @@ class RB(Agent):
     def compete(self, **kwargs):
         self.choice = np.random.binomial(1, self.bias)
         self._add_to_history(choice = self.choice)
+        print(f"RB compete c: {self.choice}")
         return self.choice
 
 
@@ -553,10 +553,13 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
         a_0, a_1 = None, None
         result = []
         for i in range(n_rounds):
+            # print("--------------------\nCalling agent 0 (Devaine's) compete function\n--------------------\n\n")
             a_0 = agent_0.compete(p_matrix = p_matrix, agent = 0, op_choice = a_1) #a for action
+            # print("--------------------\nCalling agent 1 (Friston's) compete function\n--------------------\n\n")
             a_1 = agent_1.compete(p_matrix = p_matrix, agent = 1, op_choice = a_0)
             
-            payoff = p_matrix()[:, a_0, a_1] #[agent_0, agent_1]
+            payoff = (p_matrix.payoff(a_0, a_1, agent = 0), 
+                      p_matrix.payoff(a_0, a_1, agent = 1))
             result.append((i, a_0, a_1, payoff[0], payoff[1]))
         if return_val == 'df':
             return pd.DataFrame(result, columns = ['round', 'action_agent0', 'action_agent1', 'payoff_agent0', 'payoff_agent1'])
@@ -622,26 +625,29 @@ if __name__ == "__main__":
     # penny = PayoffMatrix(name = "penny_competitive")
     # party.compete(penny)
 
-    Devaine = TOM(level = 2, save_history = True)
-    Friston = TOM(level = 1)
+    Devaine = TOM(level = 1, save_history = True)
+    Friston = TOM(level = 0, save_history = True)
+    #Friston = RB(bias = 0.9)
+    # print(f"bias: {Friston.bias} \n start params: {Friston._start_params}")
 
 
     output = compete(agent_0 = Devaine, 
                         agent_1 = Friston, 
                         p_matrix = 'penny_competitive', 
-                        n_rounds = 50, 
-                        n_sim = 100, 
+                        n_rounds = 30, 
+                        n_sim = 30, 
                         reset_agent = True, 
                         return_val = 'df', 
                         silent = False)
+
 
     m = output['payoff_agent0'].mean()
     s = output['payoff_agent0'].std()
     print(f"mean: {m}, std: {s}")
 
-    plot_winnings(output)
-    plot_actions(output)
-    plot_own_states(Devaine, state = 'p_op_mean')
+    plot_winnings(output, agent = 0)
+    plot_actions(output, agent = 0)
+    plot_own_states(Devaine, state = 'p_op_mean0')
     plot_own_states(Devaine, state = 'p_k')
     plot_op_states(Devaine, op = 1, state = 'p_op_mean')
     plot_op_states(Devaine, op = 0, state = 'p_op_mean0')

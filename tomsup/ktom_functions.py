@@ -8,6 +8,7 @@ Parameter Order:
 [3] Dilution
 [4] Bias
 """
+
 #%%
 
 from warnings import warn
@@ -15,11 +16,16 @@ import numpy as np
 from tomsup.payoffmatrix import PayoffMatrix
 from scipy.special import expit as inv_logit
 from scipy.special import logit
+import copy
 
 
 # Learning subfunctions
 def p_op_var0_update(prev_p_op_mean0, prev_p_op_var0, volatility):
     """ 
+    prev_p_op_mean0   (float)
+    prev_p_op_var0    (float)
+    volatility        (float)
+
     0-ToM updates variance / uncertainty on choice probability estimate
 
     Examples:
@@ -54,6 +60,10 @@ def p_op_var0_update(prev_p_op_mean0, prev_p_op_var0, volatility):
 
 def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
     """
+    prev_p_op_mean0 (float)
+    p_op_var0       (float)
+    op_choice       (int)
+
     0-ToM updates mean choice probability estimate
     """
     #Input variable transforms
@@ -67,9 +77,12 @@ def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
 
 def p_opk_approx_fun(prev_p_op_mean, prev_param_var, prev_gradient, level):
     """
+    
     k-ToM
     Approximates the estimated choice probability of the opponent on the previous round. 
     A semi-analytical approximation derived in Daunizeau, J. (2017)
+
+    
     """
     #Constants
     a = 0.205
@@ -189,7 +202,7 @@ def gradient_update(
         param_mean_incr[param] = param_mean[param] + increment
 
         #Make parameter structure similar to own
-        sim_params_incr = params
+        sim_params_incr = copy.deepcopy(params)
         #Populate it with estimated values, including the increment
         for param_idx, param_key in enumerate(params):
             sim_params_incr[param_key] = param_mean_incr[param_idx]
@@ -318,6 +331,14 @@ def learning_function(
     p_matrix,
     **kwargs):
     """
+    Examples:
+    >>> penny = PayoffMatrix(name = "penny_competitive")
+    >>> prev_internal_states = {'opponent_states': {}, 'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}
+    >>> params = {'volatility': -2, 'b_temp': -1}
+    >>> learning_function(prev_internal_states, params, self_choice=1, op_choice=1, level=0, agent=0, p_matrix=penny)
+    {'opponent_states': {},
+    'own_states': {'p_op_mean0': 0.44216598162254866,
+    'p_op_var0': -0.12292276280308079}}
     """
     #Extract needed parameters
     volatility = params['volatility']
@@ -379,7 +400,8 @@ def learning_function(
             sim_prev_internal_states = prev_internal_states['opponent_states'][level_index]
 
             #Make parameter structure similar to own
-            sim_params = params
+            sim_params = copy.deepcopy(params)
+
             #Populate it with estimated values
             for param_idx, param_key in enumerate(params):
                 sim_params[param_key] = param_mean[level_index, param_idx]
@@ -434,6 +456,13 @@ def decision_function(
         level,
         p_matrix):
     """
+
+    Examples:
+    >>> penny = PayoffMatrix(name = "penny_competitive")
+    >>> new_internal_states = {'opponent_states': {}, 'own_states': {'p_op_mean0': 30, 'p_op_var0': 2}}
+    >>> params = {'volatility': -2, 'b_temp': -1}
+    >>> decision_function(new_internal_states, params, agent = 0, level = 0, p_matrix = penny)
+    -5.436561973742046
     """
     #Extract needed parameters
     b_temp = params['b_temp']
@@ -489,13 +518,21 @@ def k_tom(
     agent,
     p_matrix,
     **kwargs):
+    """
+    # penny = PayoffMatrix(name = "penny_competitive")
+    # prev_internal_states = {'opponent_states': {}, 'own_states': {'p_op_mean0': -0.2, 'p_op_var0': 2}}
+    # params = {'volatility': -2, 'b_temp': -1}
+    # k_tom(prev_internal_states, params, self_choice=0, op_choice=0, level=0, agent=0, p_matrix = penny)
+    """
 
-    #assert prev_internal_states['own_states']['param_mean'].shape == (level, len(params)), (
+    # assert prev_internal_states['own_states']['param_mean'].shape == (level, len(params)), (
     #            "The inputted internal states have the wrong" + 
     #            " dimensions, check if the agent was initalized corectly.")
 
+
     #Update estimates of opponent based on behaviour
     if self_choice is not None:
+        # print(f"The input of the learning function is: \n new_int: \t{prev_internal_states}, \n params:\t {params}, \n agent: \t{agent}, \n level: \t {level}")
         new_internal_states = learning_function(
         prev_internal_states,
         params,
@@ -508,6 +545,7 @@ def k_tom(
     else: #If first round or missed round, make no update
         new_internal_states = prev_internal_states
 
+    # print(f"The input of the decision function is: \n new_int: \t{new_internal_states}, \n params:\t {params}, \n agent: \t{agent}, \n level: \t {level}")
     #Calculate own decision probability
     p_self = decision_function(
         new_internal_states,
@@ -518,7 +556,7 @@ def k_tom(
 
     #Probability transform
     p_self = inv_logit(p_self)
-    
+    print(f"--> k_tom p_self (after inv logit): {p_self}")
     #Make decision
     choice = np.random.binomial(1, p_self)
 
@@ -595,30 +633,46 @@ def init_k_tom(params, level, priors='default'):
 
 #%%
 if __name__ == "__main__":
-    STATES = {'opponent_states': {0: {'opponent_states': {},
-    'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}},
+    prev_internal_states = {'opponent_states': {0: {'opponent_states': {},
+    'own_states': {'p_op_mean0': -0.2, 'p_op_var0': 2}}},
     'own_states': {'p_k': np.array([1.]),
     'p_op_mean': np.array([0]),
     'param_mean': np.array([[0, 0]]),
     'param_var': np.array([[0, 0]]),
     'gradient': np.array([[0, 0]])}}
 
-    C = 1
+    c = 1
 
-    P_MATRIX = PayoffMatrix(name = 'penny_competitive')
+    p_matrix = PayoffMatrix(name = 'penny_competitive')
 
-    PARAMS = {'volatility': -2, 'b_temp': -1}
+    params = {'volatility': -2, 'b_temp': -1}
 
-    for i in range(100):
-        C, STATES = k_tom(
-                        prev_internal_states = STATES,
-                        params = PARAMS,
-                        self_choice = C,
-                        op_choice = 1,
-                        level = 1,
-                        agent = 1,
-                        p_matrix = P_MATRIX)
+    c, states = k_tom(
+                prev_internal_states = prev_internal_states,
+                params = params,
+                self_choice = 1,
+                op_choice = 1,
+                level = 1,
+                agent = 0,
+                p_matrix = p_matrix)
+    print(f"states: \n {states}")
+
+    # for i in range(100):
+    #     C, STATES = k_tom(
+    #                     prev_internal_states = STATES,
+    #                     params = PARAMS,
+    #                     self_choice = 1,
+    #                     op_choice = 1,
+    #                     level = 1,
+    #                     agent = 1,
+    #                     p_matrix = P_MATRIX)
         
+
+t = np.array([[1,2], [1,8]])
+
+d = np.copy(t)
+d[1,1] = 100
+t
 
 #%%
 
