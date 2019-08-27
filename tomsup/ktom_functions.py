@@ -520,10 +520,6 @@ def k_tom(
     p_matrix,
     **kwargs):
     """
-    # penny = PayoffMatrix(name = "penny_competitive")
-    # prev_internal_states = {'opponent_states': {}, 'own_states': {'p_op_mean0': -0.2, 'p_op_var0': 2}}
-    # params = {'volatility': -2, 'b_temp': -1}
-    # k_tom(prev_internal_states, params, self_choice=0, op_choice=0, level=0, agent=0, p_matrix = penny)
     """
 
     # assert prev_internal_states['own_states']['param_mean'].shape == (level, len(params)), (
@@ -557,7 +553,6 @@ def k_tom(
 
     #Probability transform
     p_self = inv_logit(p_self)
-    print(f"--> k_tom p_self (after inv logit): {p_self}")
     #Make decision
     choice = np.random.binomial(1, p_self)
 
@@ -619,89 +614,7 @@ def init_k_tom(params, level, priors='default'):
 
     return internal_states 
 
-#Adding bounds to the logit functions to avoid infinite values and rounding
-    # def bound_inv_logit(func):
-    #     def _bounded(x):
-    #         x = 10_000 if x > 10_000 else x
-    #         x = -10_000 if x < -10_000 else x
-    #         return func(x)
-    #     return _bounded
-
-    # def bounded_logit(func):
-        # def _bounded(x):
-        #     x = 0.9999 if x > 0.9999 else x
-        #     x = 0.0001 if x < 0.0001 else x
-        #     return func(x)
-        # return _bounded
-
-
-#%%
-if __name__ == "__main__":
-    prev_internal_states = {'opponent_states': {0: {'opponent_states': {},
-    'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}},
-    'own_states': {'p_k': np.array([1.]),
-    'p_op_mean': np.array([0]),
-    'param_mean': np.array([[0, 0]]),
-    'param_var': np.array([[0, 0]]),
-    'gradient': np.array([[0, 0]])}}
-
-    c = 1
-
-    p_matrix = PayoffMatrix(name = 'penny_competitive')
-
-    params = {'volatility': -2, 'b_temp': -1}
-
-    c, states = k_tom(
-                prev_internal_states = prev_internal_states,
-                params = params,
-                self_choice = None,
-                op_choice = None,
-                level = 1,
-                agent = 0,
-                p_matrix = p_matrix)
-
-    prev_internal_states = states
-    c, states = k_tom(
-                prev_internal_states = prev_internal_states,
-                params = params,
-                self_choice = 1,
-                op_choice = 1,
-                level = 1,
-                agent = 0,
-                p_matrix = p_matrix)
-
-        
-    prev_internal_states = states
-    c, states = k_tom(
-                prev_internal_states = prev_internal_states,
-                params = params,
-                self_choice = 0,
-                op_choice = 1,
-                level = 1,
-                agent = 0,
-                p_matrix = p_matrix)
-    print(f"states: \n {states}")
-
-    # for i in range(100):
-    #     C, STATES = k_tom(
-    #                     prev_internal_states = STATES,
-    #                     params = PARAMS,
-    #                     self_choice = 1,
-    #                     op_choice = 1,
-    #                     level = 1,
-    #                     agent = 1,
-    #                     p_matrix = P_MATRIX)
-        
-
-# t = np.array([[1,2], [1,8]])
-
-# d = np.copy(t)
-# d[1,1] = 100
-# t
-
-#%%
-
 # Testing function
-#if __name__ == "__main__":
-#  import doctest
-#  doctest.testmod(verbose=True)
+if __name__ == "__main__":
+ import doctest
+ doctest.testmod(verbose=True)

@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 from warnings import warn
 from itertools import combinations
-from tomsup.ktom_functions import k_toms, init_k_tom
+from tomsup.ktom_functions import k_tom, init_k_tom
 from scipy.special import expit as inv_logit
 from scipy.special import logit
 
@@ -162,9 +162,10 @@ class RB(Agent):
 
 
     def compete(self, **kwargs):
+
         self.choice = np.random.binomial(1, self.bias)
         self._add_to_history(choice = self.choice)
-        print(f"RB compete c: {self.choice}")
+
         return self.choice
 
 
@@ -194,14 +195,14 @@ class WSLS(Agent):
         super().__init__(**kwargs)
         self._start_params = {'prob_stay': prob_stay, 'prob_switch':  prob_switch, **kwargs}
 
-    def compete(self, op_choice, p_matrix, **kwargs):
+    def compete(self, op_choice, p_matrix, agent, **kwargs):
         if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
             self.choice = np.random.binomial(1, 0.5)
         else:  # if a choice have been made:
             if op_choice is None:
                 raise TypeError("compete() missing 1 required positional argument: 'op_choice',"
                                 " which should be given for all round except the first.")
-            payoff = p_matrix.payoff(self.choice, op_choice, 0)  # calculate payoff of last round
+            payoff = p_matrix.payoff(self.choice, op_choice, agent)  # calculate payoff of last round
             if payoff < p_matrix().mean(): # if you lost change action (e.g. if payoff is less the mean outcome)
                 switch = np.random.binomial(1, self.prob_switch)
                 self.choice = switch * (1-self.choice) + (1-switch) * self.choice
@@ -214,7 +215,7 @@ class WSLS(Agent):
 
 
 
-
+#!# NOT TESTED
 class TFT(Agent):
     """
     'TFT': Tit-for-Tat
@@ -338,7 +339,7 @@ class TOM(Agent):
         return self.params
 
 
-    def print_internal(self, keys_to_print = None, silent = False):
+    def print_internal(self, keys_to_print = None, silent = False, print_as_str = False):
         """
         keys_to_print (list) is the keys which you desire to print. If key is None all keys will be printed.
         """
@@ -366,6 +367,8 @@ class TOM(Agent):
                 if isinstance(d[key], dict):
                     _print_internal(d[key], n+1, keys_to_print)
 
+        if print_as_str:
+            return  str(self.internal)
         _print_internal(self.internal, n = 0, keys_to_print = keys_to_print)
 
 
@@ -533,20 +536,19 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
         result = []
         for i in range(n_rounds):
             c_0_prev, c_1_prev = c_0, c_1 
-            c_0 = agent_0.compete(p_matrix = p_matrix, agent = 0, op_choice = c_0_prev) #c for choice
-            c_1 = agent_1.compete(p_matrix = p_matrix, agent = 1, op_choice = c_1_prev)
-        
+            c_0 = agent_0.compete(p_matrix = p_matrix, agent = 0, op_choice = c_1_prev) #c for choice
+            c_1 = agent_1.compete(p_matrix = p_matrix, agent = 1, op_choice = c_0_prev)
 
             payoff = (p_matrix.payoff(c_0, c_1, agent = 0), 
                       p_matrix.payoff(c_0, c_1, agent = 1))
             result.append((i, c_0, c_1, payoff[0], payoff[1]))
         if return_val == 'df':
-            return pd.DataFrame(result, columns = ['round', 'action_agent0', 'action_agent1', 'payoff_agent0', 'payoff_agent1'])
+            return pd.DataFrame(result, columns = ['round', 'choice_agent0', 'choice_agent1', 'payoff_agent0', 'payoff_agent1'])
 
     if return_val == 'list':
         return result
     elif return_val == 'df':
-        return pd.DataFrame(result, columns = ['n_sim','round', 'action_agent0', 'action_agent1', 'payoff_agent0', 'payoff_agent1'])
+        return pd.DataFrame(result, columns = ['n_sim','round', 'choice_agent0', 'choice_agent1', 'payoff_agent0', 'payoff_agent1'])
     else:
         raise TypeError("Invalid return_val, please use either 'df' or 'list'")
 
@@ -634,7 +636,7 @@ def plot_own_states(agent, state = 'p_k'):
     df = df[1:]
 
     # plot mean
-    tmp = df['internal_states'].apply(lambda d: d['own_states'][state])
+    tmp = df['internal_states'].apply(lambda d: d['own_states'][state][0,:])
     pk_df = pd.DataFrame(tmp.tolist())
     for col in pk_df:
         plt.plot(range(len(pk_df[col])), pk_df[col], label = col, linewidth=1)
@@ -703,17 +705,18 @@ if __name__ == "__main__":
     # party.compete(penny)
 
     Devaine = TOM(level = 1, save_history = True)
+    #Devaine = WSLS()
     Friston = TOM(level = 0, save_history = True)
     #Friston = RB(bias = 0.9)
-    # Friston = WSLS()
+    #Friston = WSLS()
     # print(f"bias: {Friston.bias} \n start params: {Friston._start_params}")
 
 
     output = compete(agent_0 = Devaine, 
                         agent_1 = Friston, 
                         p_matrix = 'penny_competitive', 
-                        n_rounds = 150, 
-                        n_sim = 50, 
+                        n_rounds = 100, 
+                        n_sim = 100,
                         reset_agent = True, 
                         return_val = 'df', 
                         silent = False)
@@ -723,21 +726,32 @@ if __name__ == "__main__":
     s = output['payoff_agent0'].std()
     print(f"mean: {m}, std: {s}")
 
-    
+    sum(output['payoff_agent0'] == 1)/len(output['payoff_agent0'])
+    s = output['payoff_agent0'].std()
+    print(f"mean: {m}, std: {s}")
 
+    # Devaine.compete(p_matrix = penny, op_choice = None, agent = 0)
+    # Devaine.compete(p_matrix = penny, op_choice = 1, agent = 0)
+    # Devaine.compete(p_matrix = penny, op_choice = 0, agent = 0)
+
+    # intern['internal_states'][1]
+    # intern['internal_states'][2]
+    # intern['internal_states'][3]
     # str(Devaine.internal)
 
 
     # add save as str til print
     # kør og se om det påvirker modellen er du kører 2
     # 
-
     plot_winnings(output, agent = 0)
     plot_actions(output, agent = 0)
-    plot_own_states(Devaine, state = 'p_op_mean0')
+    plot_own_states(Devaine, state = 'p_op_mean')
+    plot_own_states(Devaine, state = 'param_mean')
     plot_own_states(Devaine, state = 'p_k')
     plot_op_states(Devaine, op = 1, state = 'p_op_mean')
     plot_op_states(Devaine, op = 0, state = 'p_op_mean0')
+
+
 
 
 #%%
