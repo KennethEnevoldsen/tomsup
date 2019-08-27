@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 from warnings import warn
 from itertools import combinations
-from tomsup.ktom_functions import k_tom, init_k_tom
+from tomsup.ktom_functions import k_toms, init_k_tom
 from scipy.special import expit as inv_logit
 from scipy.special import logit
 
