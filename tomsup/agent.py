@@ -172,108 +172,87 @@ class RB(Agent):
         return self.bias
 
 
+
 class WSLS(Agent):
     """
     'WSLS': Win-stay, lose-switch
 
     Examples:
-    >>> sirWSLS = WSLS()
-    >>> sirWSLS.choice = 0  # Manually setting choice
-    >>> sirWSLS.compete(payoff = 1)
+    >>> sigmund = WSLS()
+    >>> sigmund.choice = 0  # Manually setting choice
+    >>> penny = PayoffMatrix(name = "penny_competitive")
+    >>> sigmund.compete(op_choice = 1, p_matrix = penny)
     0
-    >>> sirWSLS.choice = 1  # Manually setting choice
-    >>> sirWSLS.compete(payoff = -1)
+    >>> sigmund.choice = 1  # Manually setting choice
+    >>> sigmund.compete(payoff = -1)
     0
     """
-    def __init__(self, **kwargs):
+    def __init__(self, prob_stay = 1, prob_switch = 1, **kwargs):
         self.strategy = "WSLS"
+        self.prob_switch = prob_switch
+        self.prob_stay = prob_stay
         super().__init__(**kwargs)
-        self._start_params = {**kwargs}
+        self._start_params = {'prob_stay': prob_stay, 'prob_switch':  prob_switch, **kwargs}
 
-
-    def compete(self, payoff = None, **kwargs):
+    def compete(self, op_choice, p_matrix, **kwargs):
         if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
             self.choice = np.random.binomial(1, 0.5)
         else:  # if a choice have been made:
-            if payoff is None:
-                raise TypeError("compete() missing 1 required positional argument: 'payoff'")
-            elif payoff == -1:
-                self.choice = 1-self.choice
+            if op_choice is None:
+                raise TypeError("compete() missing 1 required positional argument: 'op_choice',"
+                                " which should be given for all round except the first.")
+            payoff = p_matrix.payoff(self.choice, op_choice, 0)  # calculate payoff of last round
+            if payoff < p_matrix().mean(): # if you lost change action (e.g. if payoff is less the mean outcome)
+                switch = np.random.binomial(1, self.prob_switch)
+                self.choice = switch * (1-self.choice) + (1-switch) * self.choice
+            else:  # if you won
+                stay = np.random.binomial(1, self.prob_stay)
+                self.choice = stay * self.choice + (1-stay) * (1-self.choice)
+
         self._add_to_history(choice = self.choice)
         return self.choice
 
 
 
-# class TFT(Agent):
-#     """
-#     'TFT': Tit-for-Tat
 
-#     Examples:
-#     >>> Shelling = TFT(copy_prob = 1)
-#     >>> Sheling.choice = 1 #manually setting the first choise
-#     """
-#     def __init__(self, copy_prob = 1, **kwargs):
-#         self.strategy = "TFT"
-#         self.copy_prob = copy_prob
-#         super().__init__(**kwargs)
-#         self._start_params = {'copy_prob': copy_prob, **kwargs}
+class TFT(Agent):
+    """
+    'TFT': Tit-for-Tat
 
-
-#     def compete(self, op_choice = None, p_matrix = "prisoners_dilemma", silent = False, **kwargs):
-#         """
-#         choice_op (0 <= int <= 1): The choice of the oppenent given af a 1 or a 0
-#         copy_prop (0 <= float <= 1): The probability of the TFT agent to copy the action of its opponent, hereby introducing noise to
-#         the original TFT strategy by Shelling (1981).
-#         """
-#         if p_matrix != "prisoners_dilemma" and silent is False:
-#             warn("Tit-for-Tat is designed for the prisoners dilemma" +
-#             " and might not perform as intended with other payoff matrices.", Warning)
-#         if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
-#             self.choice = 1 #assumes 1 to be cooperate
-#         else:  # if a choice have been made apply the TFT strategy
-#             if choice_op is None:
-#                 raise TypeError("choice_op is None, but it is not the first round the agent played." +
-#                 "Try resetting the agent, e.g. agent.reset()")
-#             self.op_choice = op_choice
-#             copy = np.random.binomial(1, self.copy_prob)
-#             #Calculate resulting choice
-#             choice = copy * op_choice + (1 - copy) * (1 - op_choice)
-#         self._add_to_history(choice = self.choice, choice_op = op_choice)
-#         return self.choice
+    Examples:
+    >>> shelling = TFT(copy_prob = 1)
+    >>> shelling.choice = 1  # manually setting the first choice
+    >>>
+    """
+    def __init__(self, copy_prob = 1, **kwargs):
+        self.strategy = "TFT"
+        self.copy_prob = copy_prob
+        super().__init__(**kwargs)
+        self._start_params = {'copy_prob': copy_prob, **kwargs}
 
 
+    def compete(self, op_choice = None, p_matrix = "prisoners_dilemma", silent = False, **kwargs):
+        """
+        choice_op (0 <= int <= 1): The choice of the oppenent given af a 1 or a 0
+        copy_prop (0 <= float <= 1): The probability of the TFT agent to copy the action of its opponent, hereby introducing noise to
+        the original TFT strategy by Shelling (1981).
+        """
+        if p_matrix != "prisoners_dilemma" and silent is False:
+            warn("Tit-for-Tat is designed for the prisoners dilemma" +
+            " and might not perform as intended with other payoff matrices.", Warning)
+        if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
+            self.choice = 1 #assumes 1 to be cooperate
+        else:  # if a choice have been made apply the TFT strategy
+            if op_choice is None:
+                raise TypeError("choice_op is None, but it is not the first round the agent played." +
+                "Try resetting the agent, e.g. agent.reset()")
+            self.op_choice = op_choice
+            copy = np.random.binomial(1, self.copy_prob)
+            #Calculate resulting choice
+            self.choice = copy * op_choice + (1 - copy) * (1 - op_choice)
+        self._add_to_history(choice = self.choice, choice_op = op_choice)
+        return self.choice
 
-#     def get_copy_prop(self):
-#         return self.copy_prob
-
-
-"""
-TFT <- function(params, hidden_states = NULL, player = NULL, p_matrix = NULL, choice_self, choice_op, return_hidden_states = F) {
-  #A probabilistic Tit for Tat strategy. Copies the opponent's last choice with a given probability.
-  #INPUT
-  #params: list of 1 element: TFT's choice probability parameter
-  #OUTPUT
-  #TFT's choice
-
-  #The probability of TFT copying opponent's choice
-  copy_prob = params$copy_prob
-
-  if (is.null(choice_op)) { #initial round or missed trial
-    choice <- rbinom(1, 1, 0.5) #make random choice
-  } else {
-    #Decide whether TFT copies opponent
-    copy = rbinom(1, 1, copy_prob)
-    #Calculate resulting choice
-    choice = copy*choice_op + (1-copy)*(1-choice_op)
-  }
-
-  if (return_hidden_states == T){
-    return(list(choice = choice, hidden_states = hidden_states))
-  } else {
-    return(choice)
-  }
-}
-"""
 
 class TOM(Agent):
     """
@@ -300,9 +279,9 @@ class TOM(Agent):
         priors = 'default' if 'priors' not in kwargs else kwargs['priors']
 
         params = {'volatility': volatility, 'b_temp': b_temp} 
-        if dilution:
+        if dilution is not None:
             params['dilution'] = dilution
-        if bias:
+        if bias is not None:
             params['bias'] = bias
         
         self.params = params
@@ -550,17 +529,17 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
                 agent_1.reset()
 
     else:      
-        a_0, a_1 = None, None
+        c_0, c_1 = None, None
         result = []
         for i in range(n_rounds):
-            # print("--------------------\nCalling agent 0 (Devaine's) compete function\n--------------------\n\n")
-            a_0 = agent_0.compete(p_matrix = p_matrix, agent = 0, op_choice = a_1) #a for action
-            # print("--------------------\nCalling agent 1 (Friston's) compete function\n--------------------\n\n")
-            a_1 = agent_1.compete(p_matrix = p_matrix, agent = 1, op_choice = a_0)
-            
-            payoff = (p_matrix.payoff(a_0, a_1, agent = 0), 
-                      p_matrix.payoff(a_0, a_1, agent = 1))
-            result.append((i, a_0, a_1, payoff[0], payoff[1]))
+            c_0_prev, c_1_prev = c_0, c_1 
+            c_0 = agent_0.compete(p_matrix = p_matrix, agent = 0, op_choice = c_0_prev) #c for choice
+            c_1 = agent_1.compete(p_matrix = p_matrix, agent = 1, op_choice = c_1_prev)
+        
+
+            payoff = (p_matrix.payoff(c_0, c_1, agent = 0), 
+                      p_matrix.payoff(c_0, c_1, agent = 1))
+            result.append((i, c_0, c_1, payoff[0], payoff[1]))
         if return_val == 'df':
             return pd.DataFrame(result, columns = ['round', 'action_agent0', 'action_agent1', 'payoff_agent0', 'payoff_agent1'])
 
@@ -590,68 +569,7 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
 #output
 #output['internal_states'][1]
 
-#%%
-if __name__ == "__main__":
-    penny = PayoffMatrix(name = "penny_competitive")
-    
-    # Devaine = TOM(level = 4, volatility = -2, b_temp = -1, save_history = True)
-    #Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
-    
-    # Devaine.compete(penny, agent = 0, op_choice = None)
-
-    # for _ in range(1):
-    #     print(_)
-    #     Devaine.reset()
-    #     for i in range (100):
-    #         Devaine.compete(penny, agent= 0, op_choice = np.random.binomial(1,0.9))
-
-    # print("DONE")
-    # output = Devaine.get_history()
-    # x = output['internal_states'][1:].apply(lambda d: d['own_states']['param_mean'][:,3])
-    # import matplotlib.pyplot as plt
-    # #fig = plt.figure()
-    # plt.plot(x)
-
-    # output['choice'].mean()
-
-    # #output['internal_states'][1]
-
-    # Devie = Agent("1-TOM", volatility = -2, b_temp = -1)
-    # Devie.get_behav_temperature()
-
-    # party = AgentGroup(agents = ['2-tom', '3-tom'], start_params = [{}]*2)
-    # party.set_env('round_robin')
-    # party.pairing
-    # penny = PayoffMatrix(name = "penny_competitive")
-    # party.compete(penny)
-
-    Devaine = TOM(level = 1, save_history = True)
-    Friston = TOM(level = 0, save_history = True)
-    #Friston = RB(bias = 0.9)
-    # print(f"bias: {Friston.bias} \n start params: {Friston._start_params}")
-
-
-    output = compete(agent_0 = Devaine, 
-                        agent_1 = Friston, 
-                        p_matrix = 'penny_competitive', 
-                        n_rounds = 30, 
-                        n_sim = 30, 
-                        reset_agent = True, 
-                        return_val = 'df', 
-                        silent = False)
-
-
-    m = output['payoff_agent0'].mean()
-    s = output['payoff_agent0'].std()
-    print(f"mean: {m}, std: {s}")
-
-    plot_winnings(output, agent = 0)
-    plot_actions(output, agent = 0)
-    plot_own_states(Devaine, state = 'p_op_mean0')
-    plot_own_states(Devaine, state = 'p_k')
-    plot_op_states(Devaine, op = 1, state = 'p_op_mean')
-    plot_op_states(Devaine, op = 0, state = 'p_op_mean0')
-#%% Plot functions
+# Plot functions
 def plot_winnings(df, agent = 0):
     """
     assumes multiples simulations
@@ -723,6 +641,7 @@ def plot_own_states(agent, state = 'p_k'):
     plt.legend()
     plt.show()
 
+
 def plot_op_states(agent, op = 0, state = 'p_op_mean0'):
     """
     does not plot the first round
@@ -747,6 +666,79 @@ def plot_op_states(agent, op = 0, state = 'p_op_mean0'):
     if len(pk_df.columns) > 1:
         plt.legend()
     plt.show()
+
+#%%
+if __name__ == "__main__":
+    penny = PayoffMatrix(name = "penny_competitive")
+    
+    # Devaine = TOM(level = 4, volatility = -2, b_temp = -1, save_history = True)
+    #Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
+    
+    # Devaine.compete(penny, agent = 0, op_choice = None)
+
+    # for _ in range(1):
+    #     print(_)
+    #     Devaine.reset()
+    #     for i in range (100):
+    #         Devaine.compete(penny, agent= 0, op_choice = np.random.binomial(1,0.9))
+
+    # print("DONE")
+    # output = Devaine.get_history()
+    # x = output['internal_states'][1:].apply(lambda d: d['own_states']['param_mean'][:,3])
+    # import matplotlib.pyplot as plt
+    # #fig = plt.figure()
+    # plt.plot(x)
+
+    # output['choice'].mean()
+
+    # #output['internal_states'][1]
+
+    # Devie = Agent("1-TOM", volatility = -2, b_temp = -1)
+    # Devie.get_behav_temperature()
+
+    # party = AgentGroup(agents = ['2-tom', '3-tom'], start_params = [{}]*2)
+    # party.set_env('round_robin')
+    # party.pairing
+    # penny = PayoffMatrix(name = "penny_competitive")
+    # party.compete(penny)
+
+    Devaine = TOM(level = 1, save_history = True)
+    Friston = TOM(level = 0, save_history = True)
+    #Friston = RB(bias = 0.9)
+    # Friston = WSLS()
+    # print(f"bias: {Friston.bias} \n start params: {Friston._start_params}")
+
+
+    output = compete(agent_0 = Devaine, 
+                        agent_1 = Friston, 
+                        p_matrix = 'penny_competitive', 
+                        n_rounds = 150, 
+                        n_sim = 50, 
+                        reset_agent = True, 
+                        return_val = 'df', 
+                        silent = False)
+
+
+    m = output['payoff_agent0'].mean()
+    s = output['payoff_agent0'].std()
+    print(f"mean: {m}, std: {s}")
+
+    
+
+    # str(Devaine.internal)
+
+
+    # add save as str til print
+    # kør og se om det påvirker modellen er du kører 2
+    # 
+
+    plot_winnings(output, agent = 0)
+    plot_actions(output, agent = 0)
+    plot_own_states(Devaine, state = 'p_op_mean0')
+    plot_own_states(Devaine, state = 'p_k')
+    plot_op_states(Devaine, op = 1, state = 'p_op_mean')
+    plot_op_states(Devaine, op = 0, state = 'p_op_mean0')
+
 
 #%%
 if __name__ == "__main__":

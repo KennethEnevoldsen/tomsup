@@ -77,12 +77,13 @@ def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
 
 def p_opk_approx_fun(prev_p_op_mean, prev_param_var, prev_gradient, level):
     """
-    
-    k-ToM
-    Approximates the estimated choice probability of the opponent on the previous round. 
-    A semi-analytical approximation derived in Daunizeau, J. (2017)
+    prev_p_op_mean  (numpy.ndarray)
+    prev_param_var  (numpy.ndarray)
+    prev_gradient   (numpy.ndarray)
+    level           (int)
 
-    
+    Approximates the estimated choice probability of the opponent on the previous round. 
+    A semi-analytical approximation derived in Daunizeau, J. (2017)    
     """
     #Constants
     a = 0.205
@@ -197,7 +198,7 @@ def gradient_update(
         #Calculate increment
         increment = max(abs(1e-4 * param_mean[param]), 1e-4)
         #Use normal parameter estimates
-        param_mean_incr = param_mean
+        param_mean_incr = np.copy(param_mean)
         #But increment the current parameter
         param_mean_incr[param] = param_mean[param] + increment
 
@@ -385,8 +386,8 @@ def learning_function(
 
         ##Do recursive simulating of opponent
         #Make empty structure for new means and gradients
-        p_op_mean = np.zeros (level)
-        gradient = np.zeros ([level, param_mean.shape[1]])
+        p_op_mean = np.zeros(level)
+        gradient = np.zeros([level, param_mean.shape[1]])
 
         #Prepare simulated opponent perspective
         sim_agent = 1 - agent #simulated perspective swtiches own and opponent role
@@ -396,8 +397,8 @@ def learning_function(
         for level_index in range(level):
 
             #Further preparation of simulated perspective
-            sim_level = level_index
-            sim_prev_internal_states = prev_internal_states['opponent_states'][level_index]
+            sim_level = level_index # slightly wasteful
+            sim_prev_internal_states = copy.deepcopy(prev_internal_states['opponent_states'][level_index])
 
             #Make parameter structure similar to own
             sim_params = copy.deepcopy(params)
@@ -560,11 +561,14 @@ def k_tom(
     #Make decision
     choice = np.random.binomial(1, p_self)
 
+
     return (choice, new_internal_states)
 
 # Initializing function
 def init_k_tom(params, level, priors='default'):
-    
+    """
+    >>> init_k_tom(params = {'volatility': -2, 'b_temp': -1, 'bias':0 }, level = 1, priors='default')
+    """
     #If no priors are specified
     if priors == 'default':
         #Set default priors
@@ -634,7 +638,7 @@ def init_k_tom(params, level, priors='default'):
 #%%
 if __name__ == "__main__":
     prev_internal_states = {'opponent_states': {0: {'opponent_states': {},
-    'own_states': {'p_op_mean0': -0.2, 'p_op_var0': 2}}},
+    'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}},
     'own_states': {'p_k': np.array([1.]),
     'p_op_mean': np.array([0]),
     'param_mean': np.array([[0, 0]]),
@@ -650,7 +654,28 @@ if __name__ == "__main__":
     c, states = k_tom(
                 prev_internal_states = prev_internal_states,
                 params = params,
+                self_choice = None,
+                op_choice = None,
+                level = 1,
+                agent = 0,
+                p_matrix = p_matrix)
+
+    prev_internal_states = states
+    c, states = k_tom(
+                prev_internal_states = prev_internal_states,
+                params = params,
                 self_choice = 1,
+                op_choice = 1,
+                level = 1,
+                agent = 0,
+                p_matrix = p_matrix)
+
+        
+    prev_internal_states = states
+    c, states = k_tom(
+                prev_internal_states = prev_internal_states,
+                params = params,
+                self_choice = 0,
                 op_choice = 1,
                 level = 1,
                 agent = 0,
@@ -668,11 +693,11 @@ if __name__ == "__main__":
     #                     p_matrix = P_MATRIX)
         
 
-t = np.array([[1,2], [1,8]])
+# t = np.array([[1,2], [1,8]])
 
-d = np.copy(t)
-d[1,1] = 100
-t
+# d = np.copy(t)
+# d[1,1] = 100
+# t
 
 #%%
 
