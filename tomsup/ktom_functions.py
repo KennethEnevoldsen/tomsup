@@ -83,7 +83,10 @@ def p_opk_approx_fun(prev_p_op_mean, prev_param_var, prev_gradient, level):
     level           (int)
 
     Approximates the estimated choice probability of the opponent on the previous round. 
-    A semi-analytical approximation derived in Daunizeau, J. (2017)    
+    A semi-analytical approximation derived in Daunizeau, J. (2017)
+
+    >>> p_opk_approx_fun(prev_p_op_mean = np.array([0]), prev_param_var = np.array([[0, 0, 0]]), prev_gradient = np.array([[0, 0, 0]]), level = 1)  
+    array([-0.69314718])
     """
     #Constants
     a = 0.205
@@ -112,6 +115,9 @@ def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution = None):
     """
     k-ToM updates its estimate of opponents sophistication level.
     If k-ToM has a dilution parameter, it does a partial forgetting of learned estimates.
+
+    >>> p_k_udpate(prev_p_k = np.array([1.]), p_opk_approx = np.array([-0.69314718]), op_choice = 1, dilution = None)
+    array([1.])
     """
     #Input variable transforms
     p_opk_approx = np.exp(p_opk_approx)
@@ -139,6 +145,9 @@ def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution = None):
 def param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volatility, volatility_dummy = None):
     """
     k-ToM updates its uncertainty / variance on its estimates of opponent's parameter values
+    
+    >>> param_var_update(prev_param_mean = np.array([[0, 0, 0]]), prev_param_var = np.array([[0, 0, 0]]), prev_gradient = np.array([0, 0, 0]), p_k = np.array([1.]), volatility = -2, volatility_dummy = None)
+    array([[0.12692801, 0.        , 0.        ]])
     """
     #Dummy constant: sets volatility to 0 for all except volatility opponent parameter estimates
     if volatility_dummy is None:
@@ -165,6 +174,10 @@ def param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volati
 def param_mean_update(prev_p_op_mean, prev_param_mean, prev_gradient, p_k, param_var, op_choice):
     """
     k-ToM updates its estimates of opponent's parameter values
+
+    >>> param_mean_update(prev_p_op_mean, prev_param_mean = np.array([[0, 0, 0]]), prev_gradient = np.array([0, 0, 0]), p_k = np.array([0, 0, 0]), param_var, op_choice)
+        array([[0.12692801, 0.        , 0.        ]])
+    >>> param_var_update(prev_p_op_mean = , prev_param_mean = np.array([[0, 0, 0]]), prev_gradient = np.array([0, 0, 0]), p_k = np.array([1.]), volatility = -2, volatility_dummy = None)
     """
     #Input variable transforms 
     param_var = np.exp(param_var) * prev_gradient
@@ -394,18 +407,17 @@ def learning_function(
         sim_self_choice, sim_op_choice = op_choice, self_choice #And previous choices
         
         #k-ToM simulates an opponent for each level below its own
-        for level_index in range(level):
+        for sim_level in range(level):
 
             #Further preparation of simulated perspective
-            sim_level = level_index # slightly wasteful
-            sim_prev_internal_states = copy.deepcopy(prev_internal_states['opponent_states'][level_index])
+            sim_prev_internal_states = copy.deepcopy(prev_internal_states['opponent_states'][sim_level])
 
             #Make parameter structure similar to own
             sim_params = copy.deepcopy(params)
 
             #Populate it with estimated values
             for param_idx, param_key in enumerate(params):
-                sim_params[param_key] = param_mean[level_index, param_idx]
+                sim_params[param_key] = param_mean[sim_level, param_idx]
 
             #Simulate opponent learning (recursive)
             sim_new_internal_states = learning_function(
@@ -418,7 +430,7 @@ def learning_function(
                 p_matrix)
 
             #Simulate opponent deciding
-            p_op_mean[level_index] = decision_function(
+            p_op_mean[sim_level] = decision_function(
                 sim_new_internal_states,
                 sim_params,
                 sim_agent,
@@ -426,10 +438,10 @@ def learning_function(
                 p_matrix)
 
             #Update gradient (recursive)
-            gradient[level_index] = gradient_update(
+            gradient[sim_level] = gradient_update(
                 params,
-                p_op_mean[level_index],
-                param_mean[level_index],
+                p_op_mean[sim_level],
+                param_mean[sim_level],
                 sim_prev_internal_states,
                 sim_self_choice,
                 sim_op_choice,
@@ -438,7 +450,7 @@ def learning_function(
                 p_matrix)
 
             #Save opponent's states
-            opponent_states[level_index] = sim_new_internal_states
+            opponent_states[sim_level] = sim_new_internal_states
 
         #Gather own internal states
         own_states = {'p_k':p_k, 'p_op_mean':p_op_mean, 'param_mean':param_mean, 'param_var':param_var, 'gradient':gradient}
@@ -552,7 +564,9 @@ def k_tom(
         p_matrix)
 
     #Probability transform
+    print(f"p_self (before inv): {p_self}")
     p_self = inv_logit(p_self)
+    print(f"p_self (after inv): {p_self}")
     #Make decision
     choice = np.random.binomial(1, p_self)
 
@@ -575,6 +589,9 @@ def init_k_tom(params, level, priors='default'):
             priors['param_mean'] = np.repeat(0,len(params))
             priors['param_var'] = np.repeat(0,len(params))
             priors['gradient'] = np.repeat(0,len(params))
+            if 'bias' in params: #Following the original VBA implementation
+                priors['gradient'][-1] = 1
+                
 
     #Make empty list for prior internal states
     internal_states = {}
@@ -618,3 +635,25 @@ def init_k_tom(params, level, priors='default'):
 if __name__ == "__main__":
  import doctest
  doctest.testmod(verbose=True)
+
+
+if __name__ == "__main__":
+    p_matrix = PayoffMatrix(name = "penny_competitive")
+
+    prev_internal_states = {'opponent_states': {0: {'opponent_states': {},
+                                'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}},
+                                'own_states': {'p_k': np.array([1.]),
+                                'p_op_mean': np.array([0]),
+                                'param_mean': np.array([[0, 0, 0]]),
+                                'param_var': np.array([[0, 0, 0]]),
+                                'gradient': np.array([[0, 0, 0]])}}
+
+    params = {'volatility': -2, 'b_temp': -1, 'bias': 0}
+
+    k_tom(prev_internal_states,
+    params,
+    self_choice = 1,
+    op_choice = 1,
+    level = 1,
+    agent = 0,
+    p_matrix = p_matrix)

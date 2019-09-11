@@ -14,7 +14,7 @@ import tomsup as ts
 # Create agent
 arnault = ts.Agent(strategy="2-tom", save_history=True)
 # or
-arnault = ts.TOM(level=2, save_history=True)
+arnault = ts.TOM(level=1, save_history=True)
 
 # you can see all its internal states like this (maybe not relevant unless you know the model)
 arnault.print_internal()
@@ -41,3 +41,23 @@ history = arnault.get_history()  # NOTE! This should only be for the agents inte
 history.to_json(r'Name.json')  # JSON as the internal states of the TOM agent is structured as a tree
 
 
+#testing stuff:
+tom1 = ts.TOM(level=1, bias = 0, save_history=True)
+tom0 = ts.TOM(level=0, bias = 0, save_history=True)
+
+# runde 1
+tom1.compete(p_matrix=penny, bias = 0, agent=0, op_choice=None)
+tom1.print_internal()
+tom0.compete(p_matrix=penny, agent=1, op_choice=None)
+tom0.print_internal()
+# runde 2
+tom1.compete(p_matrix=penny, bias = 0, agent=0, op_choice=1)
+tom1.print_internal()
+
+# runde 3
+tom1.compete(p_matrix=penny, bias = 0, agent=0, op_choice=1)
+tom1.print_internal()
+tom1.compete(p_matrix=penny, bias = 0, agent=0, op_choice=1)
+tom1.print_internal()
+tom0 = ts.TOM(level=1, save_history=True)
+tom0.compete(p_matrix=penny, agent=1, op_choice=p_choice)
