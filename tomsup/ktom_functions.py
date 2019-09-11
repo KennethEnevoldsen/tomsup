@@ -8,6 +8,7 @@ Parameter Order:
 [3] Dilution
 [4] Bias
 """
+
 #%%
 
 from warnings import warn
@@ -15,11 +16,16 @@ import numpy as np
 from tomsup.payoffmatrix import PayoffMatrix
 from scipy.special import expit as inv_logit
 from scipy.special import logit
+import copy
 
 
 # Learning subfunctions
 def p_op_var0_update(prev_p_op_mean0, prev_p_op_var0, volatility):
     """ 
+    prev_p_op_mean0   (float)
+    prev_p_op_var0    (float)
+    volatility        (float)
+
     0-ToM updates variance / uncertainty on choice probability estimate
 
     Examples:
@@ -54,6 +60,10 @@ def p_op_var0_update(prev_p_op_mean0, prev_p_op_var0, volatility):
 
 def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
     """
+    prev_p_op_mean0 (float)
+    p_op_var0       (float)
+    op_choice       (int)
+
     0-ToM updates mean choice probability estimate
     """
     #Input variable transforms
@@ -67,9 +77,13 @@ def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
 
 def p_opk_approx_fun(prev_p_op_mean, prev_param_var, prev_gradient, level):
     """
-    k-ToM
+    prev_p_op_mean  (numpy.ndarray)
+    prev_param_var  (numpy.ndarray)
+    prev_gradient   (numpy.ndarray)
+    level           (int)
+
     Approximates the estimated choice probability of the opponent on the previous round. 
-    A semi-analytical approximation derived in Daunizeau, J. (2017)
+    A semi-analytical approximation derived in Daunizeau, J. (2017)    
     """
     #Constants
     a = 0.205
@@ -99,7 +113,6 @@ def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution = None):
     k-ToM updates its estimate of opponents sophistication level.
     If k-ToM has a dilution parameter, it does a partial forgetting of learned estimates.
     """
-    
     #Input variable transforms
     p_opk_approx = np.exp(p_opk_approx)
     if dilution:
@@ -185,12 +198,12 @@ def gradient_update(
         #Calculate increment
         increment = max(abs(1e-4 * param_mean[param]), 1e-4)
         #Use normal parameter estimates
-        param_mean_incr = param_mean
+        param_mean_incr = np.copy(param_mean)
         #But increment the current parameter
         param_mean_incr[param] = param_mean[param] + increment
 
         #Make parameter structure similar to own
-        sim_params_incr = params
+        sim_params_incr = copy.deepcopy(params)
         #Populate it with estimated values, including the increment
         for param_idx, param_key in enumerate(params):
             sim_params_incr[param_key] = param_mean_incr[param_idx]
@@ -319,6 +332,14 @@ def learning_function(
     p_matrix,
     **kwargs):
     """
+    Examples:
+    >>> penny = PayoffMatrix(name = "penny_competitive")
+    >>> prev_internal_states = {'opponent_states': {}, 'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}
+    >>> params = {'volatility': -2, 'b_temp': -1}
+    >>> learning_function(prev_internal_states, params, self_choice=1, op_choice=1, level=0, agent=0, p_matrix=penny)
+    {'opponent_states': {},
+    'own_states': {'p_op_mean0': 0.44216598162254866,
+    'p_op_var0': -0.12292276280308079}}
     """
     #Extract needed parameters
     volatility = params['volatility']
@@ -365,8 +386,8 @@ def learning_function(
 
         ##Do recursive simulating of opponent
         #Make empty structure for new means and gradients
-        p_op_mean = np.zeros (level)
-        gradient = np.zeros ([level, param_mean.shape[1]])
+        p_op_mean = np.zeros(level)
+        gradient = np.zeros([level, param_mean.shape[1]])
 
         #Prepare simulated opponent perspective
         sim_agent = 1 - agent #simulated perspective swtiches own and opponent role
@@ -376,11 +397,12 @@ def learning_function(
         for level_index in range(level):
 
             #Further preparation of simulated perspective
-            sim_level = level_index
-            sim_prev_internal_states = prev_internal_states['opponent_states'][level_index]
+            sim_level = level_index # slightly wasteful
+            sim_prev_internal_states = copy.deepcopy(prev_internal_states['opponent_states'][level_index])
 
             #Make parameter structure similar to own
-            sim_params = params
+            sim_params = copy.deepcopy(params)
+
             #Populate it with estimated values
             for param_idx, param_key in enumerate(params):
                 sim_params[param_key] = param_mean[level_index, param_idx]
@@ -435,6 +457,13 @@ def decision_function(
         level,
         p_matrix):
     """
+
+    Examples:
+    >>> penny = PayoffMatrix(name = "penny_competitive")
+    >>> new_internal_states = {'opponent_states': {}, 'own_states': {'p_op_mean0': 30, 'p_op_var0': 2}}
+    >>> params = {'volatility': -2, 'b_temp': -1}
+    >>> decision_function(new_internal_states, params, agent = 0, level = 0, p_matrix = penny)
+    -5.436561973742046
     """
     #Extract needed parameters
     b_temp = params['b_temp']
@@ -490,13 +519,17 @@ def k_tom(
     agent,
     p_matrix,
     **kwargs):
+    """
+    """
 
-    #assert prev_internal_states['own_states']['param_mean'].shape == (level, len(params)), (
+    # assert prev_internal_states['own_states']['param_mean'].shape == (level, len(params)), (
     #            "The inputted internal states have the wrong" + 
     #            " dimensions, check if the agent was initalized corectly.")
 
+
     #Update estimates of opponent based on behaviour
     if self_choice is not None:
+        # print(f"The input of the learning function is: \n new_int: \t{prev_internal_states}, \n params:\t {params}, \n agent: \t{agent}, \n level: \t {level}")
         new_internal_states = learning_function(
         prev_internal_states,
         params,
@@ -509,6 +542,7 @@ def k_tom(
     else: #If first round or missed round, make no update
         new_internal_states = prev_internal_states
 
+    # print(f"The input of the decision function is: \n new_int: \t{new_internal_states}, \n params:\t {params}, \n agent: \t{agent}, \n level: \t {level}")
     #Calculate own decision probability
     p_self = decision_function(
         new_internal_states,
@@ -519,15 +553,17 @@ def k_tom(
 
     #Probability transform
     p_self = inv_logit(p_self)
-    
     #Make decision
     choice = np.random.binomial(1, p_self)
+
 
     return (choice, new_internal_states)
 
 # Initializing function
 def init_k_tom(params, level, priors='default'):
-    
+    """
+    >>> init_k_tom(params = {'volatility': -2, 'b_temp': -1, 'bias':0 }, level = 1, priors='default')
+    """
     #If no priors are specified
     if priors == 'default':
         #Set default priors
@@ -578,52 +614,7 @@ def init_k_tom(params, level, priors='default'):
 
     return internal_states 
 
-#Adding bounds to the logit functions to avoid infinite values and rounding
-    # def bound_inv_logit(func):
-    #     def _bounded(x):
-    #         x = 10_000 if x > 10_000 else x
-    #         x = -10_000 if x < -10_000 else x
-    #         return func(x)
-    #     return _bounded
-
-    # def bounded_logit(func):
-        # def _bounded(x):
-        #     x = 0.9999 if x > 0.9999 else x
-        #     x = 0.0001 if x < 0.0001 else x
-        #     return func(x)
-        # return _bounded
-
-
-#%%
-if __name__ == "__main__":
-    STATES = {'opponent_states': {0: {'opponent_states': {},
-    'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}},
-    'own_states': {'p_k': np.array([1.]),
-    'p_op_mean': np.array([0]),
-    'param_mean': np.array([[0, 0]]),
-    'param_var': np.array([[0, 0]]),
-    'gradient': np.array([[0, 0]])}}
-
-    C = 1
-
-    P_MATRIX = PayoffMatrix(name = 'penny_competitive')
-
-    PARAMS = {'volatility': -2, 'b_temp': -1}
-
-    for i in range(100):
-        C, STATES = k_tom(
-                        prev_internal_states = STATES,
-                        params = PARAMS,
-                        self_choice = C,
-                        op_choice = 1,
-                        level = 1,
-                        agent = 1,
-                        p_matrix = P_MATRIX)
-        
-
-#%%
-
 # Testing function
-#if __name__ == "__main__":
-#  import doctest
-#  doctest.testmod(verbose=True)
+if __name__ == "__main__":
+ import doctest
+ doctest.testmod(verbose=True)

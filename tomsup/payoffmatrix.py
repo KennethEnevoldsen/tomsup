@@ -8,15 +8,6 @@ import numpy as np
 class PayoffMatrix():
     """
     Example:
-    >>> penny = PayoffMatrix(name="penny_competitive")
-    >>> penny()
-    array([[[ 1, -1],
-        [-1,  1]],
-
-       [[-1,  1],
-        [ 1, -1]]])
-    >>> penny.payoff(action_agent0 = 1, action_agent1 = 1 , agent = 0)
-    1
     >>> staghunt = PayoffMatrix(name="staghunt")
     >>> staghunt.payoff(action_agent0 = 1, action_agent1 = 1 , agent = 0)
     5
@@ -50,10 +41,10 @@ class PayoffMatrix():
                                     [(3, 0), #     --   Payoff matrix for a1
                                      (3, 5)]))
         elif name == "penny_competitive":            
-            self.matrix = np.array(([(1, -1),
-                                     (-1, 1)],
-                                    [(-1, 1),
-                                     (1, -1)]))
+            self.matrix = np.array(([(-1, 1),
+                                     (1, -1)],
+                                    [(1, -1),
+                                     (-1, 1)]))
         elif name == "penny_cooperative":            
             self.matrix = np.array(([(1, -1),
                                      (-1, 1)],

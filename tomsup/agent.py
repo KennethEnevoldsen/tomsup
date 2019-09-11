@@ -44,13 +44,12 @@ class Agent():
             - ToM   
         """
         self.choice = None                                  # the last choice of the agent
-        self._start_params = None                           # starting parameters of the agent
         if save_history:
             self.history = pd.DataFrame()                  # history of choices
         else:
             self.history = None
         if strategy:
-            if 'tom' in strategy:
+            if 'TOM' in strategy.upper():
                 k = strategy.split('-')[0]
                 kwargs['level'] = int(k)
                 strategy = strategy.split('-')[1].upper()
@@ -163,8 +162,10 @@ class RB(Agent):
 
 
     def compete(self, **kwargs):
+
         self.choice = np.random.binomial(1, self.bias)
         self._add_to_history(choice = self.choice)
+
         return self.choice
 
 
@@ -172,108 +173,87 @@ class RB(Agent):
         return self.bias
 
 
+
 class WSLS(Agent):
     """
     'WSLS': Win-stay, lose-switch
 
     Examples:
-    >>> sirWSLS = WSLS()
-    >>> sirWSLS.choice = 0  # Manually setting choice
-    >>> sirWSLS.compete(payoff = 1)
+    >>> sigmund = WSLS()
+    >>> sigmund.choice = 0  # Manually setting choice
+    >>> penny = PayoffMatrix(name = "penny_competitive")
+    >>> sigmund.compete(op_choice = 1, p_matrix = penny)
     0
-    >>> sirWSLS.choice = 1  # Manually setting choice
-    >>> sirWSLS.compete(payoff = -1)
+    >>> sigmund.choice = 1  # Manually setting choice
+    >>> sigmund.compete(payoff = -1)
     0
     """
-    def __init__(self, **kwargs):
+    def __init__(self, prob_stay = 1, prob_switch = 1, **kwargs):
         self.strategy = "WSLS"
+        self.prob_switch = prob_switch
+        self.prob_stay = prob_stay
         super().__init__(**kwargs)
-        self._start_params = {**kwargs}
+        self._start_params = {'prob_stay': prob_stay, 'prob_switch':  prob_switch, **kwargs}
 
-
-    def compete(self, payoff = None, **kwargs):
+    def compete(self, op_choice, p_matrix, agent, **kwargs):
         if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
             self.choice = np.random.binomial(1, 0.5)
         else:  # if a choice have been made:
-            if payoff is None:
-                raise TypeError("compete() missing 1 required positional argument: 'payoff'")
-            elif payoff == -1:
-                self.choice = 1-self.choice
+            if op_choice is None:
+                raise TypeError("compete() missing 1 required positional argument: 'op_choice',"
+                                " which should be given for all round except the first.")
+            payoff = p_matrix.payoff(self.choice, op_choice, agent)  # calculate payoff of last round
+            if payoff < p_matrix().mean(): # if you lost change action (e.g. if payoff is less the mean outcome)
+                switch = np.random.binomial(1, self.prob_switch)
+                self.choice = switch * (1-self.choice) + (1-switch) * self.choice
+            else:  # if you won
+                stay = np.random.binomial(1, self.prob_stay)
+                self.choice = stay * self.choice + (1-stay) * (1-self.choice)
+
         self._add_to_history(choice = self.choice)
         return self.choice
 
 
 
-# class TFT(Agent):
-#     """
-#     'TFT': Tit-for-Tat
+#!# NOT TESTED
+class TFT(Agent):
+    """
+    'TFT': Tit-for-Tat
 
-#     Examples:
-#     >>> Shelling = TFT(copy_prob = 1)
-#     >>> Sheling.choice = 1 #manually setting the first choise
-#     """
-#     def __init__(self, copy_prob = 1, **kwargs):
-#         self.strategy = "TFT"
-#         self.copy_prob = copy_prob
-#         super().__init__(**kwargs)
-#         self._start_params = {'copy_prob': copy_prob, **kwargs}
-
-
-#     def compete(self, op_choice = None, p_matrix = "prisoners_dilemma", silent = False, **kwargs):
-#         """
-#         choice_op (0 <= int <= 1): The choice of the oppenent given af a 1 or a 0
-#         copy_prop (0 <= float <= 1): The probability of the TFT agent to copy the action of its opponent, hereby introducing noise to
-#         the original TFT strategy by Shelling (1981).
-#         """
-#         if p_matrix != "prisoners_dilemma" and silent is False:
-#             warn("Tit-for-Tat is designed for the prisoners dilemma" +
-#             " and might not perform as intended with other payoff matrices.", Warning)
-#         if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
-#             self.choice = 1 #assumes 1 to be cooperate
-#         else:  # if a choice have been made apply the TFT strategy
-#             if choice_op is None:
-#                 raise TypeError("choice_op is None, but it is not the first round the agent played." +
-#                 "Try resetting the agent, e.g. agent.reset()")
-#             self.op_choice = op_choice
-#             copy = np.random.binomial(1, self.copy_prob)
-#             #Calculate resulting choice
-#             choice = copy * op_choice + (1 - copy) * (1 - op_choice)
-#         self._add_to_history(choice = self.choice, choice_op = op_choice)
-#         return self.choice
+    Examples:
+    >>> shelling = TFT(copy_prob = 1)
+    >>> shelling.choice = 1  # manually setting the first choice
+    >>>
+    """
+    def __init__(self, copy_prob = 1, **kwargs):
+        self.strategy = "TFT"
+        self.copy_prob = copy_prob
+        super().__init__(**kwargs)
+        self._start_params = {'copy_prob': copy_prob, **kwargs}
 
 
+    def compete(self, op_choice = None, p_matrix = "prisoners_dilemma", silent = False, **kwargs):
+        """
+        choice_op (0 <= int <= 1): The choice of the oppenent given af a 1 or a 0
+        copy_prop (0 <= float <= 1): The probability of the TFT agent to copy the action of its opponent, hereby introducing noise to
+        the original TFT strategy by Shelling (1981).
+        """
+        if p_matrix != "prisoners_dilemma" and silent is False:
+            warn("Tit-for-Tat is designed for the prisoners dilemma" +
+            " and might not perform as intended with other payoff matrices.", Warning)
+        if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
+            self.choice = 1 #assumes 1 to be cooperate
+        else:  # if a choice have been made apply the TFT strategy
+            if op_choice is None:
+                raise TypeError("choice_op is None, but it is not the first round the agent played." +
+                "Try resetting the agent, e.g. agent.reset()")
+            self.op_choice = op_choice
+            copy = np.random.binomial(1, self.copy_prob)
+            #Calculate resulting choice
+            self.choice = copy * op_choice + (1 - copy) * (1 - op_choice)
+        self._add_to_history(choice = self.choice, choice_op = op_choice)
+        return self.choice
 
-#     def get_copy_prop(self):
-#         return self.copy_prob
-
-
-"""
-TFT <- function(params, hidden_states = NULL, player = NULL, p_matrix = NULL, choice_self, choice_op, return_hidden_states = F) {
-  #A probabilistic Tit for Tat strategy. Copies the opponent's last choice with a given probability.
-  #INPUT
-  #params: list of 1 element: TFT's choice probability parameter
-  #OUTPUT
-  #TFT's choice
-
-  #The probability of TFT copying opponent's choice
-  copy_prob = params$copy_prob
-
-  if (is.null(choice_op)) { #initial round or missed trial
-    choice <- rbinom(1, 1, 0.5) #make random choice
-  } else {
-    #Decide whether TFT copies opponent
-    copy = rbinom(1, 1, copy_prob)
-    #Calculate resulting choice
-    choice = copy*choice_op + (1-copy)*(1-choice_op)
-  }
-
-  if (return_hidden_states == T){
-    return(list(choice = choice, hidden_states = hidden_states))
-  } else {
-    return(choice)
-  }
-}
-"""
 
 class TOM(Agent):
     """
@@ -300,9 +280,9 @@ class TOM(Agent):
         priors = 'default' if 'priors' not in kwargs else kwargs['priors']
 
         params = {'volatility': volatility, 'b_temp': b_temp} 
-        if dilution:
+        if dilution is not None:
             params['dilution'] = dilution
-        if bias:
+        if bias is not None:
             params['bias'] = bias
         
         self.params = params
@@ -314,7 +294,7 @@ class TOM(Agent):
                               'bias': bias, 'dilution': dilution, **kwargs}
 
 
-    def compete(self, p_matrix, agent_perspective, op_choice = None, **kwargs):
+    def compete(self, p_matrix, agent, op_choice = None, **kwargs):
         """
         
         """
@@ -325,7 +305,7 @@ class TOM(Agent):
                                         self.choice,
                                         op_choice,
                                         self.level,
-                                        agent_perspective,
+                                        agent,
                                         p_matrix,
                                         **kwargs)
         self._add_to_history(choice = self.choice, internal_states = self.internal)
@@ -358,6 +338,38 @@ class TOM(Agent):
     def get_parameters(self):
         return self.params
 
+
+    def print_internal(self, keys_to_print = None, silent = False, print_as_str = False):
+        """
+        keys_to_print (list) is the keys which you desire to print. If key is None all keys will be printed.
+        """
+
+        # Convert all elements to string
+        if keys_to_print:
+            keys_to_print = [str(key) for key in keys_to_print]
+            # if sum(key not in keys_to_print for key in ['opponent_states', 'own_states']) != 0:
+            #     if not silent:
+            #         print("You haven't added 'opponent_states' and/or 'own_states' to keys_to_print." + 
+            #               " If any of the keys_to_print is within one")
+
+        def _print_internal(d, n = 0, keys_to_print = None):
+            for key in d:
+                p_key = str(key) + '-ToM' if isinstance(key, int) else key
+                p_str = '|   '*n + str(p_key)
+                # print('|---'*n, key, sep = "", end = '')
+                if isinstance(d[key], dict) is False:
+                    x = d[key].tolist() if isinstance(d[key], np.ndarray) else d[key]
+                    p_str = p_str + ":" + " "*(12-len(p_key)) + str(x)
+                if keys_to_print is None or str(key) in keys_to_print:
+                    #continue
+                    print(p_str)
+
+                if isinstance(d[key], dict):
+                    _print_internal(d[key], n+1, keys_to_print)
+
+        if print_as_str:
+            return  str(self.internal)
+        _print_internal(self.internal, n = 0, keys_to_print = keys_to_print)
 
 
 #########################
@@ -515,26 +527,28 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
                 print(f"\tRunning simulation {sim+1} out of {n_sim}")
             res = compete(agent_0, agent_1, p_matrix, n_rounds, None, reset_agent, return_val = 'list')
             result += [(sim,) + tup for tup in res] #add n_sim til list and 'append' to results
-            if reset_agent:
+            if reset_agent and sim != n_sim-1:
                 agent_0.reset()
                 agent_1.reset()
 
     else:      
-        payoff = [None, None]
+        c_0, c_1 = None, None
         result = []
         for i in range(n_rounds):
-            a_0 = agent_0.compete(p_matrix = p_matrix, payoff = payoff[0]) #a for action
-            a_1 = agent_1.compete(p_matrix = p_matrix, payoff = payoff[1])
-            
-            payoff = p_matrix()[:, a_0, a_1] #[agent_0, agent_1]
-            result.append((i, a_0, a_1, payoff[0], payoff[1]))
+            c_0_prev, c_1_prev = c_0, c_1 
+            c_0 = agent_0.compete(p_matrix = p_matrix, agent = 0, op_choice = c_1_prev) #c for choice
+            c_1 = agent_1.compete(p_matrix = p_matrix, agent = 1, op_choice = c_0_prev)
+
+            payoff = (p_matrix.payoff(c_0, c_1, agent = 0), 
+                      p_matrix.payoff(c_0, c_1, agent = 1))
+            result.append((i, c_0, c_1, payoff[0], payoff[1]))
         if return_val == 'df':
-            return pd.DataFrame(result, columns = ['round', 'action_agent0', 'action_agent1', 'payoff_agent0', 'payoff_agent1'])
+            return pd.DataFrame(result, columns = ['round', 'choice_agent0', 'choice_agent1', 'payoff_agent0', 'payoff_agent1'])
 
     if return_val == 'list':
         return result
     elif return_val == 'df':
-        return pd.DataFrame(result, columns = ['n_sim','round', 'action_agent0', 'action_agent1', 'payoff_agent0', 'payoff_agent1'])
+        return pd.DataFrame(result, columns = ['n_sim','round', 'choice_agent0', 'choice_agent1', 'payoff_agent0', 'payoff_agent1'])
     else:
         raise TypeError("Invalid return_val, please use either 'df' or 'list'")
 
@@ -557,37 +571,188 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
 #output
 #output['internal_states'][1]
 
+# Plot functions
+def plot_winnings(df, agent = 0):
+    """
+    assumes multiples simulations
+
+    agent is either 1 or 0
+
+    """
+    import matplotlib.pyplot as plt
+
+    cum_payoff = 'cum_payoff_a' + str(agent) 
+    payoff_agent = 'payoff_agent' + str(agent)
+    df[cum_payoff] = df.groupby(by = ['n_sim'])['payoff_agent0'].cumsum()
+
+    plt.figure()
+    # plot each line 
+    for sim in range(df['n_sim'].max() + 1):
+        tmp = df[['round', cum_payoff]].loc[df['n_sim'] == sim]
+        plt.plot(tmp['round'], tmp[cum_payoff], color='grey', linewidth=1, alpha=0.2)
+
+    # plot mean
+    tmp = df.groupby(by = ['round'])[cum_payoff].mean()
+    plt.plot(range(len(tmp)), tmp.values, color='lightblue', linewidth=4)
+    plt.show()
+    
+
+def plot_actions(df, agent = 0):
+    """
+    assumes multiples simulations
+
+    agent is either 1 or 0
+
+    """
+    import matplotlib.pyplot as plt
+
+    action = 'action_agent' + str(agent)
+
+    plt.figure()
+    # plot each line 
+    for sim in range(df['n_sim'].max() + 1):
+        tmp = df[['round', action]].loc[df['n_sim'] == sim]
+        plt.plot(tmp['round'], tmp[action], color='grey', linewidth=1, alpha=0.2)
+
+    # plot mean
+    tmp = df.groupby(by = ['round'])[action].mean()
+    plt.plot(range(len(tmp)), tmp.values, color='lightblue', linewidth=4)
+    plt.show()
+
+
+def plot_own_states(agent, state = 'p_k'):
+    """
+    does not plot the first round
+
+    agent is either 1 or 0
+
+
+    """
+    import matplotlib.pyplot as plt
+
+    if state not in ['p_k', 'p_op_mean']:
+        print("You can't plot the given state using this function.")
+    df = agent.get_history()
+    df = df[1:]
+
+    # plot mean
+    tmp = df['internal_states'].apply(lambda d: d['own_states'][state][0,:])
+    pk_df = pd.DataFrame(tmp.tolist())
+    for col in pk_df:
+        plt.plot(range(len(pk_df[col])), pk_df[col], label = col, linewidth=1)
+    plt.legend()
+    plt.show()
+
+
+def plot_op_states(agent, op = 0, state = 'p_op_mean0'):
+    """
+    does not plot the first round
+
+    agent is either 1 or 0
+
+
+    """
+    import matplotlib.pyplot as plt
+
+    if state not in ['p_k', 'p_op_mean']:
+        print("You can't plot the given state using this function.")
+    df = agent.get_history()
+    df = df[1:]
+
+    # plot mean
+    tmp = df['internal_states'].apply(lambda d: d['opponent_states'][op]['own_states'][state])
+    pk_df = pd.DataFrame(tmp.tolist())
+    for col in pk_df:
+        plt.plot(range(len(pk_df[col])), pk_df[col], label = col, linewidth=1)
+    
+    if len(pk_df.columns) > 1:
+        plt.legend()
+    plt.show()
+
 #%%
 if __name__ == "__main__":
     penny = PayoffMatrix(name = "penny_competitive")
     
     # Devaine = TOM(level = 4, volatility = -2, b_temp = -1, save_history = True)
-    Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
-    Riccardo = TOM(level = 2, volatility = -2, b_temp = -1.5, dilution = 0.2, bias = 0, save_history = True)
-    Friston = TOM(level = 3, volatility = -2.5, b_temp = -1, dilution = 0.05, bias = 0.2, save_history = True)
+    #Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
     
-    Devaine.compete(penny, agent_perspective = 1, op_choice = None)
+    # Devaine.compete(penny, agent = 0, op_choice = None)
 
-    for _ in range(1):
-        print(_)
-        Devaine.reset()
-        for i in range (100):
-            Devaine.compete(penny, agent_perspective = 1, op_choice = np.random.binomial(1,0.9))
+    # for _ in range(1):
+    #     print(_)
+    #     Devaine.reset()
+    #     for i in range (100):
+    #         Devaine.compete(penny, agent= 0, op_choice = np.random.binomial(1,0.9))
 
-    print("DONE")
-    output = Devaine.get_history()
-    x = output['internal_states'][1:].apply(lambda d: d['own_states']['param_mean'][:,3])
-    import matplotlib.pyplot as plt
-    #fig = plt.figure()
-    plt.plot(x)
+    # print("DONE")
+    # output = Devaine.get_history()
+    # x = output['internal_states'][1:].apply(lambda d: d['own_states']['param_mean'][:,3])
+    # import matplotlib.pyplot as plt
+    # #fig = plt.figure()
+    # plt.plot(x)
 
-    output['choice'].mean()
+    # output['choice'].mean()
 
-    #output['internal_states'][1]
+    # #output['internal_states'][1]
 
-    Devie = Agent("1-TOM", volatility = -2, b_temp = -1)
-    round_table = AgentGroup(agents = ['RB']*2, start_params = [{'bias': 1}]*2)
-    x = input()
+    # Devie = Agent("1-TOM", volatility = -2, b_temp = -1)
+    # Devie.get_behav_temperature()
+
+    # party = AgentGroup(agents = ['2-tom', '3-tom'], start_params = [{}]*2)
+    # party.set_env('round_robin')
+    # party.pairing
+    # penny = PayoffMatrix(name = "penny_competitive")
+    # party.compete(penny)
+
+    Devaine = TOM(level = 1, save_history = True)
+    #Devaine = WSLS()
+    Friston = TOM(level = 0, save_history = True)
+    #Friston = RB(bias = 0.9)
+    #Friston = WSLS()
+    # print(f"bias: {Friston.bias} \n start params: {Friston._start_params}")
+
+
+    output = compete(agent_0 = Devaine, 
+                        agent_1 = Friston, 
+                        p_matrix = 'penny_competitive', 
+                        n_rounds = 100, 
+                        n_sim = 100,
+                        reset_agent = True, 
+                        return_val = 'df', 
+                        silent = False)
+
+
+    m = output['payoff_agent0'].mean()
+    s = output['payoff_agent0'].std()
+    print(f"mean: {m}, std: {s}")
+
+    sum(output['payoff_agent0'] == 1)/len(output['payoff_agent0'])
+    s = output['payoff_agent0'].std()
+    print(f"mean: {m}, std: {s}")
+
+    # Devaine.compete(p_matrix = penny, op_choice = None, agent = 0)
+    # Devaine.compete(p_matrix = penny, op_choice = 1, agent = 0)
+    # Devaine.compete(p_matrix = penny, op_choice = 0, agent = 0)
+
+    # intern['internal_states'][1]
+    # intern['internal_states'][2]
+    # intern['internal_states'][3]
+    # str(Devaine.internal)
+
+
+    # add save as str til print
+    # kør og se om det påvirker modellen er du kører 2
+    # 
+    plot_winnings(output, agent = 0)
+    plot_actions(output, agent = 0)
+    plot_own_states(Devaine, state = 'p_op_mean')
+    plot_own_states(Devaine, state = 'param_mean')
+    plot_own_states(Devaine, state = 'p_k')
+    plot_op_states(Devaine, op = 1, state = 'p_op_mean')
+    plot_op_states(Devaine, op = 0, state = 'p_op_mean0')
+
+
+
 
 #%%
 if __name__ == "__main__":
