@@ -55,14 +55,7 @@ class Agent():
                 strategy = strategy.split('-')[1].upper()
             self.__class__ = eval(strategy)
             self.__init__(**kwargs)
-        else:
-            self.strategy = None
-        # if strategy == "RB": #fjern hvis ovenstående virker
-        #     self.__class__ = RB
-        #     self.__init__(**kwargs)
-        # elif strategy == "WSLS":
-        #     self.__class__ = WSLS
-        #     self.__init__(**kwargs)
+
 
 
     def reset(self):
