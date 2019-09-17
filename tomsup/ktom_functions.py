@@ -238,6 +238,9 @@ def gradient_update(
             sim_agent,
             sim_level,
             p_matrix)
+        
+        #Variable transform
+        p_op_mean_incr = inv_logit(p_op_mean_incr)
 
         #Calculate the gradient: a measure of the size of the influence of the incremented parameter value
         gradient[param] = (p_op_mean_incr - p_op_mean) / increment
@@ -437,6 +440,9 @@ def learning_function(
                 sim_level,
                 p_matrix)
 
+            #Variable transform
+            p_op_mean[sim_level] = inv_logit(p_op_mean[sim_level])
+
             #Update gradient (recursive)
             gradient[sim_level] = gradient_update(
                 params,
@@ -532,12 +538,9 @@ def k_tom(
     p_matrix,
     **kwargs):
     """
+    k_tom(prev_internal_states = STATES, params = PARAM, self_choice = 1, op_choice = 1, level = 2, agent = 1, p_matrix = penny)
+
     """
-
-    # assert prev_internal_states['own_states']['param_mean'].shape == (level, len(params)), (
-    #            "The inputted internal states have the wrong" + 
-    #            " dimensions, check if the agent was initalized corectly.")
-
 
     #Update estimates of opponent based on behaviour
     if self_choice is not None:
@@ -564,12 +567,13 @@ def k_tom(
         p_matrix)
 
     #Probability transform
-    print(f"p_self (before inv): {p_self}")
     p_self = inv_logit(p_self)
-    print(f"p_self (after inv): {p_self}")
+
+    #Save own choice probability
+    new_internal_states['own_states']['p_self'] = p_self
+
     #Make decision
     choice = np.random.binomial(1, p_self)
-
 
     return (choice, new_internal_states)
 
@@ -625,12 +629,16 @@ def init_k_tom(params, level, priors='default'):
         #Gather own internal states
         own_states = {'p_k':p_k, 'p_op_mean':p_op_mean, 'param_mean':param_mean, 'param_var':param_var, 'gradient':gradient}
 
+    #Save own choice probability
+    own_states['p_self'] = np.nan
+
     #Save the updated estimated and own internal states
     internal_states['opponent_states'] = opponent_states
     internal_states['own_states'] = own_states
 
     return internal_states 
 
+#%%
 # Testing function
 if __name__ == "__main__":
  import doctest

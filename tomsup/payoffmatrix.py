@@ -41,10 +41,10 @@ class PayoffMatrix():
                                     [(3, 0), #     --   Payoff matrix for a1
                                      (3, 5)]))
         elif name == "penny_competitive":            
-            self.matrix = np.array(([(-1, 1),
-                                     (1, -1)],
-                                    [(1, -1),
-                                     (-1, 1)]))
+            self.matrix = np.array(([(1, -1),
+                                     (-1, 1)],
+                                    [(-1, 1),
+                                     (1, -1)]))
         elif name == "penny_cooperative":            
             self.matrix = np.array(([(1, -1),
                                      (-1, 1)],
