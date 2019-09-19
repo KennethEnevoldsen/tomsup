@@ -257,7 +257,7 @@ class TOM(Agent):
     >>> Devaine = TOM(level = 2, volatility = -2, b_temp = -1)
     >>> Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.5, bias = 0.3)
     """
-    def __init__(self, level = 0, volatility = -2, b_temp = -1, bias = None, dilution = None,  **kwargs):
+    def __init__(self, level = 0, volatility = -2, b_temp = -1, bias = 0, dilution = None,  **kwargs):
         if level > 5:
             warn("It is quite computationally expensive to run a TOM with a level > 5." + 
                  " Make sure this is your intention.", Warning)
