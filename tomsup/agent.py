@@ -248,6 +248,49 @@ class TFT(Agent):
         return self.choice
 
 
+class RL(Agent): ###NOT DONE###
+    """
+    'RL': simple reinforcement learning
+    """
+    def __init__(self, learning_rate = 0.5, **kwargs):
+        self.strategy = "RL"
+        self.learning_rate = learning_rate
+        super().__init__(**kwargs)
+        self._start_params = {'learning_rate': learning_rate, **kwargs}
+
+    def compete(self, op_choice, p_matrix, agent, **kwargs):
+        
+        if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
+            self.values = [0.5, 0.5]
+        else:  # if a choice have been made:
+            if op_choice is None:
+                raise TypeError("compete() missing 1 required positional argument: 'op_choice',"
+                                " which should be given for all round except the first.")
+            
+            #Calculate whether or not last round was a victory
+            payoff = p_matrix.payoff(self.choice, op_choice, agent) #calculate payoff from last round
+            if payoff > p_matrix().mean(): #if you won last round
+                reward = 1 #Save a win
+            else: #and if you lost
+                reward = 0 #Save a loss
+                    #NB: We can make a way of making this be larger for higher rewards.
+
+            #Update perceived values of options. Only the last chosen option is updated. 
+            self.values[self.choice] = values[self.choice] + self.learning_rate * (reward - values[self.choice])
+            
+            #Calulate own choice probability
+            if self.choice == 0: #if last choice was 0
+                p_self = 1 - self.values[self.choice]
+            else: #And if it was 1
+                p_self = self.values[self.choice]
+
+            #And make choice
+            self.choice = np.random.binomial(1, p_self) 
+
+        self._add_to_history(choice = self.choice, values = self.values)
+        return self.choice
+
+
 class TOM(Agent):
     """
     'TOM': Theory of Mind agent
