@@ -153,7 +153,6 @@ class RB(Agent):
         self.strategy = "RB"
         super().__init__(**kwargs)
 
-
     def compete(self, **kwargs):
 
         self.choice = np.random.binomial(1, self.bias)
@@ -161,10 +160,8 @@ class RB(Agent):
 
         return self.choice
 
-
     def get_bias(self):
         return self.bias
-
 
 
 class WSLS(Agent):
@@ -207,8 +204,6 @@ class WSLS(Agent):
         return self.choice
 
 
-
-#!# NOT TESTED
 class TFT(Agent):
     """
     'TFT': Tit-for-Tat
@@ -224,7 +219,6 @@ class TFT(Agent):
         super().__init__(**kwargs)
         self._start_params = {'copy_prob': copy_prob, **kwargs}
 
-
     def compete(self, op_choice = None, p_matrix = "prisoners_dilemma", silent = False, **kwargs):
         """
         choice_op (0 <= int <= 1): The choice of the oppenent given af a 1 or a 0
@@ -232,20 +226,72 @@ class TFT(Agent):
         the original TFT strategy by Shelling (1981).
         """
         if p_matrix != "prisoners_dilemma" and silent is False:
-            warn("Tit-for-Tat is designed for the prisoners dilemma" +
-            " and might not perform as intended with other payoff matrices.", Warning)
-        if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
+            warn("Tit-for-Tat is designed for the prisoners dilemma"
+            " and might not perform well with other payoff matrices.", Warning)
+        
+        # If a choice haven't been made: Cooperate
+        if self.choice is None: 
             self.choice = 1 #assumes 1 to be cooperate
-        else:  # if a choice have been made apply the TFT strategy
+        else:  # if a choice have been made
             if op_choice is None:
-                raise TypeError("choice_op is None, but it is not the first round the agent played." +
-                "Try resetting the agent, e.g. agent.reset()")
+                raise TypeError("compete() missing 1 required positional argument: 'op_choice',"
+                                " which should be given for all round except the first.")
+
             self.op_choice = op_choice
             copy = np.random.binomial(1, self.copy_prob)
             #Calculate resulting choice
             self.choice = copy * op_choice + (1 - copy) * (1 - op_choice)
         self._add_to_history(choice = self.choice, choice_op = op_choice)
         return self.choice
+
+
+class RL(Agent): 
+    """
+    'RL': Reinforcement learning
+    """
+    def __init__(self, learning_rate = 0.5, **kwargs):
+        self.strategy = "RL"
+        self.learning_rate = learning_rate
+        self.expec_val = [0.5, 0.5]
+        super().__init__(**kwargs)
+        self._start_params = {'learning_rate': learning_rate, 'expec_val': [0.5, 0.5], **kwargs}
+
+    def compete(self, op_choice, p_matrix, agent, **kwargs):
+        if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
+            p_self = 0.5
+        else:  # if a choice have been made:
+            if op_choice is None:
+                raise Warning("compete() missing 1 required positional argument: 'op_choice',"
+                                " which should be given for all rounds except the first.")
+            
+            #Calculate whether or not last round was a victory
+            payoff = p_matrix.payoff(self.choice, op_choice, agent) #calculate payoff from last round
+            if payoff > p_matrix().mean(): #if you won last round
+                reward = 1 #Save a win
+            else: #and if you lost
+                reward = 0 #Save a loss
+
+            #Update perceived values of options. Only the last chosen option is updated. 
+            self.expec_val[self.choice] = self.expec_val[self.choice] + self.learning_rate * (reward - self.expec_val[self.choice])
+            
+            #Calulate own choice probability
+            if self.choice == 0: #if last choice was 0
+                p_self = 1 - self.expec_val[self.choice]
+            else: #And if it was 1
+                p_self = self.expec_val[self.choice]
+
+        #Make choice
+        self.choice = np.random.binomial(1, p_self) 
+
+        self._add_to_history(choice = self.choice, expected_value0 = self.valexpec_values[0], expected_value1 = self.expec_val[1])
+        return self.choice
+        
+    #Define getters
+    def get_expected_values(self):
+        return self.expec_val
+
+    def get_learning_rate(self):
+        return self.learning_rate
 
 
 class TOM(Agent):
