@@ -3,6 +3,7 @@ This script contains utility functions
 """
 import pandas as pd
 from tomsup.agent import AgentGroup
+from tomsup.agent import Agent
 import json
 import os
 
@@ -56,7 +57,11 @@ def create_agents(agents, start_params = None):
     """
     return AgentGroup(agents = agents, start_params = start_params)
 
-
+def create_agent(strategy, save_history = False, **kwargs):
+    """
+    A wrapper for the Agent class
+    """
+    return Agent(strategy, save_history, **kwargs)
 
 # %% Run test
 if __name__ == "__main__":
