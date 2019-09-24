@@ -1,3 +1,23 @@
+
+
+import tomsup as ts
+
+penny = ts.PayoffMatrix(name='penny_competitive')
+
+tom2 = ts.TOM(level=2, save_history=True)
+tom1 = ts.TOM(level=1, save_history=True)
+tom0 = ts.TOM(level=0, save_history=True)
+
+# runde 1
+tom1.compete(p_matrix=penny, bias = 0, agent=0, op_choice=None)
+tom1.choice = 1
+tom1.print_internal()
+
+
+
+
+
+
 """
 A sample for Arnault. Should work with the current distribution.
 
@@ -9,12 +29,13 @@ but the current distribution should be enough to get everything working.
 me and peter will be at the library so feel free to ask us.
 """
 
-import tomsup as ts
 
 # Create agent
 arnault = ts.Agent(strategy="2-tom", save_history=True)
 # or
 arnault = ts.TOM(level=1, save_history=True)
+
+
 
 # you can see all its internal states like this (maybe not relevant unless you know the model)
 arnault.print_internal()
@@ -27,9 +48,9 @@ print(penny())
 n_rounds = 10
 p_choice = None
 for round in range(n_rounds): 
-    tom_choice = arnault.compete(p_matrix=penny, agent=0, op_choice=p_choice)  # agent is the perspective in the p_matrix
+    tom_choice = arnault.compete(p_matrix=penny, agent=0, op_choice=1)  # agent is the perspective in the p_matrix
     
-    p_choice = input()  # get the input from the human player (up to you to visualize this)
+    p_choice = 1  # get the input from the human player (up to you to visualize this)
     
     # calculate the players payoff
     players_payoff = penny.payoff(action_agent0=tom_choice, action_agent1=p_choice, agent=1)
