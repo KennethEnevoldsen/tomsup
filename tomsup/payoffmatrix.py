@@ -7,6 +7,23 @@ import numpy as np
 
 class PayoffMatrix():
     """
+    A class of 2 by 2 payoff matrices.
+
+    Currently include the following games:
+    The staghunt game: 
+        'staghunt'
+    The matching pennies game (coop and competive): 
+        'penny_competive'
+        'penny_cooperative'
+    The party dilemma:
+        'party'
+    The Battle of the sexes:
+        'sexes'
+    The chicken game:
+        'chicken'
+    The deadlock:
+        'deadlock'
+
     Example:
     >>> staghunt = PayoffMatrix(name="staghunt")
     >>> staghunt.payoff(action_agent0 = 1, action_agent1 = 1 , agent = 0)
@@ -24,15 +41,8 @@ class PayoffMatrix():
     >>> sexes = PayoffMatrix(name="sexes")
     >>> sexes.payoff(1, 1, 0)
     5
-    TODO: 
-    - add method to class payoff matrix to fetch value
-    - make a nicer print
     """
     def __init__(self, name, predefined=None):
-        """
-        TODO:
-        # add the remaining payoff matrices
-        """
         self.name = name
         if name == "staghunt":
                           #choice a1: 0  1 - Choice a0
@@ -89,6 +99,30 @@ class PayoffMatrix():
 
         return self.matrix[agent, action_agent0, action_agent1]
 
+
+    def __str__(self):
+        print_len = max([len(str(self().min())), len(str(self().max()))])
+
+        def add_pl(string):
+            return (print_len - len(str(string))) * " " + str(string)
+
+        str1 = f"<Class PayoffMatrix, Name = {self.name}> "
+        str2 = "The payoff matrix of agent 0"
+        str3 = "       |  Choice agent 1"
+        str4 = "       | " + f"{add_pl('-')}" + " | " + f"{add_pl(0)}"         + " | " + f"{add_pl(1)}" + " |"
+        str5 = "Choice | " + f"{add_pl(0)}"   + " | " + f"{add_pl(self()[0][0,0])}" + " | " f"{add_pl(self()[0][0,1])}" + " |"
+        str6 = "agent 0| " + f"{add_pl(1)}"   + " | " + f"{add_pl(self()[0][1,0])}" + " | " f"{add_pl(self()[0][1,1])}" + " |"
+        str7 = len(str6) * "-"
+        str8 = "The payoff matrix of agent 1"
+        str9 = "       |  Choice agent 1"
+        str10 = "       | " + f"{add_pl('-')}" + " | " + f"{add_pl(0)}"         + " | " + f"{add_pl(1)}" + " |"
+        str11 = "Choice | " + f"{add_pl(0)}"   + " | " + f"{add_pl(self()[1][0,0])}" + " | " f"{add_pl(self()[1][0,1])}" + " |"
+        str12 = "agent 0| " + f"{add_pl(1)}"   + " | " + f"{add_pl(self()[1][1,0])}" + " | " f"{add_pl(self()[1][1,1])}" + " |"
+        str13 = str7
+        return '\n'.join([str1, str2, str3, str4, str5, str6, str7, str8, str9, str10, str11, str12, str13])
+
+    def get_matrix(self):
+        return self.matrix()
 
     def __call__(self):
         return self.matrix
