@@ -797,8 +797,3 @@ if __name__ == "__main__":
 if __name__ == "__main__":
   import doctest
   doctest.testmod(verbose=True)
-
-
-
-
-TEST = np.array([1,2,3])
