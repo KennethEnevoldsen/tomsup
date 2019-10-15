@@ -122,7 +122,7 @@ class PayoffMatrix():
         return '\n'.join([str1, str2, str3, str4, str5, str6, str7, str8, str9, str10, str11, str12, str13])
 
     def get_matrix(self):
-        return self.matrix()
+        return self.matrix
 
     def __call__(self):
         return self.matrix

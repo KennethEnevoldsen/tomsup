@@ -17,9 +17,6 @@ from scipy.special import logit
 
 class Agent():
     """
-    TODO:
-    make a create_agent(strategy = "RB") i stedet for at bruge super class'en
-
     Examples:
     >>> sirRB = Agent("RB", bias = 0.7)
     >>> isinstance(sirRB, RB)
@@ -53,6 +50,7 @@ class Agent():
                 k = strategy.split('-')[0]
                 kwargs['level'] = int(k)
                 strategy = strategy.split('-')[1].upper()
+            kwargs['save_history'] = save_history
             self.__class__ = eval(strategy)
             self.__init__(**kwargs)
 
@@ -261,7 +259,7 @@ class RL(Agent):
             p_self = 0.5
         else:  # if a choice have been made:
             if op_choice is None:
-                raise Warning("compete() missing 1 required positional argument: 'op_choice',"
+                raise TypeError("compete() missing 1 required positional argument: 'op_choice',"
                                 " which should be given for all rounds except the first.")
             
             #Calculate whether or not last round was a victory
@@ -283,7 +281,7 @@ class RL(Agent):
         #Make choice
         self.choice = np.random.binomial(1, p_self) 
 
-        self._add_to_history(choice = self.choice, expected_value0 = self.valexpec_values[0], expected_value1 = self.expec_val[1])
+        self._add_to_history(choice = self.choice, expected_value0 = self.expec_val[0], expected_value1 = self.expec_val[1])
         return self.choice
         
     #Define getters
@@ -479,9 +477,12 @@ class AgentGroup():
 
     def set_env(self, env):
         """
-        set environment of agent group
+        set environment of agent group.
 
-        env (str): desired environment
+        env (str): The string for the environment you wish to set.
+        Valid environment strings include:
+            'round_robin': Matches all participant against all others
+            'rondom_pairs': Combines the agent in random pairs (the number of agent must be even)
         """
         self.environment = env.lower()
         if self.environment == 'round_robin':
@@ -494,7 +495,7 @@ class AgentGroup():
             random.shuffle(L)
             self.pairing = list(zip(L[:len(L)//2], L[len(L)//2:]))
         else:
-            raise TypeError(f"{env} is not a valid environment.")
+            raise TypeError(f"{env} is not a valid environment. Use help() to see valid environments")
 
     def compete(self, p_matrix, n_rounds = 10, n_sim = 1, reset_agent = True, env = None, silent = False):
         # TODO: add check to payoffmatrix is already set
@@ -515,6 +516,13 @@ class AgentGroup():
         if not silent:
             print("Simulation complete")
         return pd.concat(result) #concatenate into one df
+
+        
+    def __str__(self):
+        header = f"<Class AgentGroup, envinment = {self.environment} \n\n" 
+        info = "\n".join(("\t | \t".join(str(ii) for ii in i)) for i in list(zip(self.agent_names, self.start_params)))
+        return header + info
+        
 
 
 ###################

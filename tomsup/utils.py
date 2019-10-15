@@ -56,7 +56,7 @@ def create_agents(agents, start_params = None, **kwargs):
     >>> group.set_env(env = 'round_robin')
     """
     if isinstance(agents, str):
-        if start_params is not None and "save_history" in start_params:
+        if (start_params is not None) and ("save_history" in start_params):
             save_history = start_params["save_history"]
         else:
             save_history = False
