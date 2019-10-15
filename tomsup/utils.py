@@ -36,7 +36,7 @@ def valid_agents():
     return agent_dict
 
 
-def create_agents(agents, start_params = None):
+def create_agents(agents, start_params = None, **kwargs):
     """
     Given a list of agents and their starting parameters returns an
     object agent_group.
@@ -55,13 +55,15 @@ def create_agents(agents, start_params = None):
     'RB'
     >>> group.set_env(env = 'round_robin')
     """
+    if isinstance(agents, str):
+        if start_params is not None and "save_history" in start_params:
+            save_history = start_params["save_history"]
+        else:
+            save_history = False
+        return Agent(strategy = agents, save_history = save_history, **kwargs)
     return AgentGroup(agents = agents, start_params = start_params)
 
-def create_agent(strategy, save_history = False, **kwargs):
-    """
-    A wrapper for the Agent class
-    """
-    return Agent(strategy, save_history, **kwargs)
+
 
 # %% Run test
 if __name__ == "__main__":

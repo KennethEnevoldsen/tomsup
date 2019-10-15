@@ -256,7 +256,7 @@ class RL(Agent):
         super().__init__(**kwargs)
         self._start_params = {'learning_rate': learning_rate, 'expec_val': [0.5, 0.5], **kwargs}
 
-    def compete(self, op_choice, p_matrix, agent, **kwargs):
+    def compete(self, p_matrix, agent, op_choice = None, **kwargs):
         if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
             p_self = 0.5
         else:  # if a choice have been made:
