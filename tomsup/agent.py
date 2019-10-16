@@ -17,9 +17,6 @@ from scipy.special import logit
 
 class Agent():
     """
-    TODO:
-    make a create_agent(strategy = "RB") i stedet for at bruge super class'en
-
     Examples:
     >>> sirRB = Agent("RB", bias = 0.7)
     >>> isinstance(sirRB, RB)
@@ -53,6 +50,7 @@ class Agent():
                 k = strategy.split('-')[0]
                 kwargs['level'] = int(k)
                 strategy = strategy.split('-')[1].upper()
+            kwargs['save_history'] = save_history
             self.__class__ = eval(strategy)
             self.__init__(**kwargs)
 
@@ -256,12 +254,12 @@ class RL(Agent):
         super().__init__(**kwargs)
         self._start_params = {'learning_rate': learning_rate, 'expec_val': [0.5, 0.5], **kwargs}
 
-    def compete(self, op_choice, p_matrix, agent, **kwargs):
+    def compete(self, p_matrix, agent, op_choice = None, **kwargs):
         if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
             p_self = 0.5
         else:  # if a choice have been made:
             if op_choice is None:
-                raise Warning("compete() missing 1 required positional argument: 'op_choice',"
+                raise TypeError("compete() missing 1 required positional argument: 'op_choice',"
                                 " which should be given for all rounds except the first.")
             
             #Calculate whether or not last round was a victory
@@ -283,7 +281,7 @@ class RL(Agent):
         #Make choice
         self.choice = np.random.binomial(1, p_self) 
 
-        self._add_to_history(choice = self.choice, expected_value0 = self.valexpec_values[0], expected_value1 = self.expec_val[1])
+        self._add_to_history(choice = self.choice, expected_value0 = self.expec_val[0], expected_value1 = self.expec_val[1])
         return self.choice
         
     #Define getters
@@ -479,9 +477,12 @@ class AgentGroup():
 
     def set_env(self, env):
         """
-        set environment of agent group
+        set environment of agent group.
 
-        env (str): desired environment
+        env (str): The string for the environment you wish to set.
+        Valid environment strings include:
+            'round_robin': Matches all participant against all others
+            'rondom_pairs': Combines the agent in random pairs (the number of agent must be even)
         """
         self.environment = env.lower()
         if self.environment == 'round_robin':
@@ -494,7 +495,7 @@ class AgentGroup():
             random.shuffle(L)
             self.pairing = list(zip(L[:len(L)//2], L[len(L)//2:]))
         else:
-            raise TypeError(f"{env} is not a valid environment.")
+            raise TypeError(f"{env} is not a valid environment. Use help() to see valid environments")
 
     def compete(self, p_matrix, n_rounds = 10, n_sim = 1, reset_agent = True, env = None, silent = False):
         # TODO: add check to payoffmatrix is already set
@@ -515,6 +516,13 @@ class AgentGroup():
         if not silent:
             print("Simulation complete")
         return pd.concat(result) #concatenate into one df
+
+        
+    def __str__(self):
+        header = f"<Class AgentGroup, envinment = {self.environment} \n\n" 
+        info = "\n".join(("\t | \t".join(str(ii) for ii in i)) for i in list(zip(self.agent_names, self.start_params)))
+        return header + info
+        
 
 
 ###################
@@ -592,213 +600,7 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
         raise TypeError("Invalid return_val, please use either 'df' or 'list'")
 
 
-
-# #%%
-# Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
-# #Devaine = TOM(level = 2, volatility = -2, b_temp = -1, dilution = 0.2, bias = 0.3)
-# penny = PayoffMatrix(name = "penny_competitive")
-# Devaine.compete(penny, agent_perspective = 1, op_choice = None)
-# STATES = Devaine.get_internal_states()
-
-
-# for i in range (100):
-#     print(i)
-#     Devaine.compete(penny, agent_perspective = 1, op_choice = 1)
-#     Devaine.compete(penny, agent_perspective = 1, op_choice = 0)
-
-#output = Devaine.get_history()
-#output
-#output['internal_states'][1]
-
-# Plot functions
-def plot_winnings(df, agent = 0):
-    """
-    assumes multiples simulations
-
-    agent is either 1 or 0
-
-    """
-    import matplotlib.pyplot as plt
-
-    cum_payoff = 'cum_payoff_a' + str(agent) 
-    payoff_agent = 'payoff_agent' + str(agent)
-    df[cum_payoff] = df.groupby(by = ['n_sim'])['payoff_agent0'].cumsum()
-
-    plt.figure()
-    # plot each line 
-    for sim in range(df['n_sim'].max() + 1):
-        tmp = df[['round', cum_payoff]].loc[df['n_sim'] == sim]
-        plt.plot(tmp['round'], tmp[cum_payoff], color='grey', linewidth=1, alpha=0.2)
-
-    # plot mean
-    tmp = df.groupby(by = ['round'])[cum_payoff].mean()
-    plt.plot(range(len(tmp)), tmp.values, color='lightblue', linewidth=4)
-    plt.show()
-    
-
-def plot_actions(df, agent = 0):
-    """
-    assumes multiples simulations
-
-    agent is either 1 or 0
-
-    """
-    import matplotlib.pyplot as plt
-
-    action = 'action_agent' + str(agent)
-
-    plt.figure()
-    # plot each line 
-    for sim in range(df['n_sim'].max() + 1):
-        tmp = df[['round', action]].loc[df['n_sim'] == sim]
-        plt.plot(tmp['round'], tmp[action], color='grey', linewidth=1, alpha=0.2)
-
-    # plot mean
-    tmp = df.groupby(by = ['round'])[action].mean()
-    plt.plot(range(len(tmp)), tmp.values, color='lightblue', linewidth=4)
-    plt.show()
-
-
-def plot_own_states(agent, state = 'p_k'):
-    """
-    does not plot the first round
-
-    agent is either 1 or 0
-
-
-    """
-    import matplotlib.pyplot as plt
-
-    if state not in ['p_k', 'p_op_mean']:
-        print("You can't plot the given state using this function.")
-    df = agent.get_history()
-    df = df[1:]
-
-    # plot mean
-    tmp = df['internal_states'].apply(lambda d: d['own_states'][state][0,:])
-    pk_df = pd.DataFrame(tmp.tolist())
-    for col in pk_df:
-        plt.plot(range(len(pk_df[col])), pk_df[col], label = col, linewidth=1)
-    plt.legend()
-    plt.show()
-
-
-def plot_op_states(agent, op = 0, state = 'p_op_mean0'):
-    """
-    does not plot the first round
-
-    agent is either 1 or 0
-
-
-    """
-    import matplotlib.pyplot as plt
-
-    if state not in ['p_k', 'p_op_mean']:
-        print("You can't plot the given state using this function.")
-    df = agent.get_history()
-    df = df[1:]
-
-    # plot mean
-    tmp = df['internal_states'].apply(lambda d: d['opponent_states'][op]['own_states'][state])
-    pk_df = pd.DataFrame(tmp.tolist())
-    for col in pk_df:
-        plt.plot(range(len(pk_df[col])), pk_df[col], label = col, linewidth=1)
-    
-    if len(pk_df.columns) > 1:
-        plt.legend()
-    plt.show()
-
-#%%
-if __name__ == "__main__":
-    penny = PayoffMatrix(name = "penny_competitive")
-    
-    # Devaine = TOM(level = 4, volatility = -2, b_temp = -1, save_history = True)
-    #Devaine = TOM(level = 1, volatility = -2, b_temp = -1, save_history = True)
-    
-    # Devaine.compete(penny, agent = 0, op_choice = None)
-
-    # for _ in range(1):
-    #     print(_)
-    #     Devaine.reset()
-    #     for i in range (100):
-    #         Devaine.compete(penny, agent= 0, op_choice = np.random.binomial(1,0.9))
-
-    # print("DONE")
-    # output = Devaine.get_history()
-    # x = output['internal_states'][1:].apply(lambda d: d['own_states']['param_mean'][:,3])
-    # import matplotlib.pyplot as plt
-    # #fig = plt.figure()
-    # plt.plot(x)
-
-    # output['choice'].mean()
-
-    # #output['internal_states'][1]
-
-    # Devie = Agent("1-TOM", volatility = -2, b_temp = -1)
-    # Devie.get_behav_temperature()
-
-    # party = AgentGroup(agents = ['2-tom', '3-tom'], start_params = [{}]*2)
-    # party.set_env('round_robin')
-    # party.pairing
-    # penny = PayoffMatrix(name = "penny_competitive")
-    # party.compete(penny)
-
-    Devaine = TOM(level = 1, save_history = True)
-    #Devaine = WSLS()
-    Friston = TOM(level = 0, save_history = True)
-    #Friston = RB(bias = 0.9)
-    #Friston = WSLS()
-    # print(f"bias: {Friston.bias} \n start params: {Friston._start_params}")
-
-
-    output = compete(agent_0 = Devaine, 
-                        agent_1 = Friston, 
-                        p_matrix = 'penny_competitive', 
-                        n_rounds = 100, 
-                        n_sim = 100,
-                        reset_agent = True, 
-                        return_val = 'df', 
-                        silent = False)
-
-
-    m = output['payoff_agent0'].mean()
-    s = output['payoff_agent0'].std()
-    print(f"mean: {m}, std: {s}")
-
-    sum(output['payoff_agent0'] == 1)/len(output['payoff_agent0'])
-    s = output['payoff_agent0'].std()
-    print(f"mean: {m}, std: {s}")
-
-    # Devaine.compete(p_matrix = penny, op_choice = None, agent = 0)
-    # Devaine.compete(p_matrix = penny, op_choice = 1, agent = 0)
-    # Devaine.compete(p_matrix = penny, op_choice = 0, agent = 0)
-
-    # intern['internal_states'][1]
-    # intern['internal_states'][2]
-    # intern['internal_states'][3]
-    # str(Devaine.internal)
-
-
-    # add save as str til print
-    # kør og se om det påvirker modellen er du kører 2
-    # 
-    plot_winnings(output, agent = 0)
-    plot_actions(output, agent = 0)
-    plot_own_states(Devaine, state = 'p_op_mean')
-    plot_own_states(Devaine, state = 'param_mean')
-    plot_own_states(Devaine, state = 'p_k')
-    plot_op_states(Devaine, op = 1, state = 'p_op_mean')
-    plot_op_states(Devaine, op = 0, state = 'p_op_mean0')
-
-
-
-
 #%%
 if __name__ == "__main__":
   import doctest
   doctest.testmod(verbose=True)
-
-
-
-
-TEST = np.array([1,2,3])
