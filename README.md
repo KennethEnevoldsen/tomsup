@@ -6,7 +6,7 @@ A Python Package for Agent Based simulations.
 ![Python Versions](link missing)
 -->
 
-An implementation of game theory of mind in a agent based framework following the implementation of [Devaine, et al. (2017)](http://dx.plos.org/10.1371/journal.pcbi.1005833).
+An implementation of game theory of mind in a agent based framework following the implementation of [Devaine, et al. (2017)](http://dx.plos.org/10.1371/journal.pcbi.1005833). This package also include a theory of mind. 
 
 <!--  # NOT RENDERED
 ### References
@@ -29,9 +29,11 @@ To ask questions, report issues or request features, please use the [GitHub Issu
 
 ## Setup
 
-tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [here](https://pip.pypa.io/en/stable/installing/), otherwise simply run
+tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [here](https://pip.pypa.io/en/stable/installing/), otherwise simply run 
+
+(**the version on pip currently does not work**)
 ```bash
-pip3 install tomsup
+pip3 install tomsup 
 ```
 
 However you can also install it directly from github by simply running:
@@ -42,45 +44,18 @@ pip3 install -e .
 ```
 
 
-
-
 ## Getting Started with tomsup
+To get started with tomsup we recommend to the tutorials in the tutorials folder. We recommend that you start with the introduction.
 
-```python
-import tomsup
 
-## Get a list of valid agents
-tomsup.valid_agents()
-```
+The tutorials is in a Jupyter Notebooks format if you don't have Jupyter Notebook installed, instructions for installing and running can be found here: http://jupyter.org/install. 
 
-Which should get you the output
-```
-(not yet inserted)
-```
+Currently we have the following tutorials
+- introduction, a general introduction to the features of tomsup
+- Creating_an_agent, an example of how you would create new agent for the package. 
+- introduction_to_tom, an introduction to the variational bayes theory of mind model used in tomsup. (**Not currently finished**)
 
-```python
-## tomsup - create a single agent
-    # There is two ways to setup an agent (these are equivalent)
-sirRB = tomsup.Agent(strategy = "RB", save_history = True, bias = 0.7) # calling the Agent class specifying strategy
-sirRB = tomsup.RB(bias = 0.7, save_history = True) #calling the agent subclass 
-isinstance(sirRB, tomsup.Agent)  # sirRB is an Agent 
-type(sirRB)  # of supclass RB
-```
-Which should get you the output
-```
-(not yet inserted)
-```
-
-```python
-choice = sirRB.compete()
-
-print(f"SirRB chose {choice} and his probability for choosing 1 was {sirRB.get_bias()}.")
-```
-
-Which should e.g. return
-```
-SirRB chose 1 and his probability for choosing 1 was 0.7.
-```
+There is also an example psychopy experiment, in which the player can play against the theory of mind agent in the matching pennies task. (**currently not finished**)
 
 
 ## LICENSE
