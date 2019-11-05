@@ -14,9 +14,36 @@ Parameter Order:
 from warnings import warn
 import numpy as np
 from tomsup.payoffmatrix import PayoffMatrix
-from scipy.special import expit as inv_logit
-from scipy.special import logit
 import copy
+#from scipy.special import expit as inv_logit
+#from scipy.special import logit
+
+
+# Logit functions
+def inv_logit(x): 
+    """
+    This is the inverse logit (or sigmoid) function from the original VBA package
+    It is slightly different from a standard inverse logit. Most importantly, it uses a finite precision, epsilon.
+    Note that the VBA implementation has more options8changing scale, offset, etc.). These are not implemented here.
+    Note also that we have here used the "quick version" from the VBA package.
+    """
+    #Set precision parameter (0 means perfect precision)
+    epsilon = 1e-9 
+
+    #Calculate
+    y = epsilon + (1 - 2 * epsilon) / (1 + np.exp(-x))
+
+    return y
+
+def logit(x):
+    """
+    This is the the logit function from the original VBA package. See that package for mor information.
+    """
+    #Calculate
+    lx = (x) **-1 - 1
+    y = 0 - 1**-1 * np.log(lx)
+
+    return y
 
 
 # Learning subfunctions
@@ -72,6 +99,9 @@ def p_op_mean0_update(prev_p_op_mean0, p_op_var0, op_choice):
     #Update
     new_p_op_mean0 = prev_p_op_mean0 + p_op_var0 * (op_choice - inv_logit(prev_p_op_mean0))
     
+    #For numerical purposes, according to the VBA package
+    new_p_op_mean0 = logit(inv_logit(new_p_op_mean0))
+
     return new_p_op_mean0
 
 
@@ -142,7 +172,7 @@ def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution = None):
     return new_p_k
 
 
-def param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volatility, volatility_dummy = None):
+def param_var_update(prev_p_op_mean, prev_param_var, prev_gradient, p_k, volatility, volatility_dummy = None):
     """
     k-ToM updates its uncertainty / variance on its estimates of opponent's parameter values
     
@@ -151,11 +181,11 @@ def param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volati
     """
     #Dummy constant: sets volatility to 0 for all except volatility opponent parameter estimates
     if volatility_dummy is None:
-        volatility_dummy = np.zeros(prev_param_mean.shape[1] - 1)
+        volatility_dummy = np.zeros(prev_param_var.shape[1] - 1)
         volatility_dummy = np.concatenate(([1], volatility_dummy), axis = None)
 
     #Input variable transforms
-    prev_param_mean = inv_logit(prev_param_mean)
+    prev_p_op_mean = inv_logit(prev_p_op_mean)
     prev_param_var = np.exp(prev_param_var)
     volatility = np.exp(volatility) * volatility_dummy
 
@@ -163,7 +193,7 @@ def param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volati
     new_var = (
         1/
         (1 / (prev_param_var + volatility) +
-        p_k[:, np.newaxis] * prev_param_mean * (1 - prev_param_mean) * prev_gradient**2))
+        p_k[:, np.newaxis] * prev_p_op_mean[:, np.newaxis] * (1 - prev_p_op_mean[:, np.newaxis]) * prev_gradient**2))
 
     #Output variable transform
     new_var = np.log(new_var)
@@ -186,11 +216,11 @@ def param_mean_update(prev_p_op_mean, prev_param_mean, prev_gradient, p_k, param
     new_param_mean = prev_param_mean + p_k[:, np.newaxis] * param_var * (op_choice - inv_logit(prev_p_op_mean))[:, np.newaxis]
 
     #Used for numerical purposes in the VBA package
-    #new_param_mean = inv_logit(logit(new_param_mean))
+    new_param_mean = logit(inv_logit(new_param_mean))
 
     return new_param_mean
 
-#!#
+
 def gradient_update(
     params,
     p_op_mean,
@@ -238,9 +268,6 @@ def gradient_update(
             sim_agent,
             sim_level,
             p_matrix)
-        
-        #Variable transform
-        p_op_mean_incr = inv_logit(p_op_mean_incr)
 
         #Calculate the gradient: a measure of the size of the influence of the incremented parameter value
         gradient[param] = (p_op_mean_incr - p_op_mean) / increment
@@ -316,15 +343,27 @@ def expected_payoff_fun(p_op, agent, p_matrix):
     return expected_payoff
 
 
-def softmax(expected_payoff, b_temp): 
+def softmax(expected_payoff, params): 
     """
     Softmax function for calculating own probability of choosing 1
     """
+    #Extract necessary parameters
+    b_temp = params['b_temp']
+    if 'bias' in params:
+        bias = params['bias']
+
     #Input variable transforms
     b_temp = np.exp(b_temp)
 
-    #Calculation
-    p_self = 1 / (1 + np.exp(-(expected_payoff / b_temp)))
+    #Divide by temperature parameter
+    expected_payoff = expected_payoff / b_temp
+
+    #Add bias, optional
+    if 'bias' in params:
+        expected_payoff = expected_payoff + bias
+
+    #The logit transform completes the softmax function   
+    p_self = inv_logit(expected_payoff)
 
     #Set output bounds
     if p_self > 0.999:
@@ -397,7 +436,7 @@ def learning_function(
         p_k = p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution)
 
         #Update parameter estimates
-        param_var = param_var_update(prev_param_mean, prev_param_var, prev_gradient, p_k, volatility, **kwargs)
+        param_var = param_var_update(prev_p_op_mean, prev_param_var, prev_gradient, p_k, volatility, **kwargs)
         param_mean = param_mean_update(prev_p_op_mean, prev_param_mean, prev_gradient, p_k, param_var, op_choice)
 
         ##Do recursive simulating of opponent
@@ -440,9 +479,6 @@ def learning_function(
                 sim_level,
                 p_matrix)
 
-            #Variable transform
-            p_op_mean[sim_level] = inv_logit(p_op_mean[sim_level])
-
             #Update gradient (recursive)
             gradient[sim_level] = gradient_update(
                 params,
@@ -483,11 +519,6 @@ def decision_function(
     >>> decision_function(new_internal_states, params, agent = 0, level = 0, p_matrix = penny)
     -5.436561973742046
     """
-    #Extract needed parameters
-    b_temp = params['b_temp']
-    if 'bias' in params:
-        bias = params['bias']
-
     #If (simulated) agent is a 0-ToM
     if level == 0:
         #Extract needed variables
@@ -514,12 +545,8 @@ def decision_function(
     #Calculate expected payoff
     expected_payoff = expected_payoff_fun(p_op, agent, p_matrix)
 
-    #Add bias
-    if 'bias' in params:
-        expected_payoff = expected_payoff + bias
-
     #Softmax
-    p_self = softmax(expected_payoff, b_temp)
+    p_self = softmax(expected_payoff, params)
 
     #Output variable transform
     p_self = logit(p_self)
@@ -590,13 +617,12 @@ def init_k_tom(params, level, priors='default'):
             'p_op_var0': 0}
         if level > 0: # the following is not used by 0-ToM
             priors['p_op_mean'] = 0
-            priors['param_mean'] = np.repeat(0,len(params))
-            priors['param_var'] = np.repeat(0,len(params))
-            priors['gradient'] = np.repeat(0,len(params))
+            priors['param_mean'] = np.repeat(0.0,len(params))
+            priors['param_var'] = np.repeat(0.0,len(params))
+            priors['gradient'] = np.repeat(0.0,len(params))
             if 'bias' in params: #Following the original VBA implementation
-                priors['gradient'][-1] = 1
+                priors['gradient'][-1] = 0.999999997998081
                 
-
     #Make empty list for prior internal states
     internal_states = {}
     opponent_states = {}
