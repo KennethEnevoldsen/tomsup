@@ -15,56 +15,12 @@ penny = ts.PayoffMatrix(name='penny_competitive')
 arnault = ts.TOM(level=2, save_history=True)
 bond = ts.TOM(level=1, save_history=True)
 
-print('--- ROUND 1 ----')
-# runde 1
-arnault.compete(p_matrix=penny, agent=0, op_choice=None)
-arnault.choice = 1
-arnault.print_internal()
+results = ts.compete(arnault, bond, penny, n_rounds = 50, n_sim = 1000)
 
-print('--- ROUND 2 ----')
-#runde 2
-arnault.compete(p_matrix=penny, agent=0, op_choice=1)
-arnault.choice = 1
-arnault.print_internal()
+results['payoff_agent0'].mean()
 
-print('--- ROUND 3 ----')
-# runde 3
-arnault.compete(p_matrix=penny, agent=0, op_choice=1)
-arnault.choice = 1
-arnault.print_internal()
+arnault.get_history()['internal_states'][29]
+bond.get_history()['internal_states'][29]
 
-print('--- ROUND 4 ----')
-# runde 4
-arnault.compete(p_matrix=penny, agent=0, op_choice=1)
-arnault.choice = 1
-arnault.print_internal()
-
-print('--- ROUND 5 ----')
-# runde 5
-arnault.compete(p_matrix=penny, agent=0, op_choice=1)
-arnault.choice = 1
-arnault.print_internal()
-
-print('--- ROUND 6 ----')
-# runde 6
-arnault.compete(p_matrix=penny, agent=0, op_choice=1)
-arnault.choice = 1
-arnault.print_internal()
-
-print('--- ROUND 7 ----')
-# runde 7
-arnault.compete(p_matrix=penny, agent=0, op_choice=1)
-arnault.choice = 1
-arnault.print_internal()
-
-
-# for i in range(20):
-#     print(i)
-#     # runde 7
-#     arnault.compete(p_matrix=penny, agent=0, op_choice=1)
-#     arnault.choice = 1
-#     arnault.print_internal()
-
-# arnault.get_history()
-
+arnault.get_history(key = 'internal_states')
 

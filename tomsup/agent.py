@@ -370,7 +370,6 @@ class TOM(Agent):
     def get_parameters(self):
         return self.params
 
-
     def print_internal(self, keys_to_print = None, silent = False, print_as_str = False):
         """
         keys_to_print (list) is the keys which you desire to print. If key is None all keys will be printed.
@@ -524,7 +523,7 @@ class AgentGroup():
 ###___ UTILS ___###
 ###################
 
-def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent = True, return_val = 'df', silent = True):
+def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent = True, return_val = 'df', save_history = False, silent = True):
     """
     agent_0 and agent_1 (Agent): objects of class Agent which should compete
     p_matrix (PayoffMatrix | str): The PayoffMatrix in which the agents compete or the name of the payoff matrix
@@ -567,7 +566,7 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
         for sim in range(int(n_sim)):
             if not silent:
                 print(f"\tRunning simulation {sim+1} out of {n_sim}")
-            res = compete(agent_0, agent_1, p_matrix, n_rounds, None, reset_agent, return_val = 'list')
+            res = compete(agent_0, agent_1, p_matrix, n_rounds, None, reset_agent, return_val = 'list', save_history=save_history)
             result += [(sim,) + tup for tup in res] #add n_sim til list and 'append' to results
             if reset_agent and sim != n_sim-1:
                 agent_0.reset()
@@ -583,13 +582,23 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
 
             payoff = (p_matrix.payoff(c_0, c_1, agent = 0), 
                       p_matrix.payoff(c_0, c_1, agent = 1))
-            result.append((i, c_0, c_1, payoff[0], payoff[1]))
+
+            if save_history:
+                history0 = agent_0.get_history(key = "internal_states", format = "list")[-1]
+                history1 = agent_1.get_history(key = "internal_states", format = "list")[-1]
+                result.append((i, c_0, c_1, payoff[0], payoff[1], history0, history1))  
+            else:
+                result.append((i, c_0, c_1, payoff[0], payoff[1]))
         if return_val == 'df':
+            if save_history:
+                return pd.DataFrame(result, columns = ['round', 'choice_agent0', 'choice_agent1', 'payoff_agent0', 'payoff_agent1', 'history_agent0', 'history_agent1'])
             return pd.DataFrame(result, columns = ['round', 'choice_agent0', 'choice_agent1', 'payoff_agent0', 'payoff_agent1'])
 
     if return_val == 'list':
         return result
     elif return_val == 'df':
+        if save_history:
+            return pd.DataFrame(result, columns = ['n_sim', 'round', 'choice_agent0', 'choice_agent1', 'payoff_agent0', 'payoff_agent1', 'history_agent0', 'history_agent1'])
         return pd.DataFrame(result, columns = ['n_sim','round', 'choice_agent0', 'choice_agent1', 'payoff_agent0', 'payoff_agent1'])
     else:
         raise TypeError("Invalid return_val, please use either 'df' or 'list'")

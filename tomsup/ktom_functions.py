@@ -15,11 +15,11 @@ from warnings import warn
 import numpy as np
 from tomsup.payoffmatrix import PayoffMatrix
 import copy
-#from scipy.special import expit as inv_logit
-#from scipy.special import logit
+# from scipy.special import expit as inv_logit
+# from scipy.special import logit
 
 
-# Logit functions
+Logit functions
 def inv_logit(x): 
     """
     This is the inverse logit (or sigmoid) function from the original VBA package
