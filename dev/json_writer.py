@@ -26,6 +26,12 @@ agent_dict = {
      'example': 'TFT()',
      'reference': 'Shelling (1981)',
      'strategy': 'Intended the prisoners dilemma. It starts out cooperating and then simply copies it opponents action.'},
+    'QL': {
+     'name': 'Q-Learning Model',
+     'shorthand': 'QL',
+     'example': 'QL(learning_rate = 0.5, b_temp = 1)',
+     'reference': 'Watkinns (1992)',
+     'strategy': 'A simple reinforcement learning model, which is more choose e.g. 1 if 1 have previously been shown to yield positive result.'},
     'TOM': {
      'name': 'Theory of Mind',
      'shorthand': 'TOM',
@@ -38,8 +44,8 @@ agent_dict = {
 with open('../tomsup/agent_info.json', 'w') as fp:
     json.dump(agent_dict, fp)
 
-with open('../tomsup/agent_info.json', 'r') as fp:
-    data = json.load(fp)
+# with open('../tomsup/agent_info.json', 'r') as fp:
+#     data = json.load(fp)
 
 
 

@@ -243,40 +243,35 @@ class TFT(Agent):
         return self.choice
 
 
-class RL(Agent): 
+class QL(Agent): 
     """
-    'RL': Reinforcement learning
+    'QL': Q-learning model by Watkinns (1992)
     """
-    def __init__(self, learning_rate = 0.5, **kwargs):
-        self.strategy = "RL"
+    def __init__(self, learning_rate = 0.5, b_temp = 0.001, expec_val = [0.5, 0.5],  **kwargs):
+        self.strategy = "QL"
         self.learning_rate = learning_rate
-        self.expec_val = [0.5, 0.5]
+        self.expec_val = expec_val
+        self.b_temp = b_temp
         super().__init__(**kwargs)
-        self._start_params = {'learning_rate': learning_rate, 'expec_val': [0.5, 0.5], **kwargs}
+        self._start_params = {'learning_rate': learning_rate,'b_temp': b_temp, 'expec_val': expec_val, **kwargs}
 
     def compete(self, p_matrix, agent, op_choice = None, **kwargs):
-        if self.choice is None: # if a choice haven't been made: Choose randomly (0 or 1)
-            p_self = 0.5
-        else:  # if a choice have been made:
-            if op_choice is None:
-                raise TypeError("compete() missing 1 required positional argument: 'op_choice',"
-                                " which should be given for all rounds except the first.")
-            
+        
+        if self.choice and op_choice: # if not first round
             #Calculate whether or not last round was a victory
             payoff = p_matrix.payoff(self.choice, op_choice, agent) #calculate payoff from last round
             if payoff > p_matrix().mean(): #if you won last round
                 reward = 1 #Save a win
             else: #and if you lost
                 reward = 0 #Save a loss
-
-            #Update perceived values of options. Only the last chosen option is updated. 
+            #Update perceived values of options. Only the last chosen option is updated
             self.expec_val[self.choice] = self.expec_val[self.choice] + self.learning_rate * (reward - self.expec_val[self.choice])
-            
-            #Calulate own choice probability
-            if self.choice == 0: #if last choice was 0
-                p_self = 1 - self.expec_val[self.choice]
-            else: #And if it was 1
-                p_self = self.expec_val[self.choice]
+        elif self.choice and op_choice is None:
+            raise TypeError("compete() missing 1 required positional argument: 'op_choice',"
+                            " which should be given for all rounds except the first.")
+        
+        #softmax
+        p_self = np.exp(self.expec_val[1] / self.b_temp) / sum(np.exp(np.array(self.expec_val)/self.b_temp))
 
         #Make choice
         self.choice = np.random.binomial(1, p_self) 
