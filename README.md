@@ -31,7 +31,7 @@ To ask questions, report issues or request features, please use the [GitHub Issu
 
 tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [here](https://pip.pypa.io/en/stable/installing/), otherwise simply run 
 
-(**the version on pip currently does not work**)
+(**the version on pip isn't currently fully updated**)
 ```bash
 pip3 install tomsup 
 ```
