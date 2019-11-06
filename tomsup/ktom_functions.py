@@ -1,7 +1,6 @@
 """
 docstring
 
-
 Parameter Order:
 [1] Volatility
 [2] Behavioural temperature
@@ -19,7 +18,7 @@ import copy
 # from scipy.special import logit
 
 
-Logit functions
+# Logit functions
 def inv_logit(x): 
     """
     This is the inverse logit (or sigmoid) function from the original VBA package
