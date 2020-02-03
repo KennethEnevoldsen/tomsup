@@ -23,11 +23,11 @@ n_rounds = 10
 penny_comp = ts.PayoffMatrix(name='penny_competitive')
 
 #Create list of agents
-all_agents = ['RB', 'WSLS', 'QL', 
-          'TOM', 'TOM', 'TOM', 'TOM', 'TOM', 'TOM']
+all_agents = ['RB', 'WSLS', 'TFT', 'QL', 
+          '0-TOM', '1-TOM', '2-TOM', '3-TOM', '4-TOM', '5-TOM']
 #And give them parameters (default if no input is given
-all_params = [{'bias': 0.8}, {'prob_stay': 0.9, 'prob_switch': 0.9}, {'learning_rate': 0.5}, 
-                {'level': 0}, {'level': 1}, {'level': 2}, {'level': 3}, {'level': 4}, {'level': 5}]
+all_params = [{'bias': 0.8}, {'prob_stay': 0.9, 'prob_switch': 0.9}, {'copy_prob':0.9}, {'learning_rate': 0.5}, 
+                {}, {}, {}, {}, {}, {}]
 
 #Create the agent group
 group = ts.AgentGroup(all_agents, all_params)
@@ -40,6 +40,6 @@ print(group)
 print("\n----\n") 
 
 #Hold the toiurnament
-results = group.compete(p_matrix = penny, n_rounds = n_rounds, n_sim = n_sim)
+results = group.compete(p_matrix = penny_comp, n_rounds = n_rounds, n_sim = n_sim)
 #Examine the first 5 rows in results
 results.head() 
