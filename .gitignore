@@ -107,4 +107,5 @@ venv.bak/
 FistPunch_OpenFistPunch_Slap-art.jpg
 old/
 tomsup/__pycache__/*
-
+.vscode/
+.vscode/settings.json
