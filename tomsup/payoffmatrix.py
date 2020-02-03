@@ -109,17 +109,19 @@ class PayoffMatrix():
         str1 = f"<Class PayoffMatrix, Name = {self.name}> "
         str2 = "The payoff matrix of agent 0"
         str3 = "       |  Choice agent 1"
-        str4 = "       | " + f"{add_pl('-')}" + " | " + f"{add_pl(0)}"         + " | " + f"{add_pl(1)}" + " |"
-        str5 = "Choice | " + f"{add_pl(0)}"   + " | " + f"{add_pl(self()[0][0,0])}" + " | " f"{add_pl(self()[0][0,1])}" + " |"
-        str6 = "agent 0| " + f"{add_pl(1)}"   + " | " + f"{add_pl(self()[0][1,0])}" + " | " f"{add_pl(self()[0][1,1])}" + " |"
-        str7 = len(str6) * "-"
-        str8 = "The payoff matrix of agent 1"
-        str9 = "       |  Choice agent 1"
-        str10 = "       | " + f"{add_pl('-')}" + " | " + f"{add_pl(0)}"         + " | " + f"{add_pl(1)}" + " |"
-        str11 = "Choice | " + f"{add_pl(0)}"   + " | " + f"{add_pl(self()[1][0,0])}" + " | " f"{add_pl(self()[1][0,1])}" + " |"
-        str12 = "agent 0| " + f"{add_pl(1)}"   + " | " + f"{add_pl(self()[1][1,0])}" + " | " f"{add_pl(self()[1][1,1])}" + " |"
-        str13 = str7
-        return '\n'.join([str1, str2, str3, str4, str5, str6, str7, str8, str9, str10, str11, str12, str13])
+        str4 = "       | " + f"{add_pl(' ')}" + " | " + f"{add_pl(0)}"         + " | " + f"{add_pl(1)}" + " |"
+        str5= "       | " + print_len*3*"-"+2*"---" + " |"
+        str6 = "Choice | " + f"{add_pl(0)}"   + " | " + f"{add_pl(self()[0][0,0])}" + " | " f"{add_pl(self()[0][0,1])}" + " |"
+        str7 = "agent 0| " + f"{add_pl(1)}"   + " | " + f"{add_pl(self()[0][1,0])}" + " | " f"{add_pl(self()[0][1,1])}" + " |"
+        str8 = " "
+        str9 = "The payoff matrix of agent 1"
+        str10 = "       |  Choice agent 1"
+        str11 = "       | " + f"{add_pl(' ')}" + " | " + f"{add_pl(0)}"         + " | " + f"{add_pl(1)}" + " |"
+        str12 = str5
+        str13 = "Choice | " + f"{add_pl(0)}"   + " | " + f"{add_pl(self()[1][0,0])}" + " | " f"{add_pl(self()[1][0,1])}" + " |"
+        str14 = "agent 0| " + f"{add_pl(1)}"   + " | " + f"{add_pl(self()[1][1,0])}" + " | " f"{add_pl(self()[1][1,1])}" + " |"
+        str15 = str8
+        return '\n'.join([str1, str2, str3, str4, str5, str6, str7, str8, str9, str10, str11, str12, str13, str14, str15])
 
     def get_matrix(self):
         return self.matrix
