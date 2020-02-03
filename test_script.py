@@ -43,3 +43,17 @@ print("\n----\n")
 results = group.compete(p_matrix = penny_comp, n_rounds = n_rounds, n_sim = n_sim)
 #Examine the first 5 rows in results
 results.head() 
+
+#%%
+
+import os
+print(os.getcwd())
+os.chdir('../..')
+#%%
+print(os.getcwd())
+import tomsup as ts
+
+#%%
+group = ts.create_agents(['1-TOM', 'RB']*3, [{}]*6)
+
+# %%
