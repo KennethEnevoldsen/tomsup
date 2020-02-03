@@ -105,3 +105,6 @@ venv.bak/
 .mypy_cache/
 .DS_Store
 FistPunch_OpenFistPunch_Slap-art.jpg
+old/
+tomsup/__pycache__/*
+

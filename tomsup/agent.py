@@ -517,7 +517,7 @@ class AgentGroup():
 
         
     def __str__(self):
-        header = f"<Class AgentGroup, envinment = {self.environment} \n\n" 
+        header = f"<Class AgentGroup, envinment = {self.environment}> \n\n" 
         info = "\n".join(("\t | \t".join(str(ii) for ii in i)) for i in list(zip(self.agent_names, self.start_params)))
         return header + info
         
