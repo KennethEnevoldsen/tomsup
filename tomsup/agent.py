@@ -123,7 +123,6 @@ class Agent():
         else:
             raise Exception("Please input valid format e.g. 'df' or leave format unspecified")
 
-
 class RB(Agent):
     """
     'RB': Random bias agent
@@ -144,10 +143,9 @@ class RB(Agent):
     >>> sirRB.get_history(key = 'choice',format = "list")
     [1, 1]
     """
-    def __init__(self, bias = 0.5, var = 0, **kwargs):
-        self._start_params = {'bias': bias, 'var': var, **kwargs}
-        self.bias = inv_logit(np.random.normal(logit(bias), scale=var))
-        self.var = var
+    def __init__(self, bias = 0.5, **kwargs):
+        self._start_params = {'bias': bias, **kwargs}
+        self.bias = bias
         self.strategy = "RB"
         super().__init__(**kwargs)
 
