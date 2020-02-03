@@ -106,5 +106,5 @@ venv.bak/
 .DS_Store
 FistPunch_OpenFistPunch_Slap-art.jpg
 old/
-tomsup/__pycache__/
+tomsup/__pycache__/*
 
