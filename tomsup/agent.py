@@ -403,6 +403,7 @@ class TOM(Agent):
         _print_internal(self.internal, n = 0, keys_to_print = keys_to_print)
 
 
+
 #########################
 ###___ AGENT GROUP ___###
 #########################
@@ -439,14 +440,17 @@ class AgentGroup():
     def __init__(self, agents, start_params = None):
         # TODO: add option to set payoff matrix and env here
         self.agents = agents
-        if start_params is None:
+        if start_params:
+            if len(agents) != len(start_params):
+                raise ValueError("the length of agents is not equal to the length of starting parameters.")
+        else:
             start_params = [{}] * len(agents)
         self.start_params = start_params
         self.environment = None
         self.pairing = None
             # create unique agent ID's, e.g. a list of 3 RB agent becomes [RB_0, RB_1, RB_2]
         self.agent_names = [agent + '_' + str(idx) for agent in set(agents) for idx in range(agents.count(agent))]
-        self._agents = {name: Agent(agent, **param) for name, agent, param in zip(self.agent_names, agents, start_params)}
+        self._agents = {name: Agent(name.split('_')[0], **param) for name, param in zip(self.agent_names, start_params)}
 
     def get_environment_name(self):
         if self.environment:
