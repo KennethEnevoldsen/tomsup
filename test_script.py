@@ -16,8 +16,8 @@ import random
 random.seed(2)
 
 #Simulation settings
-n_sim = 10
-n_rounds = 50
+n_sim = 2
+n_rounds = 10
 
 #Get payoff matrix
 penny_comp = ts.PayoffMatrix(name='penny_competitive')
@@ -26,8 +26,8 @@ penny_comp = ts.PayoffMatrix(name='penny_competitive')
 all_agents = ['RB', 'WSLS', 'QL', 
           'TOM', 'TOM', 'TOM', 'TOM', 'TOM', 'TOM']
 #And give them parameters (default if no input is given
-all_params = [{'bias': 0.8}, {'prob_stay' = 0.9, 'prob_switch' = 0.9}, {'learning_rate': 0.5}, 
-                {'level' = 0}, {'level' = 1}, {'level' = 2}, {'level' = 3}, {'level' = 4}, {'level' = 5}]
+all_params = [{'bias': 0.8}, {'prob_stay': 0.9, 'prob_switch': 0.9}, {'learning_rate': 0.5}, 
+                {'level': 0}, {'level': 1}, {'level': 2}, {'level': 3}, {'level': 4}, {'level': 5}]
 
 #Create the agent group
 group = ts.AgentGroup(all_agents, all_params)
@@ -43,19 +43,3 @@ print("\n----\n")
 results = group.compete(p_matrix = penny, n_rounds = n_rounds, n_sim = n_sim)
 #Examine the first 5 rows in results
 results.head() 
-
-
-
-
-
-arnault = ts.TOM(level=2, save_history=True)
-bond = ts.TOM(level=1, save_history=True)
-
-results = ts.compete(arnault, bond, penny_comp, n_rounds = n_rounds, n_sim = n_sim)
-
-results['payoff_agent0'].mean()
-
-arnault.get_history()['internal_states'][29]
-bond.get_history()['internal_states'][29]
-
-arnault.get_history(key = 'internal_states')
