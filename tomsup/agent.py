@@ -494,9 +494,9 @@ class AgentGroup():
         else:
             raise TypeError(f"{env} is not a valid environment. Use help() to see valid environments")
 
-    def compete(self, p_matrix, n_rounds = 10, n_sim = 1, reset_agent = True, env = None, save_history = False, silent = False):
-        # TODO: add check to payoffmatrix is already set
-        #(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent = True, return_val = 'df')
+    def compete(self, p_matrix, n_rounds=10, n_sim=1, reset_agent=True, env=None, save_history=False, silent=False):
+        """
+        """
         if self.environment is None and env is None:
             raise TypeError('No env was specified, either specify environment using set_env() or by specifying env for compete()')
         if env:
@@ -506,8 +506,8 @@ class AgentGroup():
         for pair in self.pairing:
             if not silent:
                 print(f"Currently the pair, {pair}, is competing for {n_sim} simulations, each containg {n_rounds} rounds.")
-            res = compete(self._agents[pair[0]], self._agents[pair[1]], p_matrix = p_matrix, n_rounds = n_rounds, 
-                          n_sim = n_sim, reset_agent = reset_agent, return_val = 'df', save_history = save_history,  silent = silent) 
+            res = compete(self._agents[pair[0]], self._agents[pair[1]], p_matrix=p_matrix, n_rounds=n_rounds, 
+                          n_sim=n_sim, reset_agent=reset_agent, return_val='df', save_history=save_history,  silent=silent) 
             res['agent0'] = pair[0]
             res['agent1'] = pair[1]
             result.append(res)
@@ -589,8 +589,8 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
                       p_matrix.payoff(c_0, c_1, agent = 1))
 
             if save_history:
-                history0 = agent_0.get_history(key = "internal_states", format = "list")[-1]
-                history1 = agent_1.get_history(key = "internal_states", format = "list")[-1]
+                history0 = agent_0.get_history(format = "list")[-1]
+                history1 = agent_1.get_history(format = "list")[-1]
                 result.append((i, c_0, c_1, payoff[0], payoff[1], history0, history1))  
             else:
                 result.append((i, c_0, c_1, payoff[0], payoff[1]))
