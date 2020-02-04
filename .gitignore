@@ -110,3 +110,4 @@ tomsup/__pycache__/*
 .vscode/
 .vscode/settings.json
 tomsup/plot_results.py
+.vscode/settings.json

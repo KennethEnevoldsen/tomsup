@@ -9,19 +9,21 @@ Dette er et testscript til at tjekke om pakken fungerer
 #Made bias gradient prior = 0.999999997998081, like in the VBA package
 
 #Import packages
+import os
+os.chdir('..')
 import tomsup as ts
 import random
 import numpy as np
-from scipy.special import expit as S_inv_logit
-from scipy.special import logit as S_logit
+from scipy.special import expit as inv_logit
+from scipy.special import logit as logit
 
 #Set seed for reporoducibility
 random.seed(2)
 
 #Simulation settings
-n_sim = 3
+n_sim = 2
 #n_sim = 200
-n_rounds = 5
+n_rounds = 2
 #n_rounds = 100
 
 #Get payoff matrix
@@ -36,6 +38,9 @@ params_means = [0.8, 0.9,0.9, 0.9, 0.5, -2,-1, -2,-1, -2,-1, -2,-1, -2,-1, -2,-1
 #And the variances of each mean (in this case all the same)
 params_vars = [0.1]*len(params_means)
 
+#Make empty list for inserting parameter values
+parvals = [0]*len(params_means)
+
 #For each simulation
 for sim in range(n_sim):
 
@@ -44,7 +49,7 @@ for sim in range(n_sim):
         #The first five parameters are probability parameters
         if idx <= 4:
             #So they have to be constrained between 0 and 1 by a logit-inv_logit transform
-            parvals[idx] = S_inv_logit(np.random.normal(S_logit(mean), params_vars[idx]))
+            parvals[idx] = inv_logit(np.random.normal(logit(mean), params_vars[idx]))
         #But the other parameters
         else:
             #Can just be sampled
@@ -57,23 +62,29 @@ for sim in range(n_sim):
                     {'volatility':parvals[9], 'b_temp':parvals[10]}, {'volatility':parvals[11], 'b_temp':parvals[12]},
                     {'volatility':parvals[13], 'b_temp':parvals[14]}, {'volatility':parvals[15], 'b_temp':parvals[16]}]
 
+    #Add save_history to all parameter sets
+    for d in all_params:
+        d['save_history'] = True
+
     #And remake the group
     group = ts.AgentGroup(all_agents, all_params)
     group.set_env(env = 'round_robin')
  
     #If its the first simulation
-    if sim == 1:
+    if sim == 0:
         #Do the tournament and initate the results dataframe
-        results = group.compete(p_matrix = penny_comp, n_rounds = n_rounds, n_sim = 1)
+        results = group.compete(p_matrix = penny_comp, n_rounds = n_rounds, save_history = True)
+        #Add column with simulation number
+        results['n_sim'] = sim
     #Otherwise
     else:
         #Run the tournament again
-        result_onesim = group.compete(p_matrix = penny_comp, n_rounds = n_rounds, n_sim = 1)
+        result_onesim = group.compete(p_matrix = penny_comp, n_rounds = n_rounds, save_history = True)
+        #Add column with simulation number
+        result_onesim['n_sim'] = sim
 
         #And append to the results dataframe
-        results.append(result_onesim, ignore_index = True)
+        results = results.append(result_onesim, ignore_index = True)
 
 #Examine the first 5 rows in results
 results.head() 
-
-results.view
