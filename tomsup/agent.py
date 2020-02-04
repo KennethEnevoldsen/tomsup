@@ -508,7 +508,7 @@ class AgentGroup():
             if not silent:
                 print(f"Currently the pair, {pair}, is competing for {n_sim} simulations, each containg {n_rounds} rounds.")
             res = compete(self._agents[pair[0]], self._agents[pair[1]], p_matrix = p_matrix, n_rounds = n_rounds, 
-                          n_sim = n_sim, reset_agent = reset_agent, return_val = 'df', save_history = False,  silent = silent) 
+                          n_sim = n_sim, reset_agent = reset_agent, return_val = 'df', save_history = save_history,  silent = silent) 
             res['agent0'] = pair[0]
             res['agent1'] = pair[1]
             result.append(res)
