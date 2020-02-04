@@ -20,7 +20,9 @@ random.seed(2)
 
 #Simulation settings
 n_sim = 3
+#n_sim = 200
 n_rounds = 5
+#n_rounds = 100
 
 #Get payoff matrix
 penny_comp = ts.PayoffMatrix(name='penny_competitive')
