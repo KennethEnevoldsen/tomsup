@@ -1,5 +1,6 @@
 """
-Currently not in use.
+Currently not in use. See plot.py for plottings functions
+
 """
 
 # Plot functions
@@ -64,7 +65,6 @@ def plot_own_states(agent, state = 'p_k'):
     if state not in ['p_k', 'p_op_mean']:
         print("You can't plot the given state using this function.")
     df = agent.get_history()
-    df = df[1:]
 
     # plot mean
     tmp = df['internal_states'].apply(lambda d: d['own_states'][state][0,:])
@@ -88,7 +88,6 @@ def plot_op_states(agent, op = 0, state = 'p_op_mean0'):
     if state not in ['p_k', 'p_op_mean']:
         print("You can't plot the given state using this function.")
     df = agent.get_history()
-    df = df[1:]
 
     # plot mean
     tmp = df['internal_states'].apply(lambda d: d['opponent_states'][op]['own_states'][state])

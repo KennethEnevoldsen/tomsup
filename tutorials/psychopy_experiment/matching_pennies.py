@@ -69,13 +69,13 @@ def show_text(txt): # Show_text for normal text
 win=visual.Window(fullscr = False)
 stopwatch = core.Clock()
 RH_closed = "images/RH_closed.png"
-LF_closed = "images/LH_closed.png"
+LH_closed = "images/LH_closed.png"
+LH_open = "images/LH_open.png"
+RH_open = "images/RH_open.png"
+LH_coin = "images/LH_coin.png"
+RH_coin = "images/RH_coin.png"
 
 #---------- Preparing dataframe for CSV ----------
-
-#tmp
-#n_trials = 2; ID = 1; age = 21; gender = "M"; k = 2
-
 trial_list = []
 for trial in range(n_trials):
     trial_list += [{
@@ -97,10 +97,18 @@ for trial in range(n_trials):
 show_text(intro0)
 show_text(intro1)
 op_choice = None # setting opponenent choice to none for the first round 
+current_score_part = 0
+current_score_tom  = 0
+
+img_pos1 = [-0.50, 0.]
+img_pos2 = [ 0.50, 0.]
+img_size = [0.9,0.9]
+
+wait_time = 2
 
 for trial in trial_list:
-    picture1 = visual.ImageStim(win, image = RH_closed, pos = [-0.38, 0.3], units='norm', size=[1.1, 1.1])
-    picture2 = visual.ImageStim(win, image = LF_closed, pos = [ 0.38, 0.3], units='norm', size=[1.1, 1.1])
+    picture1 = visual.ImageStim(win, image = RH_closed, pos = img_pos1, units='norm', size=img_size)
+    picture2 = visual.ImageStim(win, image = LH_closed, pos = img_pos2, units='norm', size=img_size)
     picture1.draw()
     picture2.draw()
     stopwatch.reset()
@@ -111,18 +119,48 @@ for trial in trial_list:
         core.quit()
     if k[0] == 'left':
         resp_part = 0
-    elif k[0] in 'right':
+        trial['RT'] = stopwatch.getTime()
+        picture1 = visual.ImageStim(win, image = RH_open, pos = img_pos1, units='norm', size=img_size)
+        picture2 = visual.ImageStim(win, image = LH_coin, pos = img_pos2, units='norm', size=img_size)
+        picture1.draw()
+        picture2.draw()
+        win.flip()
+        core.wait(wait_time)
+    elif k[0] == 'right':
         resp_part = 1
+        trial['RT'] = stopwatch.getTime()
+        picture1 = visual.ImageStim(win, image = RH_coin, pos = img_pos1, units='norm', size=img_size)
+        picture2 = visual.ImageStim(win, image = LH_open, pos = img_pos2, units='norm', size=img_size)
+        picture1.draw()
+        picture2.draw()
+        win.flip()
+        core.wait(wait_time)
 
-    resp_tom = tom.compete(p_matrix=penny, op_choice = op_choice)
+    # get ToM response
+    resp_tom = tom.compete(p_matrix=penny, op_choice = op_choice, agent = 1)
+
+    # get payoff
     payoff_part = penny.payoff(action_agent0 = resp_part, action_agent1 = resp_tom, agent=0) #agent0 is seeker e.g. the participant
     payoff_tom = penny.payoff(action_agent0 = resp_part, action_agent1 = resp_tom, agent=1)
-    trial['RT'] = stopwatch.getTime()
-    # trial['Left_image'] = imagestimulus_left
-    # trial['Right_image'] = imagestimulus_right
-    # trial['Response'] = response
+
+    # Give response text
+    rl_tom = "left" if resp_tom == 0 else "right"
+    current_score_part += payoff_part
+    current_score_tom  += payoff_tom
+    show_text(f"You choose {k[0]} and penny was in the {rl_tom} hand. This results in a payoff of {payoff_part}. This mean that \n\n your current score is: " + 
+              f"{current_score_part} \n your opponents score is: {current_score_tom}. Press enter to continue.")
+
+    # Save data
+    trial['Response_participant'] = resp_part
+    trial['Response_tom']         = resp_tom
+    trial['payoff_participant']   = payoff_part
+    trial['payoff_tom']           = payoff_tom
+    
+        # write data (writes at each trial, so that even if the program crashes there should be an issue)
+    pd.DataFrame(trial_list).to_csv("data/ID_" + str(ID) + ".csv")
 
 if not os.path.exists("data"):
       os.makedirs("data")
 
+    # write data
 pd.DataFrame(trial_list).to_csv("data/ID_" + str(ID) + ".csv")
