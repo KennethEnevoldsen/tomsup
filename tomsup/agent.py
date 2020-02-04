@@ -67,6 +67,8 @@ class Agent():
             pass
         elif self.history.empty:
             self.history = pd.DataFrame(data = kwargs, index=[0])
+            if self.strategy.split('-')[-1] == "TOM":
+                self.history.loc[0, 'internal_states'] = [kwargs['internal_states']]
         else:
             self.history = self.history.append(kwargs, ignore_index=True)
 
@@ -237,7 +239,7 @@ class TFT(Agent):
             copy = np.random.binomial(1, self.copy_prob)
             #Calculate resulting choice
             self.choice = copy * op_choice + (1 - copy) * (1 - op_choice)
-        self._add_to_history(choice = self.choice, choice_op = op_choice)
+        self._add_to_history(choice = self.choice)
         return self.choice
 
 
@@ -447,7 +449,7 @@ class AgentGroup():
         self.environment = None
         self.pairing = None
             # create unique agent ID's, e.g. a list of 3 RB agent becomes [RB_0, RB_1, RB_2]
-        self.agent_names = [agent + '_' + str(idx) for agent in set(agents) for idx in range(agents.count(agent))]
+        self.agent_names = [v + "_" + str(agents[:i].count(v)) if agents.count(v) > 1 else v for i, v in enumerate(agents)]
         self._agents = {name: Agent(name.split('_')[0], **param) for name, param in zip(self.agent_names, start_params)}
 
     def get_environment_name(self):
@@ -493,18 +495,20 @@ class AgentGroup():
         else:
             raise TypeError(f"{env} is not a valid environment. Use help() to see valid environments")
 
-    def compete(self, p_matrix, n_rounds = 10, n_sim = 1, reset_agent = True, env = None, silent = False):
+    def compete(self, p_matrix, n_rounds = 10, n_sim = 1, reset_agent = True, env = None, save_history = False, silent = False):
         # TODO: add check to payoffmatrix is already set
         #(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent = True, return_val = 'df')
         if self.environment is None and env is None:
             raise TypeError('No env was specified, either specify environment using set_env() or by specifying env for compete()')
+        if env:
+            self.set_env(env)
 
         result = []
         for pair in self.pairing:
             if not silent:
                 print(f"Currently the pair, {pair}, is competing for {n_sim} simulations, each containg {n_rounds} rounds.")
             res = compete(self._agents[pair[0]], self._agents[pair[1]], p_matrix = p_matrix, n_rounds = n_rounds, 
-                          n_sim = n_sim, reset_agent = reset_agent, return_val = 'df', silent = silent) 
+                          n_sim = n_sim, reset_agent = reset_agent, return_val = 'df', save_history = False,  silent = silent) 
             res['agent0'] = pair[0]
             res['agent1'] = pair[1]
             result.append(res)
