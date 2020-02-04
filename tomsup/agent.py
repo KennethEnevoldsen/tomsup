@@ -102,9 +102,8 @@ class Agent():
             'list': for a list. Only valid if key is a str
         """
         if self.get_history is None:
-            warn("save_history is unspecified or set to False. Consequently None is returned." + 
-                 " Set save_history = True if you want to save agent history", Warning)
-            return None
+            raise Exception("save_history is unspecified or set to False. Consequently you can't get history." + 
+                 " Set save_history = True if you want to save agent history")
         if key is None:
             _return = self.history
         elif isinstance(key, list) or isinstance(key, str):
