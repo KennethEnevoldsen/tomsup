@@ -30,11 +30,11 @@ n_rounds = 2
 penny_comp = ts.PayoffMatrix(name='penny_competitive')
 
 #Create list of agents
-all_agents = ['RB', 'WSLS', 'TFT', 'QL', 
+all_agents = ['RB', 'WSLS', 'QL', 
           '0-TOM', '1-TOM', '2-TOM', '3-TOM', '4-TOM', '5-TOM']
 
 #Write down parameter means
-params_means = [0.8, 0.9,0.9, 0.9, 0.5, -2,-1, -2,-1, -2,-1, -2,-1, -2,-1, -2,-1]
+params_means = [0.8, 0.9,0.9, 0.5, -2,-1, -2,-1, -2,-1, -2,-1, -2,-1, -2,-1]
 #And the variances of each mean (in this case all the same)
 params_vars = [0.1]*len(params_means)
 
@@ -56,8 +56,7 @@ for sim in range(n_sim):
             parvals[idx] = np.random.normal(mean, params_vars[idx])
     
     #Save them for group input
-    all_params = [{'bias': parvals[0]}, {'prob_stay': parvals[1], 'prob_switch': parvals[2]}, 
-                    {'copy_prob': parvals[3]}, {'learning_rate': parvals[4]}, 
+    all_params = [{'bias': parvals[0]}, {'prob_stay': parvals[1], 'prob_switch': parvals[2]}, {'learning_rate': parvals[4]}, 
                     {'volatility':parvals[5], 'b_temp':parvals[6]}, {'volatility':parvals[7], 'b_temp':parvals[8]},
                     {'volatility':parvals[9], 'b_temp':parvals[10]}, {'volatility':parvals[11], 'b_temp':parvals[12]},
                     {'volatility':parvals[13], 'b_temp':parvals[14]}, {'volatility':parvals[15], 'b_temp':parvals[16]}]
@@ -86,5 +85,10 @@ for sim in range(n_sim):
         #And append to the results dataframe
         results = results.append(result_onesim, ignore_index = True)
 
+#Save to CSV and pkl
+results.to_csv(r'Large_Simulation_results.csv')
+results.to_pickle(r'Large_Simulation_results.pkl')
+
 #Examine the first 5 rows in results
-results.head() 
+results.head(20) 
+
