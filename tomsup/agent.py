@@ -10,7 +10,7 @@ from itertools import combinations
 from tomsup.ktom_functions import k_tom, init_k_tom
 from scipy.special import expit as inv_logit
 from scipy.special import logit
-import random   
+import random    
 
 ###################
 ###___ AGENT ___###
