@@ -117,13 +117,14 @@ class Agent():
         elif format == "dict":
             return dict(_return)
         elif format == "list":
-            if isinstance(key, str):
-                return list(_return)
-            else:
-                raise Exception("Format cannot be 'list' if key is given as a list or left unspecified." +
-                                " Key should be given as a string e.g. key = 'choice'.")
+            # if isinstance(key, str):
+            #     return list(_return)
+            return list(_return)
+            # else:
+            #     raise Exception("Format cannot be 'list' if key is given as a list or left unspecified." +
+            #                     " Key should be given as a string e.g. key = 'choice'.")
         else:
-            raise Exception("Please input valid format e.g. 'df' or leave format unspecified")
+            raise Exception("Please input valid format e.g. 'df' or 'list' or leave format unspecified")
 
 class RB(Agent):
     """
@@ -590,8 +591,8 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
                       p_matrix.payoff(c_0, c_1, agent = 1))
 
             if save_history:
-                history0 = agent_0.get_history(format = "list")[-1]
-                history1 = agent_1.get_history(format = "list")[-1]
+                history0 = agent_0.history.tail(1).to_dict('r')[0]
+                history1 = agent_1.history.tail(1).to_dict('r')[0]
                 result.append((i, c_0, c_1, payoff[0], payoff[1], history0, history1))  
             else:
                 result.append((i, c_0, c_1, payoff[0], payoff[1]))
