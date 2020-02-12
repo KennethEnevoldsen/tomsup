@@ -14,6 +14,7 @@ os.chdir('..')
 import tomsup as ts
 import random
 import numpy as np
+import pandas as pd
 from scipy.special import expit as inv_logit
 from scipy.special import logit as logit
 
@@ -24,17 +25,17 @@ random.seed(2)
 #n_sim = 2
 n_sim = 100
 #n_rounds = 2
-n_rounds = 200
+n_rounds = 100
 
 #Get payoff matrix
 penny_comp = ts.PayoffMatrix(name='penny_competitive')
 
 #Create list of agents
-all_agents = ['RB', 'WSLS', 'TFT', 'QL', 
+all_agents = ['RB', 'WSLS', 'QL', 
           '0-TOM', '1-TOM', '2-TOM', '3-TOM', '4-TOM', '5-TOM']
 
 #Write down parameter means
-params_means = [0.8, 0.9,0.9, 0.9, 0.5, -2,-1, -2,-1, -2,-1, -2,-1, -2,-1, -2,-1]
+params_means = [0.8, 0.9,0.9, 0.5, -2,-1, -2,-1, -2,-1, -2,-1, -2,-1, -2,-1]
 #And the variances of each mean (in this case all the same)
 params_vars = [0.1]*len(params_means)
 
@@ -48,8 +49,8 @@ for sim in range(n_sim):
 
     #Resample parameter values
     for idx, mean in enumerate(params_means):
-        #The first five parameters are probability parameters
-        if idx <= 4:
+        #The first four parameters are probability parameters
+        if idx <= 3:
             #So they have to be constrained between 0 and 1 by a logit-inv_logit transform
             parvals[idx] = inv_logit(np.random.normal(logit(mean), params_vars[idx]))
         #But the other parameters
@@ -58,11 +59,10 @@ for sim in range(n_sim):
             parvals[idx] = np.random.normal(mean, params_vars[idx])
     
     #Save them for group input
-    all_params = [{'bias': parvals[0]}, {'prob_stay': parvals[1], 'prob_switch': parvals[2]}, 
-                    {'copy_prob': parvals[3]}, {'learning_rate': parvals[4]}, 
-                    {'volatility':parvals[5], 'b_temp':parvals[6]}, {'volatility':parvals[7], 'b_temp':parvals[8]},
-                    {'volatility':parvals[9], 'b_temp':parvals[10]}, {'volatility':parvals[11], 'b_temp':parvals[12]},
-                    {'volatility':parvals[13], 'b_temp':parvals[14]}, {'volatility':parvals[15], 'b_temp':parvals[16]}]
+    all_params = [{'bias': parvals[0]}, {'prob_stay': parvals[1], 'prob_switch': parvals[2]}, {'learning_rate': parvals[3]}, 
+                    {'volatility':parvals[4], 'b_temp':parvals[5]}, {'volatility':parvals[6], 'b_temp':parvals[7]},
+                    {'volatility':parvals[8], 'b_temp':parvals[9]}, {'volatility':parvals[10], 'b_temp':parvals[11]},
+                    {'volatility':parvals[12], 'b_temp':parvals[13]}, {'volatility':parvals[14], 'b_temp':parvals[15]}]
 
     #Add save_history to all parameter sets
     for d in all_params:
@@ -89,9 +89,9 @@ for sim in range(n_sim):
         results = results.append(result_onesim, ignore_index = True)
 
         #Save the results so far
-        results.to_pickle(r'Large_Simulation_results.pkl')
+        results.to_pickle(r'simulations/results/Large_Simulation_results_temp.pkl')
 
 #Save to CSV and pkl
-results.to_csv(r'Large_Simulation_results.csv')
+results.to_pickle(r'simulations/results/Large_Simulation_results.pkl')
 
 #group.get_agent('0-TOM').get_history()['internal_states'][0]
