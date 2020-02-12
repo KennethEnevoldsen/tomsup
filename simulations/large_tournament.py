@@ -22,9 +22,9 @@ random.seed(2)
 
 #Simulation settings
 #n_sim = 2
-n_sim = 200
+n_sim = 100
 #n_rounds = 2
-n_rounds = 100
+n_rounds = 200
 
 #Get payoff matrix
 penny_comp = ts.PayoffMatrix(name='penny_competitive')
@@ -43,6 +43,8 @@ parvals = [0]*len(params_means)
 
 #For each simulation
 for sim in range(n_sim):
+
+    print(f"Simulation {sim}")
 
     #Resample parameter values
     for idx, mean in enumerate(params_means):
@@ -73,21 +75,23 @@ for sim in range(n_sim):
     #If its the first simulation
     if sim == 0:
         #Do the tournament and initate the results dataframe
-        results = group.compete(p_matrix = penny_comp, n_rounds = n_rounds, save_history = True)
+        results = group.compete(p_matrix = penny_comp, n_rounds = n_rounds, save_history = True, silent=True)
         #Add column with simulation number
         results['n_sim'] = sim
     #Otherwise
     else:
         #Run the tournament again
-        result_onesim = group.compete(p_matrix = penny_comp, n_rounds = n_rounds, save_history = True)
+        result_onesim = group.compete(p_matrix = penny_comp, n_rounds = n_rounds, save_history = True, silent=True)
         #Add column with simulation number
         result_onesim['n_sim'] = sim
 
         #And append to the results dataframe
         results = results.append(result_onesim, ignore_index = True)
 
+        #Save the results so far
+        results.to_pickle(r'Large_Simulation_results.pkl')
+
 #Save to CSV and pkl
 results.to_csv(r'Large_Simulation_results.csv')
-results.to_pickle(r'Large_Simulation_results.pkl')
 
 #group.get_agent('0-TOM').get_history()['internal_states'][0]
