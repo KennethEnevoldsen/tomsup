@@ -20,22 +20,18 @@ import warnings
 
 
 
-def fxn():
-    warnings.warn("deprecated", RuntimeWarning)
+#def fxn():
+#    warnings.warn("deprecated", RuntimeWarning)
 
-with warnings.catch_warnings(record=True) as w:
+#with warnings.catch_warnings(record=True) as w:
     # Cause all warnings to always be triggered.
-    warnings.simplefilter("always")
+#    warnings.simplefilter("always")
     # Trigger a warning.
-    fxn()
+#    fxn()
     # Verify some things
-    assert len(w) == 1
-    assert issubclass(w[-1].category, RuntimeWarning)
-    assert "deprecated" in str(w[-1].message)
-
-
-
-
+#    assert len(w) == 1
+#    assert issubclass(w[-1].category, RuntimeWarning)
+#    assert "deprecated" in str(w[-1].message)
 
 # Logit functions
 def inv_logit(x): 
@@ -48,19 +44,24 @@ def inv_logit(x):
     #Set precision parameter (0 means perfect precision)
     epsilon = 1e-9 
 
+    #Set input bounds
+    if np.any(x > 500):
+        #For scalars
+        if np.shape(x) == ():
+            x = 500
+        #Or vectors etc
+        else:
+            x[x > 500] = 500
+        #warn("Logit input constrained at upper bound 0.9999 to avoid rounding errors", Warning)
+    if np.any(x < -500):
+        if np.shape(x) == ():
+            x = -500
+        else:
+            x[x < -500] = -500
+        #warn("Logit input constrained at lower bound 0.0001 to avoid rounding errors", Warning)
+
     #Calculate
-
-    with warnings.catch_warnings(record=True) as w:
-        # Cause all warnings to always be triggered.
-        warnings.simplefilter("always")
-        #Trigger warning
-        y = epsilon + (1 - 2 * epsilon) / (1 + np.exp(-x))
-
-        if len(w) < 0:
-            assert issubclass(w[-1].category, RuntimeWarning)
-            if issubclass(w[-1].category, RuntimeWarning):
-                print('HERE WE GO')
-                assert issubclass(w[-1].category, DeprecationWarning)
+    y = epsilon + (1 - 2 * epsilon) / (1 + np.exp(-x))
 
     return y
 
@@ -68,22 +69,6 @@ def logit(x):
     """
     This is the the logit function from the original VBA package. See that package for mor information.
     """
-
-#    #Set input bounds
-#    if np.any(x > 0.9999):
-#        #For scalars
-#        if np.shape(x) == ():
-#            x = 0.9999
-#        #Or vectors etc
-#        else:
-#            x[x > 0.9999] = 0.9999
-#        warn("Logit input constrained at upper bound 0.9999 to avoid rounding errors", Warning)
-#    if np.any(x < 0.0001):
-#        if np.shape(x) == ():
-#            x = 0.0001
-#        else:
-#            x[x < 0.0001] = 0.0001
-#        warn("Logit input constrained at lower bound 0.0001 to avoid rounding errors", Warning)
 
     #Calculate
     lx = (x) **-1 - 1
@@ -414,10 +399,10 @@ def softmax(expected_payoff, params):
     #Set output bounds
     if p_self > 0.999:
         p_self = 0.999
-        warn("Choice probability constrained at upper bound 0.999 to avoid rounding errors", Warning)
+        #warn("Choice probability constrained at upper bound 0.999 to avoid rounding errors", Warning)
     if p_self < 0.001:
         p_self = 0.001
-        warn("Choice probability constrained at lower bound 0.001 to avoid rounding errors", Warning)
+        #warn("Choice probability constrained at lower bound 0.001 to avoid rounding errors", Warning)
 
     return p_self
 
