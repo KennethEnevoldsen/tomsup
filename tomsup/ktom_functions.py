@@ -14,8 +14,27 @@ from warnings import warn
 import numpy as np
 from tomsup.payoffmatrix import PayoffMatrix
 import copy
+import warnings
 # from scipy.special import expit as inv_logit
 # from scipy.special import logit
+
+
+
+def fxn():
+    warnings.warn("deprecated", RuntimeWarning)
+
+with warnings.catch_warnings(record=True) as w:
+    # Cause all warnings to always be triggered.
+    warnings.simplefilter("always")
+    # Trigger a warning.
+    fxn()
+    # Verify some things
+    assert len(w) == 1
+    assert issubclass(w[-1].category, RuntimeWarning)
+    assert "deprecated" in str(w[-1].message)
+
+
+
 
 
 # Logit functions
@@ -30,7 +49,18 @@ def inv_logit(x):
     epsilon = 1e-9 
 
     #Calculate
-    y = epsilon + (1 - 2 * epsilon) / (1 + np.exp(-x))
+
+    with warnings.catch_warnings(record=True) as w:
+        # Cause all warnings to always be triggered.
+        warnings.simplefilter("always")
+        #Trigger warning
+        y = epsilon + (1 - 2 * epsilon) / (1 + np.exp(-x))
+
+        if len(w) < 0:
+            assert issubclass(w[-1].category, RuntimeWarning)
+            if issubclass(w[-1].category, RuntimeWarning):
+                print('HERE WE GO')
+                assert issubclass(w[-1].category, DeprecationWarning)
 
     return y
 
@@ -38,6 +68,23 @@ def logit(x):
     """
     This is the the logit function from the original VBA package. See that package for mor information.
     """
+
+#    #Set input bounds
+#    if np.any(x > 0.9999):
+#        #For scalars
+#        if np.shape(x) == ():
+#            x = 0.9999
+#        #Or vectors etc
+#        else:
+#            x[x > 0.9999] = 0.9999
+#        warn("Logit input constrained at upper bound 0.9999 to avoid rounding errors", Warning)
+#    if np.any(x < 0.0001):
+#        if np.shape(x) == ():
+#            x = 0.0001
+#        else:
+#            x[x < 0.0001] = 0.0001
+#        warn("Logit input constrained at lower bound 0.0001 to avoid rounding errors", Warning)
+
     #Calculate
     lx = (x) **-1 - 1
     y = 0 - 1**-1 * np.log(lx)
