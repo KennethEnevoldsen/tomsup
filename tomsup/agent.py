@@ -57,8 +57,10 @@ class Agent():
 
 
 
-    def reset(self):
+    def reset(self, save_history = None):
         if self._start_params:
+            if save_history is not None:
+                self._start_params['save_history'] = save_history
             self.__init__(**self._start_params)
         else:
             self.__init__()
@@ -562,8 +564,8 @@ def compete(agent_0, agent_1, p_matrix, n_rounds = 1, n_sim = None, reset_agent 
     if isinstance(p_matrix, str):
         p_matrix = PayoffMatrix(name = p_matrix)
     if reset_agent:
-        agent_0.reset()
-        agent_1.reset()
+        agent_0.reset(save_history = save_history)
+        agent_1.reset(save_history = save_history)
 
     if n_sim:
         if reset_agent is False: # make sure people don't do things they regret
