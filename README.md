@@ -1,4 +1,6 @@
-# tomsup: Theory of Mind Simulation using Python
+# tomsup 👍
+## Theory of Mind Simulation using Python
+
 A Python Package for Agent Based simulations.
 
 <!--  # NOT RENDERED
