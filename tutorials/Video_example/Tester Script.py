@@ -9,6 +9,7 @@ import tomsup as ts
 
 #Create environment
 penny = ts.PayoffMatrix("penny_competitive")
+penny.get_matrix()
 
 #Creating the agents
 rb = ts.RB(bias = 0.8, #choice probability of RB
@@ -26,7 +27,7 @@ tom2 = ts.TOM(level = 2,
             dilution = None, #The agent does not forget and also does not estimate dilution
             save_history = True) #saving ToM's states on every trial
 
-#Single trial choices
+# Single trial choices
 rb.compete(p_matrix = penny, #the payoff matrix used
             agent = 0, #agent 0 is the seeker (?)
             op_choice = None) #the opponent's choice is None on the first round. But RB doesn't care anyways.
@@ -41,6 +42,7 @@ tom0.compete(p_matrix = penny,
 
 #Make them play against each other
 results = ts.compete(rb, tom0, p_matrix = penny, n_rounds = 30, save_history=True)
+results.head(5)
 
 #Look at tom's internal states
 tom0.get_history()["internal_states"][10]['own_states'] #they're in the agent
@@ -53,11 +55,12 @@ params = [{'bias': 0.7}, #RB's parameters
           {'volatility': -3, 'b_temp': 0, 'dilution': 0.1}] #2-ToM's parameters
 
 group = ts.create_agents(agents, params) #Create the group
+type(group)
 group.set_env(env = 'round_robin') #Set the tournament structure. Right now there's only one option
 print(group) #check the group settings
 
 #Make the group compete
-results = group.compete(p_matrix = penny, n_rounds = 20, n_sim = 4)
+results = group.compete(p_matrix = penny, n_rounds = 40, n_sim = 4)
 results.head() #examine the first 5 rows in results
 
 #Plot score and choices for some competing agents (WORK IN PROGRESS)
