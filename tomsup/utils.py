@@ -1,18 +1,22 @@
 """
 This script contains utility functions
 """
-import pandas as pd
-from tomsup.agent import AgentGroup
-from tomsup.agent import Agent
 import json
 import os
 
+import pandas as pd
+
+from tomsup.agent import AgentGroup
+from tomsup.agent import Agent
+
+
 def valid_agents():
     """
-    prints dictionary of valid agent, where each key is an valid agent shorthand.
-    Each dictionary key (e.g. shorthand) refers to a new dictionary containing, 
-    additional information, such as a short description of the strategy, 
-    a code exampel and a reference. See examples for more. 
+    prints dictionary of valid agent, where each key is an valid agent
+    shorthand.
+    Each dictionary key (e.g. shorthand) refers to a new dictionary containing,
+    additional information, such as a short description of the strategy,
+    a code exampel and a reference. See examples for more.
 
     TODO: fix output of examples
 
@@ -21,7 +25,7 @@ def valid_agents():
     >>> isinstance(output, dict)
     True
     >>> output.keys()
-    dict_keys(['RB', 'WSLS']) 
+    dict_keys(['RB', 'WSLS'])
     >>> output['RB']
     {'name': 'Random Bias',
     'shorthand': 'RB',
@@ -36,7 +40,7 @@ def valid_agents():
     return agent_dict
 
 
-def create_agents(agents, start_params = None, **kwargs):
+def create_agents(agents, start_params=None, **kwargs):
     """
     Given a list of agents and their starting parameters returns an
     object agent_group.
@@ -60,12 +64,11 @@ def create_agents(agents, start_params = None, **kwargs):
             save_history = start_params["save_history"]
         else:
             save_history = False
-        return Agent(strategy = agents, save_history = save_history, **kwargs)
-    return AgentGroup(agents = agents, start_params = start_params)
+        return Agent(strategy=agents, save_history=save_history, **kwargs)
+    return AgentGroup(agents=agents, start_params=start_params)
 
 
-
-# %% Run test
+# Run test
 if __name__ == "__main__":
-  import doctest
-  doctest.testmod(verbose=True)
+    import doctest
+    doctest.testmod(verbose=True)
