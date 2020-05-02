@@ -8,9 +8,10 @@ import random
 import pandas as pd
 import numpy as np
 
-from tomsup.ktom_functions import k_tom, init_k_tom
+from tomsup.ktom_functions import k_tom, init_k_tom, inv_logit
 from tomsup.payoffmatrix import PayoffMatrix
-from tomsup.plot import choice, score
+from tomsup.plot import choice, score, ResultsDf, plot_history, plot_p_k,\
+    plot_p_op_1, plot_p_self, plot_op_states, plot_heatmap
 
 
 ###################
@@ -431,14 +432,6 @@ class TOM(Agent):
 #########################
 # ___ AGENT GROUP ___
 #########################
-class ResultsDf(pd.DataFrame):
-    def plot_choice(self, agent0, agent1, agent=0):
-        choice(self.df, agent0, agent1, agent=agent)
-
-    def plot_score(self, agent0, agent1, agent=0):
-        score(self.df, agent0, agent1, agent=agent)
-
-
 
 class AgentGroup():
     """
@@ -571,7 +564,78 @@ class AgentGroup():
 
         if not silent:
             print("Simulation complete")
-        return ResultsDf(pd.concat(result))  # concatenate into one df
+
+        self.__df = ResultsDf(pd.concat(result))  # concatenate into one df
+
+    def get_results(self):
+        return self.__df
+
+    def plot_heatmap(self, aggregate_col='payoff_agent',
+                     aggregate_fun=np.mean, certainty_fun='mean_ci_95',
+                     figsize=(11.7, 11.7), cmap="Blues", dpi=300,
+                     na_color='xkcd:white', x_axis='', y_axis=''):
+        plot_heatmap(self.__df, aggregate_col,
+                     aggregate_fun, certainty_fun,
+                     figsize, cmap, dpi,
+                     na_color, x_axis, y_axis)
+
+    def plot_choice(self, agent0, agent1, agent=0):
+        choice(self.__df, agent0, agent1, agent=agent)
+
+    def plot_score(self, agent0, agent1, agent=0):
+        score(self.df, agent0, agent1, agent=agent)
+
+    def plot_history(self, agent0, agent1, state, agent=0, fun=lambda x: x[state]):
+        """
+        agent0 (str): an agent name in the agent0 column in the df
+        agent1 (str): an agent name in the agent1 column in the df
+        agent (0|1): An indicate of which agent of agent 0 and 1 you wish to plot
+        state (str): a state of the agent you wish to plot.
+        """
+        plot_history(self.__df, agent0, agent1, state, agent, fun)
+
+    def plot_p_op_1(self, agent0, agent1, agent=0):
+        self.__tom_in_group(agent0, agent1, agent)
+        plot_p_op_1(self.__df, agent0, agent1, agent=0)
+
+    def plot_p_k(self, agent0, agent1, agent=0):
+        self.__tom_in_group(agent0, agent1, agent)
+        plot_p_k(self.__df, agent0, agent1, agent=0)
+
+    def plot_p_self(self, agent0, agent1, agent=0):
+        self.__tom_in_group(agent0, agent1, agent)
+        plot_p_self(self.__df, agent0, agent1, agent=0)
+
+    def plot_op_states(self, agent0, agent1, state, level=0, agent=0):
+        """
+        agent0 (str): an agent name in the agent0 column in the df
+        agent1 (str): an agent name in the agent1 column in the df
+        agent (0|1): An indicate of which agent of agent 0 and 1 you wish to plot
+        the indicated agent must be a theory of mind agent (ToM)
+        state (str): a state of the simulated opponent you wish to plot.
+        level (str): level of the similated opponent you wish to plot.
+        """
+        self.__tom_in_group(agent0, agent1, agent)
+        plot_op_states(self.__df, agent0, agent1, state, level=0, agent=0)
+
+    def plot_bias_estimate(self, agent0, agent1, agent=0):
+        """
+        """
+        a = self.__tom_in_group(agent0, agent1, agent)
+        if a.bias is not None:
+            plot_history(self.__df, agent0, agent1,
+                         state=None, agent=agent,
+                         fun=lambda x: inv_logit(x['internal_states']['own_states']['param_mean'][0, -1]))
+        else:
+            raise ValueError("The desired agent does not estimate a bias")
+
+    def __tom_in_group(self, agent0, agent1, agent):
+        a = agent0 if agent == 0 else agent1
+        agent = self._agents[a]
+        if isinstance(agent, TOM):
+            return agent
+        raise ValueError(f"The function called requires desired agent to be a ToM agent\
+            but the specified agent ({a}) is a agent of type {type(agent)}")
 
     def __str__(self):
         header = f"<Class AgentGroup, envinment = {self.environment}> \n\n"

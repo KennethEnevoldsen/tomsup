@@ -16,7 +16,7 @@ setuptools.setup(
    url="https://github.com/KennethEnevoldsen/tomsup",
    packages=setuptools.find_packages(),
    # external packages as dependencies
-   install_requires=['numpy', 'pandas', 'scipy', 'matplotlib'],
+   install_requires=['numpy', 'pandas', 'scipy', 'matplotlib', 'seaborn'],
 
    # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
    classifiers=[

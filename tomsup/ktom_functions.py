@@ -298,7 +298,7 @@ def gradient_update(params,
             sim_params_incr,
             sim_agent,
             sim_level,
-            p_matrix)
+            p_matrix)[0]  # only use the first part of the output
 
         # Calculate the gradient: a measure of the size of the influence of
         # the incremented parameter value
@@ -525,7 +525,7 @@ def learning_function(prev_internal_states,
                 sim_params,
                 sim_agent,
                 sim_level,
-                p_matrix)
+                p_matrix)[0]  # only use the first part of the output
 
             # Update gradient (recursive)
             gradient[sim_level] = gradient_update(
