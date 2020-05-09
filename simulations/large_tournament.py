@@ -104,4 +104,4 @@ for sim in range(n_sim):
 # Save to CSV and pkl
 results.to_pickle(r'simulations/results/Large_Simulation_results.pkl')
 
-#group.get_agent('0-TOM').get_history()['internal_states'][0]
+# group.get_agent('0-TOM').get_history()['internal_states'][0]

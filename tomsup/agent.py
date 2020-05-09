@@ -570,14 +570,16 @@ class AgentGroup():
     def get_results(self):
         return self.__df
 
+    def head(self, n):
+        return self.__df.head(n)
+
     def plot_heatmap(self, aggregate_col='payoff_agent',
                      aggregate_fun=np.mean, certainty_fun='mean_ci_95',
-                     figsize=(11.7, 11.7), cmap="Blues", dpi=300,
+                     cmap="Blues",
                      na_color='xkcd:white', x_axis='', y_axis=''):
         plot_heatmap(self.__df, aggregate_col,
                      aggregate_fun, certainty_fun,
-                     figsize, cmap, dpi,
-                     na_color, x_axis, y_axis)
+                     cmap, na_color, x_axis, y_axis)
 
     def plot_choice(self, agent0, agent1, agent=0):
         choice(self.__df, agent0, agent1, agent=agent)
@@ -596,15 +598,15 @@ class AgentGroup():
 
     def plot_p_op_1(self, agent0, agent1, agent=0):
         self.__tom_in_group(agent0, agent1, agent)
-        plot_p_op_1(self.__df, agent0, agent1, agent=0)
+        plot_p_op_1(self.__df, agent0, agent1, agent)
 
-    def plot_p_k(self, agent0, agent1, agent=0):
+    def plot_p_k(self, agent0, agent1, agent=0, k=0):
         self.__tom_in_group(agent0, agent1, agent)
-        plot_p_k(self.__df, agent0, agent1, agent=0)
+        plot_p_k(self.__df, agent0, agent1, agent, k)
 
     def plot_p_self(self, agent0, agent1, agent=0):
         self.__tom_in_group(agent0, agent1, agent)
-        plot_p_self(self.__df, agent0, agent1, agent=0)
+        plot_p_self(self.__df, agent0, agent1, agent)
 
     def plot_op_states(self, agent0, agent1, state, level=0, agent=0):
         """

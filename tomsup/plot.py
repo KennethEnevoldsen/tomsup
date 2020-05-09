@@ -43,7 +43,7 @@ def mean_confidence_interval(x, confidence=0.95):
 
 def plot_heatmap(df, aggregate_col='payoff_agent',
                  aggregate_fun=np.mean, certainty_fun='mean_ci_95',
-                 figsize=(11.7, 11.7), cmap="Blues", dpi=300,
+                 cmap="Blues",
                  na_color='xkcd:white', x_axis='', y_axis=''):
     """
     df (ResultsDf): an outcome from the compete() function
@@ -99,13 +99,13 @@ def plot_heatmap(df, aggregate_col='payoff_agent',
                             columns="agent0")
         annot_df[annot_df.isna()] = ""
 
-        fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
+        fig, ax = plt.subplots(1, 1)
         p1 = sns.heatmap(heat_df, cmap=cmap, annot=annot_df.to_numpy(), fmt='')
         p1.set_facecolor(na_color)
         ax.set_xlabel(x_axis)
         ax.set_ylabel(y_axis)
     else:
-        fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
+        fig, ax = plt.subplots(1, 1)
         p1 = sns.heatmap(heat_df, cmap=cmap, fmt='')
         p1.set_facecolor(na_color)
         ax.set_xlabel(x_axis)
@@ -231,23 +231,23 @@ def plot_history(df, agent0, agent1, state, agent=0, fun=lambda x: x[state]):
     plt.show()
 
 
-def plot_p_k(df, agent0, agent1, agent=0):
+def plot_p_k(df, agent0, agent1, agent=0, k=0):
     plot_history(df, agent0, agent1, state="p_k", agent=agent,
-                 fun=lambda x: x['own_states'][state][0])
+                 fun=lambda x: x['internal_states']['own_states']["p_k"][k])
 
 
 def plot_p_op_1(df, agent0, agent1, agent=0):
     """
     """
     plot_history(df, agent0, agent1, state="p_op", agent=agent,
-                 fun=lambda x: x['own_states'][state][0])
+                 fun=lambda x: x['internal_states']['own_states']["p_op"][0])
 
 
 def plot_p_self(df, agent0, agent1, agent=0):
     """
     """
     plot_history(df, agent0, agent1, state="p_self", agent=agent,
-                 fun=lambda x: x['own_states'][state])
+                 fun=lambda x: x['internal_states']['own_states']["p_self"])
 
 
 def plot_op_states(df, agent0, agent1, state, level=0, agent=0):
