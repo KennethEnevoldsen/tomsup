@@ -54,7 +54,6 @@ def plot_heatmap(df, aggregate_col='payoff_agent',
     """
     check_plot_input(df, None, None)
     df_ = df.copy()
-
     if isinstance(certainty_fun, str):
         if certainty_fun.startswith("mean_ci_"):
             ci = float(certainty_fun.split("_")[-1])
@@ -172,6 +171,8 @@ def score(df, agent0, agent1, agent=0):
     plt.plot(range(len(tmp)), tmp.values, color='lightblue', linewidth=4,
              label=label_text)
     plt.legend()
+    plt.xlabel("Round")
+    plt.ylabel("Score")
     plt.show()
 
 
@@ -195,13 +196,20 @@ def choice(df, agent0, agent1, agent=0):
         plt.plot(tmp['round'], tmp[action], color='grey', linewidth=1,
                  alpha=0.2)
 
+    label_text = 'mean score across simulations' if 'n_sim' in df else 'score'
+
     # plot mean
     tmp = df.groupby(by=['round'])[action].mean()
-    plt.plot(range(len(tmp)), tmp.values, color='lightblue', linewidth=4)
+    plt.plot(range(len(tmp)), tmp.values, color='lightblue', linewidth=4,
+             label=label_text)
+    plt.legend(loc="upper right")
+    plt.xlabel("Round")
+    plt.ylabel("Choice")
     plt.show()
 
 
-def plot_history(df, agent0, agent1, state, agent=0, fun=lambda x: x[state]):
+def plot_history(df, agent0, agent1, state, agent=0,
+                 fun=lambda x: x[state], ylab="", xlab="Round"):
     """
     df (ResultsDf): an outcome from the compete() function
     agent0 (str): an agent name in the agent0 column in the df
@@ -225,15 +233,20 @@ def plot_history(df, agent0, agent1, state, agent=0, fun=lambda x: x[state]):
                  color='grey', linewidth=1,
                  alpha=0.2)
     # plot mean
+    label_text = 'mean score across simulations' if 'n_sim' in df else 'score'
     df['extract'] = df[hist].apply(fun)
     tmp = df.groupby(by=['round'])['extract'].mean()
-    plt.plot(range(len(tmp)), tmp.values, color='lightblue', linewidth=4)
+    plt.plot(range(len(tmp)), tmp.values, color='lightblue', linewidth=4,
+             label=label_text)
+    plt.xlabel(xlab)
+    plt.ylabel(ylab)
     plt.show()
 
 
 def plot_p_k(df, agent0, agent1, agent=0, k=0):
     plot_history(df, agent0, agent1, state="p_k", agent=agent,
-                 fun=lambda x: x['internal_states']['own_states']["p_k"][k])
+                 fun=lambda x: x['internal_states']['own_states']["p_k"][k],
+                 ylab=f"Probability of k={k}", xlab="Round")
 
 
 def plot_p_op_1(df, agent0, agent1, agent=0):

@@ -104,10 +104,10 @@ class Agent():
             'df': for pandas dataframe
             'list': for a list. Only valid if key is a str
         """
-        if self.get_history is None:
+        if self.history is None:
             raise Exception("save_history is unspecified or set to False. \
                  Consequently you can't get history. \
-                 Set save_history = True if you want to save agent history")
+                 Set save_history=True if you want to save agent history")
         if key is None:
             _return = self.history
         elif isinstance(key, list) or isinstance(key, str):
@@ -261,7 +261,7 @@ class QL(Agent):
     """
     'QL': Q-learning model by Watkinns (1992)
     """
-    def __init__(self, learning_rate=0.5, b_temp=0.001, expec_val=[0.5, 0.5],
+    def __init__(self, learning_rate=0.5, b_temp=0.01, expec_val=[0.5, 0.5],
                  **kwargs):
         self.strategy = "QL"
         self.learning_rate = learning_rate
@@ -320,7 +320,7 @@ class TOM(Agent):
     >>> Devaine = TOM(level=2, volatility=-2, b_temp=-1, dilution=0.5, \
         bias=0.3)
     """
-    def __init__(self, level=0, volatility=-2, b_temp=-1, bias=0,
+    def __init__(self, level, volatility=-2, b_temp=-1, bias=0,
                  dilution=None,
                  **kwargs):
         if level > 5:
@@ -384,7 +384,7 @@ class TOM(Agent):
     def get_dilution(self):
         if self.get_dilution is None:
             print("TOM does not have a dilution parameter.")
-        return self.get_dilution
+        return self.dilution
 
     def get_level(self):
         return self.level
@@ -585,16 +585,16 @@ class AgentGroup():
         choice(self.__df, agent0, agent1, agent=agent)
 
     def plot_score(self, agent0, agent1, agent=0):
-        score(self.df, agent0, agent1, agent=agent)
+        score(self.__df, agent0, agent1, agent=agent)
 
-    def plot_history(self, agent0, agent1, state, agent=0, fun=lambda x: x[state]):
+    def plot_history(self, agent0, agent1, state, agent=0, fun=lambda x: x[state], ylab="", xlab="Round"):
         """
         agent0 (str): an agent name in the agent0 column in the df
         agent1 (str): an agent name in the agent1 column in the df
         agent (0|1): An indicate of which agent of agent 0 and 1 you wish to plot
         state (str): a state of the agent you wish to plot.
         """
-        plot_history(self.__df, agent0, agent1, state, agent, fun)
+        plot_history(self.__df, agent0, agent1, state, agent, fun, ylab, xlab)
 
     def plot_p_op_1(self, agent0, agent1, agent=0):
         self.__tom_in_group(agent0, agent1, agent)
@@ -620,16 +620,76 @@ class AgentGroup():
         self.__tom_in_group(agent0, agent1, agent)
         plot_op_states(self.__df, agent0, agent1, state, level=0, agent=0)
 
-    def plot_bias_estimate(self, agent0, agent1, agent=0):
+    def plot_tom_op_estimate(self, agent0, agent1, level, estimate, agent=0,
+                             plot="mean", transformation=True):
         """
+        plot estimaated volatility of the opponent
+
+        agent0, agent1 (str): the desired agent pair
+        agent (0 | 1): which of the desired agents
+        level (int): the sophistication level of the opponent the agent is
+        estimating. For instance a 2-ToM have two simulated opponents 0-ToM
+        and 1-ToM, where 0 and 1 indicate their respective sophistication level
+        estimate (str): the desired estimate to plot options include:
+               "volatility"
+               "behav_temp" (Behavoural Temperature)
+               "bias"
+               "dilution"
+        plot ("mean" | "var"): Toggle between plotting mean or variance
+        transformation (bool | fun): Should the estimate be transformed. if 
+        True, applies the following transformations to the variables:
+            exponentiation (volatility)
+            inverse_logit(behavial temperature)
+            none (bias, dilution)
+        Can also be a user specified function
         """
         a = self.__tom_in_group(agent0, agent1, agent)
-        if a.bias is not None:
-            plot_history(self.__df, agent0, agent1,
-                         state=None, agent=agent,
-                         fun=lambda x: inv_logit(x['internal_states']['own_states']['param_mean'][0, -1]))
+
+        d_e = {"volatility": ("Volatility", (0, 0)),
+               "behav_temp": ("Behavoural Temperature", (0, 1)),
+               "bias": ("Bias", (0, -1)),
+               "dilution": ("Dilution", (0, 2))}
+        if estimate not in d_e:
+            raise ValueError(f"Invalid estimate: {estimate}.")
+        ylab, loc = d_e[estimate]
+
+        if plot not in {"mean", "var"}:
+            raise ValueError("plot must be either 'mean' or 'var', for\
+                 plotting either mean or variance")
+        if plot == "mean":
+            p_str = "mean"
+            p_key = "param_mean"
         else:
+            p_str = "variance"
+            p_key = "param_var"
+
+        if estimate == "dilution" and a.dilution is not None:
+            raise ValueError("The desired agent does not estimate dilution")
+        if estimate == "bias" and a.dilution is not None:
             raise ValueError("The desired agent does not estimate a bias")
+
+        if transformation is True and estimate not in {"bias", "dilution"}:
+            d_t = {"volatility": (np.exp, "exp"),
+                   "behav_temp": (inv_logit, "inverse_logit")}
+            t, t_str = d_t[estimate]
+        elif callable(transformation):
+            t = transformation
+            t_str = transformation.__name__
+        else:
+            transformation = False
+
+            def t(x):
+                return(x)
+
+        if transformation is False:
+            ylab = f"{ylab} ({p_str})"
+        else:
+            ylab = f"{t_str}({p_str} - {ylab})"
+
+        plot_history(self.__df, agent0, agent1,
+                     state=None, agent=agent,
+                     fun=lambda x: t(x['internal_states']['opponent_states'][level]['own_states'][p_key][loc]),
+                     ylab=ylab)
 
     def __tom_in_group(self, agent0, agent1, agent):
         a = agent0 if agent == 0 else agent1
