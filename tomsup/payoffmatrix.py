@@ -23,6 +23,9 @@ class PayoffMatrix():
     The deadlock:
         'deadlock'
 
+    for custom payoff matrix supply a 2x2x2 numpy array to the
+    predefined argument. See example
+
     Example:
     >>> staghunt = PayoffMatrix(name="staghunt")
     >>> staghunt.payoff(action_agent0=1, action_agent1=1, agent=0)
@@ -40,6 +43,8 @@ class PayoffMatrix():
     >>> sexes = PayoffMatrix(name="sexes")
     >>> sexes.payoff(1, 1, 0)
     5
+    >>> custom = PayoffMatrix(name="custom", np.array(([(10, 0), (0, 5)],
+                                                       [(5, 0), (0, 10)]))
     """
     def __init__(self, name, predefined=None):
         self.name = name
