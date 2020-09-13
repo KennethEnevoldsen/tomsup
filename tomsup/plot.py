@@ -243,10 +243,10 @@ def plot_history(df, agent0, agent1, state, agent=0,
     plt.show()
 
 
-def plot_p_k(df, agent0, agent1, agent=0, k=0):
+def plot_p_k(df, agent0, agent1, level, agent=0):
     plot_history(df, agent0, agent1, state="p_k", agent=agent,
-                 fun=lambda x: x['internal_states']['own_states']["p_k"][k],
-                 ylab=f"Probability of k={k}", xlab="Round")
+                 fun=lambda x: x['internal_states']['own_states']["p_k"][level],
+                 ylab=f"Probability of k={level}", xlab="Round")
 
 
 def plot_p_op_1(df, agent0, agent1, agent=0):
