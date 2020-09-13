@@ -344,6 +344,7 @@ class TOM(Agent):
 
         self.params = params
         self.internal = init_k_tom(params, level, priors)
+        self.__kwargs = kwargs
 
         super().__init__(**kwargs)
 
@@ -353,7 +354,7 @@ class TOM(Agent):
                               'bias': bias,
                               'dilution': dilution, **kwargs}
 
-    def compete(self, p_matrix, agent, op_choice=None, **kwargs):
+    def compete(self, p_matrix, agent, op_choice=None):
         """
         """
         self.op_choice = op_choice
@@ -365,7 +366,7 @@ class TOM(Agent):
                                         self.level,
                                         agent,
                                         p_matrix,
-                                        **kwargs)
+                                        **self.__kwargs)
         self._add_to_history(choice=self.choice, internal_states=self.internal)
         return self.choice
 
@@ -576,7 +577,7 @@ class AgentGroup():
     def plot_heatmap(self, aggregate_col='payoff_agent',
                      aggregate_fun=np.mean, certainty_fun='mean_ci_95',
                      cmap="Blues",
-                     na_color='xkcd:white', x_axis='', y_axis=''):
+                     na_color='xkcd:white', x_axis="Agent", y_axis="Opponent"):
         plot_heatmap(self.__df, aggregate_col,
                      aggregate_fun, certainty_fun,
                      cmap, na_color, x_axis, y_axis)
@@ -587,11 +588,13 @@ class AgentGroup():
     def plot_score(self, agent0, agent1, agent=0):
         score(self.__df, agent0, agent1, agent=agent)
 
-    def plot_history(self, agent0, agent1, state, agent=0, fun=lambda x: x[state], ylab="", xlab="Round"):
+    def plot_history(self, agent0, agent1, state, agent=0,
+                     fun=lambda x: x[state], ylab="", xlab="Round"):
         """
         agent0 (str): an agent name in the agent0 column in the df
         agent1 (str): an agent name in the agent1 column in the df
-        agent (0|1): An indicate of which agent of agent 0 and 1 you wish to plot
+        agent (0|1): An indicate of which agent of agent 0 and 1 you wish to
+        plot
         state (str): a state of the agent you wish to plot.
         """
         plot_history(self.__df, agent0, agent1, state, agent, fun, ylab, xlab)
@@ -600,9 +603,9 @@ class AgentGroup():
         self.__tom_in_group(agent0, agent1, agent)
         plot_p_op_1(self.__df, agent0, agent1, agent)
 
-    def plot_p_k(self, agent0, agent1, agent=0, k=0):
+    def plot_p_k(self, agent0, agent1, level, agent=0):
         self.__tom_in_group(agent0, agent1, agent)
-        plot_p_k(self.__df, agent0, agent1, agent, k)
+        plot_p_k(self.__df, agent0, agent1, agent, level)
 
     def plot_p_self(self, agent0, agent1, agent=0):
         self.__tom_in_group(agent0, agent1, agent)
@@ -612,7 +615,8 @@ class AgentGroup():
         """
         agent0 (str): an agent name in the agent0 column in the df
         agent1 (str): an agent name in the agent1 column in the df
-        agent (0|1): An indicate of which agent of agent 0 and 1 you wish to plot
+        agent (0|1): An indicate of which agent of agent 0 and 1 you wish to
+        plot
         the indicated agent must be a theory of mind agent (ToM)
         state (str): a state of the simulated opponent you wish to plot.
         level (str): level of the similated opponent you wish to plot.
@@ -621,7 +625,7 @@ class AgentGroup():
         plot_op_states(self.__df, agent0, agent1, state, level=0, agent=0)
 
     def plot_tom_op_estimate(self, agent0, agent1, level, estimate, agent=0,
-                             plot="mean", transformation=True):
+                             plot="mean", transformation=None):
         """
         plot estimaated volatility of the opponent
 
@@ -636,7 +640,7 @@ class AgentGroup():
                "bias"
                "dilution"
         plot ("mean" | "var"): Toggle between plotting mean or variance
-        transformation (bool | fun): Should the estimate be transformed. if 
+        transformation (bool | fun): Should the estimate be transformed. if
         True, applies the following transformations to the variables:
             exponentiation (volatility)
             inverse_logit(behavial temperature)
@@ -668,10 +672,16 @@ class AgentGroup():
         if estimate == "bias" and a.dilution is not None:
             raise ValueError("The desired agent does not estimate a bias")
 
-        if transformation is True and estimate not in {"bias", "dilution"}:
-            d_t = {"volatility": (np.exp, "exp"),
-                   "behav_temp": (inv_logit, "inverse_logit")}
-            t, t_str = d_t[estimate]
+        if transformation is True:
+            if (estimate == "bias") and (plot == "mean"):
+                transformation = False
+            elif plot == "var":
+                t, t_str = np.exp, "exp"
+            else:
+                d_t = {"volatility": (np.exp, "exp"),
+                       "behav_temp": (inv_logit, "inverse_logit"),
+                       "dilution": (inv_logit, "inverse_logit")}
+                t, t_str = d_t[estimate]
         elif callable(transformation):
             t = transformation
             t_str = transformation.__name__

@@ -195,7 +195,7 @@ def p_k_udpate(prev_p_k, p_opk_approx, op_choice, dilution=None):
 
 
 def param_var_update(prev_p_op_mean, prev_param_var, prev_gradient, p_k,
-                     volatility, volatility_dummy=None):
+                     volatility, volatility_dummy=None, **kwargs):
     """
     k-ToM updates its uncertainty / variance on its estimates of opponent's
     parameter values
@@ -247,7 +247,7 @@ def param_mean_update(prev_p_op_mean, prev_param_mean, prev_gradient, p_k,
     new_param_mean = (prev_param_mean + p_k[:, np.newaxis] * param_var *
                       (op_choice - inv_logit(prev_p_op_mean))[:, np.newaxis])
 
-    # Used for numerical purposes in the VBA package
+    # Used for numerical purposes (similar to the VBA package)
     new_param_mean = logit(inv_logit(new_param_mean))
 
     return new_param_mean
@@ -261,7 +261,8 @@ def gradient_update(params,
                     sim_op_choice,
                     sim_level,
                     sim_agent,
-                    p_matrix):
+                    p_matrix,
+                    **kwargs):
     """
     """
     # Make empty list for fillin in gradients
@@ -290,7 +291,8 @@ def gradient_update(params,
             sim_op_choice,
             sim_level,
             sim_agent,
-            p_matrix)
+            p_matrix,
+            **kwargs)
 
         # Simulate opponent decision using incremented parameters
         p_op_mean_incr = decision_function(
@@ -517,7 +519,8 @@ def learning_function(prev_internal_states,
                 sim_op_choice,
                 sim_level,
                 sim_agent,
-                p_matrix)
+                p_matrix,
+                **kwargs)
 
             # Simulate opponent deciding
             p_op_mean[sim_level] = decision_function(
@@ -537,7 +540,8 @@ def learning_function(prev_internal_states,
                 sim_op_choice,
                 sim_level,
                 sim_agent,
-                p_matrix)
+                p_matrix,
+                **kwargs)
 
             # Save opponent's states
             opponent_states[sim_level] = sim_new_internal_states
@@ -628,7 +632,8 @@ def k_tom(prev_internal_states,
                                                 op_choice,
                                                 level,
                                                 agent,
-                                                p_matrix)
+                                                p_matrix,
+                                                **kwargs)
 
     else:  # If first round or missed round, make no update
         new_internal_states = prev_internal_states
