@@ -29,7 +29,7 @@ An implementation of game theory of mind in an agent based framework following t
 
 To ask questions, report issues or request features, please use the [GitHub Issue Tracker](https://github.com/KennethEnevoldsen/tomsup/issues).
 
-## Setup
+## 🔧 Setup and installation
 
 tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [the official pip website](https://pip.pypa.io/en/stable/installing/), otherwise simply run 
 
@@ -40,12 +40,15 @@ pip3 install tomsup
 
 You can also install it directly from github by simply running:
 ```bash
+pip install git+https://github.com/KennethEnevoldsen/tomsup.git
+```
+
+or more explicitly:
+```bash
 git clone https://github.com/KennethEnevoldsen/tomsup.git
 cd tomsup
 pip3 install -e .
 ```
-
-
 ## Getting Started with tomsup
 To get started with tomsup we recommend the tutorials in the tutorials folder. We recommend that you start with the introduction.
 
