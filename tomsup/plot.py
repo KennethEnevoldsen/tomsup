@@ -246,7 +246,6 @@ def plot_history(
     df = df.loc[(df["agent0"] == agent0) & (df["agent1"] == agent1)].copy()
 
     hist = "history_agent" + str(agent)
-    print(hist, agent)
     plt.figure()
     # plot each line
     for sim in range(df["n_sim"].max() + 1):

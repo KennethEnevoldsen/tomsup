@@ -719,7 +719,7 @@ class AgentGroup:
 
     def plot_p_k(self, agent0, agent1, level, agent=0):
         self.__tom_in_group(agent0, agent1, agent)
-        plot_p_k(self.__df, agent0, agent1, agent, level)
+        plot_p_k(self.__df, agent0, agent1, agent=agent, level=level)
 
     def plot_p_self(self, agent0, agent1, agent=0):
         self.__tom_in_group(agent0, agent1, agent)
