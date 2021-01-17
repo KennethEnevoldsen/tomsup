@@ -7,6 +7,7 @@ import random
 
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 from tomsup.ktom_functions import k_tom, init_k_tom, inv_logit
 from tomsup.payoffmatrix import PayoffMatrix
@@ -139,6 +140,33 @@ class Agent:
                 "Please input valid format e.g. 'df' or 'list' or \
                 leave format unspecified"
             )
+
+    def plot_choice(self):
+        df = self.get_history()
+        plt.plot(df.index, df["choice"], color="lightblue", linewidth=4)
+        plt.xlabel("Round")
+        plt.ylabel("Choice")
+        plt.ylim(0, 1)
+        plt.show()
+
+    def plot_internal(self, fun):
+        """
+        Function for plotting internal states of agent
+        fun (func): a function which to use to extract from the internal states dict
+
+        Examples (not run):
+        >>> # plotting the p_op_mean of the agent over trials
+        >>> # tom1.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op_mean"])
+        >>> # plotting the agent belief about its opponents theory of mind level (p_k)
+        >>> # probability of sophistication level k=0
+        >>> # tom2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][0])
+        >>> # probability of sophistication level k=1
+        >>> # tom2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][1])
+        """
+        df = self.get_history()
+        df["extracted"] = df["internal_states"].apply(fun)
+        plt.plot(df.index, df["extracted"], color="lightblue", linewidth=4)
+        plt.show()
 
 
 class RB(Agent):
@@ -357,7 +385,7 @@ class TOM(Agent):
     """
 
     def __init__(
-        self, level, volatility=-2, b_temp=-1, bias=0, dilution=None, **kwargs
+        self, level, volatility=-2, b_temp=-1, bias=0, dilution=None, init_states="default", **kwargs
     ):
         if level > 5:
             warn(
@@ -373,7 +401,6 @@ class TOM(Agent):
         self.level = level
         self.strategy = str(level) + "-TOM"
 
-        priors = "default" if "priors" not in kwargs else kwargs["priors"]
 
         params = {"volatility": volatility, "b_temp": b_temp}
         if dilution is not None:
@@ -382,7 +409,7 @@ class TOM(Agent):
             params["bias"] = bias
 
         self.params = params
-        self.internal = init_k_tom(params, level, priors)
+        self.internal = init_k_tom(params, level, priors=init_states)
         self.__kwargs = kwargs
 
         super().__init__(**kwargs)

@@ -4,7 +4,7 @@ docstring
 import numpy as np
 
 
-class PayoffMatrix():
+class PayoffMatrix:
     """
     A class of 2 by 2 payoff matrices.
 
@@ -46,57 +46,46 @@ class PayoffMatrix():
     >>> custom = PayoffMatrix(name="custom", np.array(([(10, 0), (0, 5)],
                                                        [(5, 0), (0, 10)]))
     """
+
     def __init__(self, name, predefined=None):
         self.name = name
         if name == "staghunt":
             # choice a1: 0  1 - Choice a0
-            self.matrix = np.array(([(3, 3),  # 0   --   Payoff matrix for a0
-                                     (0, 5)],  # 1
-                                    [(3, 0),  # --   Payoff matrix for a1
-                                     (3, 5)]))
+            self.matrix = np.array(
+                (
+                    [(3, 3), (0, 5)],  # 0   --   Payoff matrix for a0  # 1
+                    [(3, 0), (3, 5)],  # --   Payoff matrix for a1
+                )
+            )
         elif name == "penny_competitive":
-            self.matrix = np.array(([(1, -1),
-                                     (-1, 1)],
-                                    [(-1, 1),
-                                     (1, -1)]))
+            self.matrix = np.array(([(-1, 1), (1, -1)], [(1, -1), (-1, 1)]))
         elif name == "penny_cooperative":
-            self.matrix = np.array(([(1, -1),
-                                     (-1, 1)],
-                                    [(1, -1),
-                                     (-1, 1)]))
+            self.matrix = np.array(([(1, -1), (-1, 1)], [(1, -1), (-1, 1)]))
         elif name == "party":
-            self.matrix = np.array(([(5, 0),
-                                     (0, 10)],
-                                    [(5, 0),
-                                     (0, 10)]))
+            self.matrix = np.array(([(5, 0), (0, 10)], [(5, 0), (0, 10)]))
         elif name == "sexes":  # battle of the sexes
-            self.matrix = np.array(([(10, 0),
-                                     (0, 5)],
-                                    [(5, 0),
-                                     (0, 10)]))
+            self.matrix = np.array(([(10, 0), (0, 5)], [(5, 0), (0, 10)]))
         elif name == "chicken":
-            self.matrix = np.array(([(-1000, -1),
-                                     (1, 0)],
-                                    [(-1000, 1),
-                                     (-1, 0)]))
+            self.matrix = np.array(([(-1000, -1), (1, 0)], [(-1000, 1), (-1, 0)]))
         elif name == "deadlock":
-            self.matrix = np.array(([(1, 0),
-                                     (3, 2)],
-                                    [(1, 3),
-                                     (0, 2)]))
+            self.matrix = np.array(([(1, 0), (3, 2)], [(1, 3), (0, 2)]))
         else:
             if predefined:
                 matrix = np.array(predefined)
                 if matrix.shape == (2, 2, 2):
                     self.matrix = np.array(predefined)
                 else:
-                    raise TypeError("Predefined should be a valid matrix where \
+                    raise TypeError(
+                        "Predefined should be a valid matrix where \
                                      matrix.shape == (2, 2, 2), e.g. a 2x2x2 \
-                                     matrix")
+                                     matrix"
+                    )
             else:
-                raise TypeError("Invalid name and no predefined matrix given. \
+                raise TypeError(
+                    "Invalid name and no predefined matrix given. \
                                  Please input a valid name or input a \
-                                 predefined matrix of dimension 2x2x2.")
+                                 predefined matrix of dimension 2x2x2."
+                )
 
     def payoff(self, action_agent0, action_agent1, agent=0):
         """
@@ -117,30 +106,65 @@ class PayoffMatrix():
         str1 = f"<Class PayoffMatrix, Name = {self.name}> "
         str2 = "The payoff matrix of agent 0"
         str3 = "       |  Choice agent 1"
-        str4 = "       | " + f"{add_pl(' ')}" + " | " + f"{add_pl(0)}" + " | "\
-            + f"{add_pl(1)}" + " |"
+        str4 = (
+            "       | "
+            + f"{add_pl(' ')}"
+            + " | "
+            + f"{add_pl(0)}"
+            + " | "
+            + f"{add_pl(1)}"
+            + " |"
+        )
         str5 = "       | " + print_len * 3 * "-" + 2 * "---" + " |"
-        str6 = "Choice | " + f"{add_pl(0)}" + " | " + \
-            f"{add_pl(self()[0][0,0])}" + " | " f"{add_pl(self()[0][0,1])}" +\
-            " |"
-        str7 = "agent 0| " + f"{add_pl(1)}" + " | " + \
-            f"{add_pl(self()[0][1,0])}" + " | " f"{add_pl(self()[0][1,1])}" +\
-            " |"
+        str6 = (
+            "Choice | " + f"{add_pl(0)}" + " | " + f"{add_pl(self()[0][0,0])}" + " | "
+            f"{add_pl(self()[0][0,1])}" + " |"
+        )
+        str7 = (
+            "agent 0| " + f"{add_pl(1)}" + " | " + f"{add_pl(self()[0][1,0])}" + " | "
+            f"{add_pl(self()[0][1,1])}" + " |"
+        )
         str8 = " "
         str9 = "The payoff matrix of agent 1"
         str10 = "       |  Choice agent 1"
-        str11 = "       | " + f"{add_pl(' ')}" + " | " + f"{add_pl(0)}" + \
-            " | " + f"{add_pl(1)}" + " |"
+        str11 = (
+            "       | "
+            + f"{add_pl(' ')}"
+            + " | "
+            + f"{add_pl(0)}"
+            + " | "
+            + f"{add_pl(1)}"
+            + " |"
+        )
         str12 = str5
-        str13 = "Choice | " + f"{add_pl(0)}" + " | " +\
-            f"{add_pl(self()[1][0,0])}" + " | " f"{add_pl(self()[1][0,1])}" +\
-            " |"
-        str14 = "agent 0| " + f"{add_pl(1)}" + " | " + \
-            f"{add_pl(self()[1][1,0])}" + " | " f"{add_pl(self()[1][1,1])}" +\
-            " |"
+        str13 = (
+            "Choice | " + f"{add_pl(0)}" + " | " + f"{add_pl(self()[1][0,0])}" + " | "
+            f"{add_pl(self()[1][0,1])}" + " |"
+        )
+        str14 = (
+            "agent 0| " + f"{add_pl(1)}" + " | " + f"{add_pl(self()[1][1,0])}" + " | "
+            f"{add_pl(self()[1][1,1])}" + " |"
+        )
         str15 = str8
-        return '\n'.join([str1, str2, str3, str4, str5, str6, str7, str8, str9,
-                          str10, str11, str12, str13, str14, str15])
+        return "\n".join(
+            [
+                str1,
+                str2,
+                str3,
+                str4,
+                str5,
+                str6,
+                str7,
+                str8,
+                str9,
+                str10,
+                str11,
+                str12,
+                str13,
+                str14,
+                str15,
+            ]
+        )
 
     def get_matrix(self):
         return self.matrix
@@ -151,4 +175,5 @@ class PayoffMatrix():
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod(verbose=True)

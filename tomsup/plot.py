@@ -49,7 +49,7 @@ def plot_heatmap(
     aggregate_col="payoff_agent",
     aggregate_fun=np.mean,
     certainty_fun="mean_ci_95",
-    cmap="coolwarm",
+    cmap="RdBu",
     na_color="xkcd:white",
     x_axis="",
     y_axis="",
@@ -122,6 +122,7 @@ def plot_heatmap(
         p1.set_facecolor(na_color)
         ax.set_xlabel(x_axis)
         ax.set_ylabel(y_axis)
+    plt.show()
 
 
 def check_plot_input(df, agent0, agent1):
@@ -228,6 +229,7 @@ def choice(df, agent0, agent1, agent=0, plot_individual_sim=False):
     plt.xlabel("Round")
     plt.ylabel("Choice")
     plt.ylim(0, 1)
+    plt.show()
 
 
 def plot_history(
