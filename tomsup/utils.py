@@ -1,5 +1,5 @@
 """
-This script contains utility functions
+This script contains utility functions used in the tomsup package
 """
 import json
 import os
@@ -18,8 +18,6 @@ def valid_agents():
     additional information, such as a short description of the strategy,
     a code exampel and a reference. See examples for more.
 
-    TODO: fix output of examples
-
     Examples:
     >>> output = valid_agents()
     >>> isinstance(output, dict)
@@ -35,7 +33,7 @@ def valid_agents():
     """
     this_dir, this_filename = os.path.split(__file__)
     path = os.path.join(this_dir, "agent_info.json")
-    with open(path, 'r') as fp:
+    with open(path, "r") as fp:
         agent_dict = json.load(fp)
     return agent_dict
 
@@ -71,4 +69,5 @@ def create_agents(agents, start_params=None, **kwargs):
 # Run test
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod(verbose=True)

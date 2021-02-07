@@ -1,5 +1,5 @@
 """
-Plot function for tomsup
+Utility plotting functiona for tomsup
 """
 import seaborn as sns
 import pandas as pd

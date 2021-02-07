@@ -1,5 +1,5 @@
 """
-docstring
+This scripts contains the PayoffMatrix
 """
 import numpy as np
 
