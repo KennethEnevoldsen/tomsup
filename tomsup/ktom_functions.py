@@ -149,8 +149,8 @@ def p_opk_approx_fun(prev_p_op_mean, prev_param_var, prev_gradient, level):
     # Prepare variance by weighing with gradient
     prev_var_prepped = np.zeros(level)
     for level_idx in range(level):
-        prev_var_prepped[level_idx] = prev_param_var[level - 1, :].T.dot(
-            prev_gradient[level - 1, :] ** 2
+        prev_var_prepped[level_idx] = prev_param_var[level_idx, :].T.dot(
+            prev_gradient[level_idx, :] ** 2
         )
 
     # Equation

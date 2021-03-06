@@ -567,7 +567,7 @@ class TOM(Agent):
             if isinstance(d[key], dict):
                 self.__print(d[key], n + 1, keys, readability_transform, print_level)
 
-    def print_start_params(
+    def print_parameters(
         self,
         keys: Optional[list] = None,
     ):
