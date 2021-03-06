@@ -1,8 +1,11 @@
 README.md
 setup.py
 tomsup/__init__.py
+tomsup/_version.py
 tomsup/agent.py
+tomsup/ktom_functions.py
 tomsup/payoffmatrix.py
+tomsup/plot.py
 tomsup/utils.py
 tomsup.egg-info/PKG-INFO
 tomsup.egg-info/SOURCES.txt

@@ -1,26 +1,27 @@
 Metadata-Version: 2.1
 Name: tomsup
-Version: 1.0
-Summary: An implementation of game theory of mind in a agent based framework following the implementation of Devaine, et al. (2017).
+Version: 1.0.1
+Summary: An implementation of game theory of mind in a agent based        framework following the implementation of Devaine, et al. (2017).
 Home-page: https://github.com/KennethEnevoldsen/tomsup
 Author: Kenneth C. Enevoldsen and Peter T. Waade
 Author-email: kennethcenevoldsen@gmail.com
 License: Apache License 2.0
-Description: # tomsup: Theory of Mind Simulation using Python
+Description: # tomsup 👍
+        ## Theory of Mind Simulation using Python
+        
         A Python Package for Agent Based simulations.
         
-        
+        <!--  # NOT RENDERED
         [![PyPI Version](link missing)
         ![Python Versions](link missing)
+        -->
         
-        An implementation of game theory of mind in a agent based framework following the implementation of [Devaine, et al. (2017)](http://dx.plos.org/10.1371/journal.pcbi.1005833).
+        An implementation of game theory of mind in an agent based framework following the implementation of [Devaine, et al. (2017)](http://dx.plos.org/10.1371/journal.pcbi.1005833). This package also includes a theory of mind. 
         
-        
+        <!--  # NOT RENDERED
         ### References
-        
-        
         ```bibtex
-        @inproceedings{qi2018universal,
+        @inproceedings{bibtextag,
          author = {Enevoldsen and Waade},
          title = {Unknown},
          month = {Unkown},
@@ -31,57 +32,46 @@ Description: # tomsup: Theory of Mind Simulation using Python
          year = {2019}
         }
         ```
-        
+        -->
         ## Issues and Usage Q&A
         
-        To ask questions, report issues or request features, please use the [GitHub Issue Tracker](https://github.com/stanfordnlp/stanfordnlp/issues).
+        To ask questions, report issues or request features, please use the [GitHub Issue Tracker](https://github.com/KennethEnevoldsen/tomsup/issues).
         
-        ## Setup
+        ## 🔧 Setup and installation
         
-        StanfordNLP supports Python 3.6 or later. We strongly recommend that you install PACKAGENAME from PyPI. If you already have [pip installed](https://pip.pypa.io/en/stable/installing/), simply run:
+        tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [the official pip website](https://pip.pypa.io/en/stable/installing/), otherwise simply run 
+        
+        (**the version on pip isn't currently up to date**)
         ```bash
-        pip3 install tomsup
+        pip3 install tomsup 
         ```
         
-        Or to install it from github run
+        You can also install it directly from github by simply running:
+        ```bash
+        pip install git+https://github.com/KennethEnevoldsen/tomsup.git
+        ```
+        
+        or more explicitly:
         ```bash
         git clone https://github.com/KennethEnevoldsen/tomsup.git
         cd tomsup
         pip3 install -e .
         ```
+        ## Getting Started with tomsup
+        To get started with tomsup we recommend the tutorials in the tutorials folder. We recommend that you start with the introduction.
         
-        ## Getting Started with PACKAGENAME
+        The tutorials are provided as Jupyter Notebooks. If you do not have Jupyter Notebook installed, instructions for installing and running can be found [here]( http://jupyter.org/install). 
         
-        ```python
-        >>> import tomsup
-        >>> 
-        ```
+        Currently we have the following tutorials
+        - introduction, a general introduction to the features of tomsup
+        - Creating_an_agent, an example of how you would create new agent for the package. 
+        - introduction_to_tom, an introduction to the variational bayes theory of mind model used in tomsup. (**Not currently finished**)
         
-        The output should look something like:
-        
-        ```
-        ('Barack', '200000', 'sampleoutput')
-        ```
-        
-        **Note:** There is probably things you would want to write a note on.
-        
-        
-        See [our getting started guide](https://stanfordnlp.github.io/stanfordnlp/installation_usage.html#getting-started) for more details.
-        
-        ### A todolist:
-        
-        Need to have
-        - rework of WSLS
-        
-        Nice to have:
-        - Smart initialize ToM
-        - reinforcement learner agent
-        
+        There is also an example psychopy experiment, in which the player can play against the theory of mind agent in the matching pennies task. (**currently not finished**)
         
         
         ## LICENSE
-        
-        tomsup is released under the Apache [License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+        tomsup is released under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
         
         
 Keywords: theory-of-mind tom game-theory
