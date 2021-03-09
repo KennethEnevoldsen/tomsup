@@ -5,7 +5,7 @@
 
 [![PyPI version](https://badge.fury.io/py/tomsup.svg)](https://pypi.org/project/tomsup/)
 [![Code style: flake8](https://img.shields.io/badge/Code%20Style-flake8-blue)](https://pypi.org/project/flake8/)
-[![pip downloads](https://img.shields.io/pypi/dm/tomsup.svg)](https://crate.io/packages/tomsup)
+[![pip downloads](https://img.shields.io/pypi/dm/tomsup.svg)](https://pypi.org/project/tomsup/)
 [![python versions](https://img.shields.io/pypi/pyversions/tomsup?colorB=blue)](https://pypi.org/project/tomsup/)
 
 A Python Package for Agent Based simulations. The package provides a computational eco-system for investigating and comparing computational models of hypothesized Theory of mind (ToM) mechanisms and for using them as experimental stimuli. The package notably includes an easy-to-use implementation of the variational Bayesian k-ToM model developed by [Devaine, et al. (2017)](http://dx.plos.org/10.1371/journal.pcbi.1005833). This model has been shown able to capture individual and group-level differences in social skills, including between clinical populations and across primate species. It has also been deemed among the best computational models of ToM in terms of interaction with others and recursive representation of mental states. We provide a series of tutorials on how to implement the k-ToM model and a score of simpler types of ToM mechanisms in game theory based simulations and experimental stimuli, including how to specify custom ToM models, and show examples of how resulting data can be analyzed.
