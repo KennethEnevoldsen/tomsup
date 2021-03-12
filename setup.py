@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="tomsup",
-    version="1.0.2",
+    version="1.0.3",
     description="An implementation of game theory of mind in a agent based \
        framework following the implementation of Devaine, et al. (2017).",
     license="Apache License 2.0",
