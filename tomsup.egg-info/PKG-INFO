@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: tomsup
-Version: 1.0.2
+Version: 1.0.3
 Summary: An implementation of game theory of mind in a agent based        framework following the implementation of Devaine, et al. (2017).
 Home-page: https://github.com/KennethEnevoldsen/tomsup
 Author: Kenneth C. Enevoldsen and Peter T. Waade
