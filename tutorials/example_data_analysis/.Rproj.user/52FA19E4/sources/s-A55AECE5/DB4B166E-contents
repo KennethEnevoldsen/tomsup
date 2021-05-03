@@ -1,0 +1,279 @@
+---
+title: "Covid-19 Psychopathology"
+author: "K. Enevoldsen"
+date: "3/30/2021"
+output: html_document
+---
+
+
+```{r data and packages}
+library(tidyverse)
+library(patchwork)
+library(wesanderson)
+library(cvms)
+```
+
+```{r constants}
+cutoff = 0.33 # 95% specificity and 36% sensitivity.
+smoothing = 0.2 # higher is smoother
+```
+
+```{r data}
+cov19p_model_pred = read_csv2("../Data/new_data_results_DateScore.csv")
+cov19p_validation = read_csv("../Data/df_konklusion_500.csv")
+cov19p_training = read_csv("../Data/df_oprindelig_konklusion.csv")
+
+# questionnaries
+questionnaires = list.files("../Data/plot_dat/", full.names = T)
+
+# Covid-19 Data
+path = "Covid-19_dashboard_25032021-6c8z/Regionalt_DB/06_nye_indlaeggelser_pr_region_pr_dag.csv"
+admissions = read.csv2(path, fileEncoding="latin1") %>% 
+  select(date = Dato, everything()) %>% 
+  mutate(date = as.Date(date))
+
+path = "Covid-19_dashboard_25032021-6c8z/Regionalt_DB/07_antal_doede_pr_dag_pr_region.csv"
+deaths = read.csv2(path, fileEncoding="latin1") %>% 
+  select(date = Dato, everything()) %>% 
+  mutate(date = as.Date(date))
+```
+
+```{r validation}
+cov19p_validation = cov19p_validation %>% 
+  mutate(prediction = if_else(`1` > cutoff, 1, 0))
+out = confusion_matrix(cov19p_validation$konklusion, cov19p_validation$prediction)
+
+
+pROC::auc(cov19p_validation$konklusion, cov19p_validation$`1`)
+plot_confusion_matrix(out)
+
+cov19p_validation %>% 
+  filter(prediction != konklusion) %>% 
+ggplot(aes(date)) + geom_histogram(bins=30, fill="firebrick") + geom_histogram(data=cov19p_validation, aes(date), alpha=0.3) + theme_minimal() + labs(y="Count", x="Date")
+```
+
+
+```{r read questionnarie function}
+read_questionnarie = function(path){
+  nam = str_match(path, "plot_dat/+(.*)\\.csv")
+  nam = nam[length(nam)]
+  tf = read_csv(path) %>% 
+    select(date, p_mere)
+  tf[[nam]] = tf$p_mere
+  tf = tf %>% select(-p_mere)
+  return(tf)
+}
+```
+
+
+```{r data merge}
+# classification data
+corona_psych = cov19p_model_pred %>% 
+  mutate(weekday = weekdays(date),
+         psychopathology = if_else(`1` > cutoff, 1, 0)) %>% 
+  select(-c("1", "0")) %>% 
+  group_by(date) %>% 
+  filter(!weekday %in% c("Saturday", "Sunday")) %>%       # weekend removed
+  filter(date < "2020-12-10" | date > "2021-01-1") %>%    # holiday removed
+  summarise(psychopathology = sum(psychopathology))
+
+# tagged data
+corona_psych = cov19p_training %>% 
+  select(psychopathology = konklusion_efter_3_runde, date) %>% 
+  mutate(weekday = weekdays(date)) %>% 
+  group_by(date) %>% 
+  filter(!weekday %in% c("Saturday", "Sunday")) %>%       # weekend removed
+  summarise(psychopathology = sum(psychopathology)) %>% 
+  rbind(., corona_psych)
+
+# questionnaires
+i = 0
+for (path in questionnaires){
+  tmp = read_questionnarie(path)
+  if (i == 0){
+    i=1
+    questionnarie = tmp
+  } else {
+    questionnarie = questionnarie %>% 
+      merge(y = tmp, all=T)
+  }
+}  
+corona_psych = corona_psych %>% merge(y=questionnarie, all.x = T)
+
+# DK stat
+admissions_DK = admissions %>% 
+  group_by(date) %>%
+  summarise(admissions_DK = sum(Indlæggelser))
+admissions = admissions %>% 
+  filter(Region == "Midtjylland") %>% 
+  group_by(date) %>%
+  summarise(admissions_midt = sum(Indlæggelser)) %>% 
+  merge(admissions_DK, all=T)
+admissions[is.na(admissions)] = 0
+rm(admissions_DK)
+
+deaths_DK = deaths %>% 
+  group_by(date) %>%
+  summarise(deaths_DK = sum(Døde))
+deaths = deaths %>% 
+  filter(Region == "Midtjylland") %>% 
+  group_by(date) %>%
+  summarise(deaths_midt = sum(Døde)) %>% 
+  merge(deaths_DK, all=T)
+deaths[is.na(deaths)] = 0
+rm(deaths_DK)
+
+corona_psych = corona_psych %>% 
+  merge(y=admissions, all.x = T) %>% 
+  merge(y=deaths, all.x = T) %>% 
+  mutate(across(starts_with("admissions"), function (x) ifelse(is.na(x), 0, x)),
+         across(starts_with("deaths"), function (x) ifelse(is.na(x), 0, x)))
+```
+
+```{r correlation plot fun}
+#'@title correlation plot
+#'@description makes a correlation plot between the y variables. Also scales the input.
+#'@param x the x-axis
+#'@param y1 makes a correlation between variable y1 and variable y2
+#'@param y2 same as y1 
+#'@param smoothing the degree of smoothing in a loess span (higher -> smoother). NULL is no smoothing
+#'@param names the names of the y1 and y2 columns
+#'@param scale always TRUE, 0, 1 scales the input
+#'@author K. Enevoldsen
+#'@return a ggplot object
+correlation_plot = function(x, y1, y2, smoothing=0.2, names=c("y1", "y2"), scale=T){
+  range01 <- function(x){(x-min(x, na.rm=T))/(max(x, na.rm=T)-min(x, na.rm=T))}
+  tf = tibble(x, y1= range01(y1),y2 = range01(y2))
+  
+  if (!is.null(smoothing)){
+    tf_y1 = tf %>% 
+      filter(!is.na(y1)) %>% 
+      mutate(id =  1:length(y1),
+             y1 = loess(y1~id, span=smoothing)$fitted) %>% 
+      select(-y2, -id)
+    tf = tf %>% 
+      filter(!is.na(y2)) %>% 
+      mutate(id =  1:length(y2),
+             y2 = loess(y2~id, span=smoothing)$fitted) %>% 
+      select(-y1, -id) %>% 
+      merge(tf_y1, all = T)
+  }
+  r = round(cor(tf$y1, tf$y2, use="complete.obs") ^ 2, 2)
+  print(cor.test(tf$y1, tf$y2, use="complete.obs"))
+
+  
+  probs =0.8
+  x_loc = quantile(x, probs, type=1)
+
+  tf_y2 = tf %>% filter(!is.na(y2))
+  p = tf %>% filter(!is.na(y1)) %>%  
+    ggplot(aes(x, y1, color=names[1])) + 
+    geom_line() + 
+    geom_line(data = tf_y2, aes(x=x, y=y2, color=names[2])) + 
+    theme_minimal() + 
+    scale_color_manual(values = wesanderson::wes_palette("Royal1")) + 
+    labs(y="Min-Max Scaled Y", x = "X", color=" ") + 
+    annotate("text", x = x_loc, y = 0.8, label = paste("italic(R) ^ 2 ==", r, sep=""),
+  parse = TRUE)
+  return(p)
+}
+```
+
+
+```{r}
+range01 <- function(x){(x-min(x, na.rm=T))/(max(x, na.rm=T)-min(x, na.rm=T))}
+for (col in colnames(corona_psych)[3:ncol(corona_psych)]){
+  p = correlation_plot(x=corona_psych$date,
+                       y1 = corona_psych[[col]], 
+                       y2 = corona_psych$psychopathology,
+                       smoothing=smoothing,
+                       names=c(col, "Psychopathology"))
+  p + ggtitle(paste("Correlation between Psychopathologies and", col))
+  ggsave(filename=paste("img/", col, ".png", sep=""), plot=p)
+  p
+}
+
+
+p = correlation_plot(x=corona_psych$date,
+                     y1 = corona_psych$deaths_DK, 
+                     y2 = corona_psych$psychopathology,
+                     smoothing=0.12,
+                     names=c("Covid-19 ", "Psychopathology"))
+p$layers[[3]] = NULL
+
+p + labs(y="Scaled Number of Cases", x = "Date", color=" ") + 
+    annotate("text", x = as.Date("2020/10/15"), y = 0.8, label = paste("italic(R) ^ 2 ==", 0.35, sep=""), parse=T) + 
+  geom_vline(xintercept=max(cov19p_training$date), linetype="dashed", alpha=.5) + 
+  geom_text(aes(x=max(cov19p_training$date), label="Labelled using trained model", y=0.85), colour="black", angle=90, vjust = 1.4, size =3) +
+  geom_text(aes(x=max(cov19p_training$date), label="Labels from Rhode et. al. (2020)", y=0.85), colour="black", angle=90, vjust = -0.8, size=3) + 
+  theme(axis.line = element_line(colour = "grey"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()) + 
+  scale_color_manual(values =c("steelblue", "grey30")) + 
+  geom_point(data=corona_psych, aes(date, range01(deaths_DK)), alpha=.1) + 
+  geom_point(data=corona_psych, aes(date, range01(psychopathology)), alpha=.1, color = "black")
+
+cor(corona_psych$psychopathology, corona_psych$deaths_DK)^2
+cor.test(corona_psych$psychopathology, corona_psych$deaths_DK)
+
+ggsave(filename="geomline.png", width=10, height=7, dpi=750)
+```
+
+
+```{r}
+
+library(kableExtra)
+
+model_hyper =tribble(
+  ~Model,  ~Hyperparameters, ~"Potential Values", ~"Highest obtained test AUC",
+  "XGBoost", "Learning rate", "0.1", 0.8875,
+  "XGBoost", "Learning rate", ".2", 0.8875,
+  "XGBoost", "Learning rate", ".3",  0.8875,
+  "XGBoost", "Number of estimators", "50", 0.8875,
+  "XGBoost", "Number of estimators", "100", 0.8875,
+  "XGBoost", "Number of estimators", "200",  0.8875,
+  "XGBoost", "Maximum depth", "3", 0.8875,
+  "XGBoost", "Maximum depth", "6", 0.8875,
+  "XGBoost", "Maximum depth", "12",  0.8875,
+  "XGBoost", "Maximum depth", "18",  0.8875,
+  "XGBoost", "Minimum child weight", "1", 0.8875,
+  "XGBoost", "Minimum child weight", "2", 0.8875,
+  "XGBoost", "Minimum child weight", "3",  0.8875,
+  "XGBoost", "Gamma", "0.0",  0.8875,
+  "XGBoost", "Gamma", "0.1",  0.8875,
+  "XGBoost", "Gamma", "0.2",  0.8875,
+  "Naïve Bayes", "N/A", "N/A", 0.8319
+
+)
+
+text_hyper =tribble(
+  ~Hyperparameters, ~"Potential Values",
+  "Transformation", "TF-IDF",
+  "N-gram range", "(1, 2)",
+  "N-gram range", "(1, 3)",
+  "N-gram range", "(1, 4)",
+  "Minimum number of words", "2",
+  "Minimum number of words", "5",
+)
+
+
+
+model_hyper %>% kbl(align = "llcc") %>%   # format="latex 
+  kable_paper(full_width = F) %>%
+  column_spec(1, bold = T) %>%
+  column_spec(3, bold = c(0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0)) %>%
+  collapse_rows(columns = c(1, 2, 4))
+
+text_hyper %>% kbl(align = "lc") %>%   # format="latex 
+  kable_paper(full_width = F) %>%
+  column_spec(1, bold = F) %>%
+  column_spec(2, bold = c(1, 0, 0, 1, 0, 1)) %>%
+  collapse_rows(columns = c(1, 2))
+
+
+
+
+```
+

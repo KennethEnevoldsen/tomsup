@@ -3,7 +3,7 @@ import os
 import random
 import numpy as np
 from time import time
-# os.chdir('..')
+
 print(os.getcwd())
 print(os.listdir())
 import tomsup as ts
