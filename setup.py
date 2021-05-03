@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="tomsup",
-    version="1.0.2",
+    version="1.0.3",
     description="An implementation of game theory of mind in a agent based \
        framework following the implementation of Devaine, et al. (2017).",
     license="Apache License 2.0",
@@ -15,6 +15,7 @@ setuptools.setup(
     author_email="kennethcenevoldsen@gmail.com",
     url="https://github.com/KennethEnevoldsen/tomsup",
     packages=setuptools.find_packages(),
+    data_files=[("", ["tomsup/*.json"])],
     # external packages as dependencies
     install_requires=["numpy", "pandas", "scipy", "matplotlib", "seaborn"],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -32,7 +33,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
     ],
     keywords="theory-of-mind tom game-theory",
 )
