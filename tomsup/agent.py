@@ -815,6 +815,8 @@ class AgentGroup:
             print("Simulation complete")
 
         self.__df = ResultsDf(pd.concat(result))  # concatenate into one df
+        
+        return self.__df
 
     def get_results(self):
         return self.__df
