@@ -300,11 +300,6 @@ def gradient_update(
         for param_idx, param_key in enumerate(params):
             sim_params_incr[param_key] = param_mean_incr[param_idx]
 
-        print("lod")
-        raise Exception("!!")
-        cp = copy.deepcopy(params)
-        assert cp == sim_params_incr
-
         # Simulate opponent learning using the incremented
         sim_new_internal_states_incr = learning_function(
             sim_prev_internal_states,
@@ -534,7 +529,7 @@ def learning_function(
             )
 
             # Make parameter structure similar to own
-            sim_params = copy.deepcopy(params)
+            sim_params = dict()
 
             # Populate it with estimated values
             for param_idx, param_key in enumerate(params):

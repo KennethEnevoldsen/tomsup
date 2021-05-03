@@ -6,6 +6,10 @@ from time import time
 
 print(os.getcwd())
 print(os.listdir())
+
+import sys
+sys.path.append('/Users/au561649/Desktop/Github/tomsup/python package')
+
 import tomsup as ts
 
 # Set seed
