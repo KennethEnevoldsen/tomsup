@@ -111,3 +111,4 @@ tomsup/__pycache__/*
 .vscode/settings.json
 tomsup/plot_results.py
 .vscode/settings.json
+simulations/results/*
