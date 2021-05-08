@@ -17,9 +17,14 @@ df$tom_level = as.factor(df$tom_level)
 ```{r}
 df %>% 
   group_by(participant.code, Framing, tom_level) %>% 
-  summarise(tom_payoff = sum(tom_payoff)) %>% 
-ggplot(aes(y=tom_payoff, x=tom_level)) + geom_violin() + geom_boxplot(width=.2) + facet_wrap(~Framing)
+  summarise(player_payoff = sum(player_payoff)) %>% 
+ggplot(aes(y=player_payoff, x=tom_level)) + geom_violin() + geom_boxplot(width=.2) + facet_wrap(~Framing)
 
+df %>% 
+  group_by(participant.code, Framing, tom_level) %>% 
+  summarise(player_payoff = sum(player_payoff)) %>% 
+  mutate(tom_level = as.numeric(as.character(tom_level))) %>% 
+ggplot(aes(y=player_payoff, x=tom_level, color=Framing))  +  geom_smooth(method="lm")
 
 df %>% 
   group_by(Framing, tom_level, participant.code) %>% 

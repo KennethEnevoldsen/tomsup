@@ -112,3 +112,11 @@ tomsup/__pycache__/*
 tomsup/plot_results.py
 .vscode/settings.json
 simulations/results/*
+.Rproj.user/*
+.Rproj.user
+CogSci19_MatchingPennies_TOM_data.csv
+*.RData
+.gitignore
+.Rhistory
+*.Rproj
+
