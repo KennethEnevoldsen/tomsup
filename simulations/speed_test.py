@@ -4,11 +4,9 @@ import random
 import numpy as np
 from time import time
 
-print(os.getcwd())
-print(os.listdir())
-
 import sys
 sys.path.append('/Users/au561649/Desktop/Github/tomsup/python package')
+sys.path.append('/Users/ptwaade/Desktop/Uni/tomsup/tomsup_package')
 
 import tomsup as ts
 
@@ -19,6 +17,10 @@ random.seed(1995)
 n_tests = 20
 n_sim = 5
 n_rounds = 60
+#(Short run)
+n_tests = 2
+n_sim = 2
+n_rounds = 10
 
 # Get payoff matrix
 penny_comp = ts.PayoffMatrix(name='penny_competitive')
