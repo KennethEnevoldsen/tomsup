@@ -6,6 +6,8 @@ from warnings import warn
 from itertools import combinations
 import random
 
+from joblib import Parallel, delayed
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -772,12 +774,13 @@ class AgentGroup:
     def compete(
         self,
         p_matrix,
-        n_rounds=10,
-        n_sim=1,
-        reset_agent=True,
+        n_rounds: int = 10,
+        n_sim: int = 1,
+        reset_agent: bool = True,
         env=None,
-        save_history=False,
-        verbose=True,
+        save_history: bool = False,
+        verbose: bool = True,
+        n_jobs: Optional[int] = None,
     ):
         """"""
         if self.environment is None and env is None:
@@ -806,6 +809,7 @@ class AgentGroup:
                 return_val="df",
                 save_history=save_history,
                 verbose=verbose,
+                n_jobs=n_jobs,
             )
             res["agent0"] = pair[0]
             res["agent1"] = pair[1]
@@ -815,7 +819,7 @@ class AgentGroup:
             print("Simulation complete")
 
         self.__df = ResultsDf(pd.concat(result))  # concatenate into one df
-        
+
         return self.__df
 
     def get_results(self):
@@ -1039,6 +1043,7 @@ def compete(
     return_val: str = "df",
     save_history: bool = False,
     verbose: bool = False,
+    n_jobs: Optional[int] = None,
 ):
     """
     agent_0 and agent_1 (Agent): objects of class Agent which should compete
@@ -1054,6 +1059,7 @@ def compete(
     save_history (bool): should the history of the agent be saved. The history
     typically include internal states, estimates etc.
     verbose (bool): toggles the verbosity of function (whether it prints or not)
+    n_jobs (int): Number of parallel jobs to run. -1 uses os.cpu_count()
 
     Examples:
     >>> sirRB = RB(bias = 0.7)
@@ -1095,10 +1101,11 @@ def compete(
                   the intended outcome?",
                 Warning,
             )
-        result = []
-        for sim in range(int(n_sim)):
+
+        def __compete(sim):
             if verbose:
                 print(f"\tRunning simulation {sim+1} out of {n_sim}")
+
             res = compete(
                 agent_0,
                 agent_1,
@@ -1109,11 +1116,23 @@ def compete(
                 return_val="list",
                 save_history=save_history,
             )
-            # add n_sim til list and 'append' to results
-            result += [(sim,) + tup for tup in res]
+
             if reset_agent and sim != n_sim - 1:
                 agent_0.reset()
                 agent_1.reset()
+
+            return [(sim,) + tup for tup in res]
+
+        if n_jobs is not None:
+            result = [
+                t
+                for trial in Parallel(n_jobs=n_jobs)(
+                    delayed(__compete)(i) for i in range(n_sim)
+                )
+                for t in trial
+            ]
+        else:
+            result = [t for trial in map(__compete, range(n_sim)) for t in trial]
 
     else:
         c_0, c_1 = None, None
@@ -1191,9 +1210,3 @@ def compete(
         )
     else:
         raise TypeError("Invalid return_val, please use either 'df' or 'list'")
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True)

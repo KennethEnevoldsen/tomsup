@@ -11,56 +11,57 @@ For reference the parameter order of the k-ToM parameters is:
 import numpy as np
 from tomsup.payoffmatrix import PayoffMatrix
 import copy
+from scipy.special import expit as inv_logit
+from scipy.special import logit
+
+# # Logit functions
+# def inv_logit(x):
+#     """
+#     This is the inverse logit (or sigmoid) function from the original VBA
+#     package
+#     It is slightly different from a standard inverse logit. Most importantly,
+#     it uses a finite precision, epsilon.
+#     Note that the VBA implementation has more options8changing scale, offset,
+#     etc.). These are not implemented here.
+#     Note also that we have here used the "quick version" from the VBA package.
+#     """
+#     # Set precision parameter (0 means perfect precision)
+#     epsilon = 1e-9
+
+#     # Set input bounds
+#     if np.any(x > 500):
+#         # For scalars
+#         if np.shape(x) == ():
+#             x = 500
+#         # Or vectors etc
+#         else:
+#             x[x > 500] = 500
+#         # warn("Logit input constrained at upper bound 0.9999 to avoid
+#         # rounding errors", Warning)
+#     if np.any(x < -500):
+#         if np.shape(x) == ():
+#             x = -500
+#         else:
+#             x[x < -500] = -500
+#         # warn("Logit input constrained at lower bound 0.0001 to avoid
+#         # rounding errors", Warning)
+
+#     # Calculate
+#     y = epsilon + (1 - 2 * epsilon) / (1 + np.exp(-x))
+
+#     return y
 
 
-# Logit functions
-def inv_logit(x):
-    """
-    This is the inverse logit (or sigmoid) function from the original VBA
-    package
-    It is slightly different from a standard inverse logit. Most importantly,
-    it uses a finite precision, epsilon.
-    Note that the VBA implementation has more options8changing scale, offset,
-    etc.). These are not implemented here.
-    Note also that we have here used the "quick version" from the VBA package.
-    """
-    # Set precision parameter (0 means perfect precision)
-    epsilon = 1e-9
 
-    # Set input bounds
-    if np.any(x > 500):
-        # For scalars
-        if np.shape(x) == ():
-            x = 500
-        # Or vectors etc
-        else:
-            x[x > 500] = 500
-        # warn("Logit input constrained at upper bound 0.9999 to avoid
-        # rounding errors", Warning)
-    if np.any(x < -500):
-        if np.shape(x) == ():
-            x = -500
-        else:
-            x[x < -500] = -500
-        # warn("Logit input constrained at lower bound 0.0001 to avoid
-        # rounding errors", Warning)
+# def logit(x):
+#     """
+#     This is the the logit function from the original VBA package. See that
+#     package for mor information.
+#     """
+#     lx = (x) ** -1 - 1
+#     y = 0 - 1 ** -1 * np.log(lx)
 
-    # Calculate
-    y = epsilon + (1 - 2 * epsilon) / (1 + np.exp(-x))
-
-    return y
-
-
-def logit(x):
-    """
-    This is the the logit function from the original VBA package. See that
-    package for mor information.
-    """
-    # Calculate
-    lx = (x) ** -1 - 1
-    y = 0 - 1 ** -1 * np.log(lx)
-
-    return y
+#     return y
 
 
 # Learning subfunctions

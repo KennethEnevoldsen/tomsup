@@ -15,10 +15,15 @@ df$tom_level = as.factor(df$tom_level)
 ```
 
 ```{r}
+df$Framing = factor(df$Framing, levels = c("SlotMachine", "Human"))
 df %>% 
   group_by(participant.code, Framing, tom_level) %>% 
   summarise(player_payoff = sum(player_payoff)) %>% 
-ggplot(aes(y=player_payoff, x=tom_level)) + geom_violin() + geom_boxplot(width=.2) + facet_wrap(~Framing)
+ggplot(aes(y=player_payoff, x=Framing, fill=Framing)) + 
+  geom_errorbar() + 
+  # geom_violin() + geom_boxplot(width=.2) + 
+  facet_wrap(~tom_level) +  
+  scale_fill_manual(values=c("red", "blue"))
 
 df %>% 
   group_by(participant.code, Framing, tom_level) %>% 
