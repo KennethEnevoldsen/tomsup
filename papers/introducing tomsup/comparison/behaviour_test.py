@@ -1,11 +1,6 @@
 # Imports
-import os
-import random
-import numpy as np
-from time import time
-
 import sys
-sys.path.append('/Users/au561649/Desktop/Github/tomsup/python package')
+sys.path.append('/Users/au568658/Desktop/Academ/Projects/tomsup')
 sys.path.append('/Users/ptwaade/Desktop/Uni/tomsup/tomsup_package')
 
 import tomsup as ts
@@ -57,9 +52,9 @@ for trial in range(n_trials):
     
     # Make choices
     choice_1 = player_1.compete(p_matrix=penny_comp, agent=0,
-                                op_choice=prev_choice_p1)
-    choice_2 = player_2.compete(p_matrix=penny_comp, agent=1,
                                 op_choice=prev_choice_p2)
+    choice_2 = player_2.compete(p_matrix=penny_comp, agent=1,
+                                op_choice=prev_choice_p1)
 
     # Reset own choices
     player_1.choice = forced_choices_p1[trial+1]
