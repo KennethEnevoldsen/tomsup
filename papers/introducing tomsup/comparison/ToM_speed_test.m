@@ -3,7 +3,7 @@ close all
 clc
 
 % set the learning styles and interaction types of the first player
-styles1 = {'RB'};
+styles1 = {'2-ToM'};
 modes1 = {'comp'};
 
 % set the learning styles and interaction types of the second player
@@ -19,12 +19,16 @@ ntests = 20; % number of speedtests to run
 Nmc = 5; % number of simulations 
 nt = 60; % number of trials
 
+%ntests = 2; % number of speedtests to run
+%Nmc = 2; % number of simulations 
+%nt = 10; % number of trials
+
 
 elapsedTimes = zeros(ntests,1);
 
 for run = 1:ntests
     
-    run
+    %run
     
     tic
 
@@ -60,11 +64,3 @@ end
 % Get the mean and standard deviation for runtimes
 mean(elapsedTimes)
 std(elapsedTimes)
-
-
-
-
-
-
-
-

@@ -1,3 +1,9 @@
+#This script is used to compare the python implementation 
+# with the matlab implementation step-by-step. We suggest
+# using a debugger for this. Note that the VBA package 
+# for matlab needs to be added to the matlab path for the
+# matlab scripts to work
+
 # Imports
 import sys
 sys.path.append('/Users/au568658/Desktop/Academ/Projects/tomsup')
@@ -9,21 +15,6 @@ import tomsup as ts
 forced_choices_p1 = [0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1]
 #P2 forced choices: 
 forced_choices_p2 = [0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0]
-
-#P1 forced choices:
-forced_choices_p1 = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
-#P2 forced choices: 
-forced_choices_p2 = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
-
-# #P1 forced choices:
-# forced_choices_p1 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-# #P2 forced choices: 
-# forced_choices_p2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
-# #P1 forced choices:
-# forced_choices_p1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-# #P2 forced choices: 
-# forced_choices_p2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 # Simulation settings
 n_trials = 10

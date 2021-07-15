@@ -1,3 +1,9 @@
+%This script is used to compare the python implementation 
+% with the matlab implementation step-by-step. We suggest
+% using a debugger for this. Note that the VBA package 
+% for matlab needs to be added to the matlab path for the
+% matlab scripts to work
+
 clear all
 close all
 clc
@@ -37,7 +43,7 @@ for i=1:length(styles1)
         end
         [info2] = prepare_agent(styles2{j},info2.payoffTable,2);
         % simulate game
-        [rew,y1,y2] = PTW_runGame_2players_ForcedChoice(info1,info2,nt,0);
+        [rew,y1,y2] = TOM_behavior_test_runGame(info1,info2,nt,0);
     end
 end
 
