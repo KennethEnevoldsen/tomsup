@@ -1,11 +1,12 @@
-# Imports
-import os
-import random
-import numpy as np
-from time import time
+#This script is used to compare the python implementation 
+# with the matlab implementation step-by-step. We suggest
+# using a debugger for this. Note that the VBA package 
+# for matlab needs to be added to the matlab path for the
+# matlab scripts to work
 
+# Imports
 import sys
-sys.path.append('/Users/au561649/Desktop/Github/tomsup/python package')
+sys.path.append('/Users/au568658/Desktop/Academ/Projects/tomsup')
 sys.path.append('/Users/ptwaade/Desktop/Uni/tomsup/tomsup_package')
 
 import tomsup as ts
@@ -14,21 +15,6 @@ import tomsup as ts
 forced_choices_p1 = [0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1]
 #P2 forced choices: 
 forced_choices_p2 = [0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0]
-
-#P1 forced choices:
-forced_choices_p1 = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
-#P2 forced choices: 
-forced_choices_p2 = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
-
-# #P1 forced choices:
-# forced_choices_p1 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-# #P2 forced choices: 
-# forced_choices_p2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
-# #P1 forced choices:
-# forced_choices_p1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-# #P2 forced choices: 
-# forced_choices_p2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 # Simulation settings
 n_trials = 10
@@ -57,9 +43,9 @@ for trial in range(n_trials):
     
     # Make choices
     choice_1 = player_1.compete(p_matrix=penny_comp, agent=0,
-                                op_choice=prev_choice_p1)
-    choice_2 = player_2.compete(p_matrix=penny_comp, agent=1,
                                 op_choice=prev_choice_p2)
+    choice_2 = player_2.compete(p_matrix=penny_comp, agent=1,
+                                op_choice=prev_choice_p1)
 
     # Reset own choices
     player_1.choice = forced_choices_p1[trial+1]
