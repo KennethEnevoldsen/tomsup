@@ -3,7 +3,7 @@ close all
 clc
 
 % set the learning styles and interaction types of the first player
-styles1 = {'2-ToM'};
+styles1 = {'5-ToM'};
 modes1 = {'comp'};
 
 % set the learning styles and interaction types of the second player
@@ -16,7 +16,7 @@ coopGame = cat(3,[1,-1;-1,1],[1,-1;-1,1]); % cooperative game
 
 %Simulation settings
 ntests = 20; % number of speedtests to run
-Nmc = 5; % number of simulations 
+Nmc = 8; % number of simulations 
 nt = 60; % number of trials
 
 %ntests = 2; % number of speedtests to run

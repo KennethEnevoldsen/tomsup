@@ -18,7 +18,7 @@ random.seed(1995)
 
 # - Simulation settings - #
 n_tests = 20
-n_sim = 5
+n_sim = 8
 n_rounds = 60
 #(Short run)
 #n_tests = 2
@@ -28,8 +28,9 @@ n_rounds = 60
 # Get payoff matrix
 penny_comp = ts.PayoffMatrix(name="penny_competitive")
 
+n_jobs = 4
 # Create list of agents
-agents = ["RB", "2-ToM"]
+agents = ["2-ToM", "RB"]
 # Set parameters
 start_params = [{}, {}]
 
@@ -59,7 +60,7 @@ for test in range(n_tests):
         n_sim=n_sim,
         save_history=False,
         verbose=False,
-        n_jobs=4,
+        n_jobs=n_jobs,
     )
 
     # Save elapsed time in vector
