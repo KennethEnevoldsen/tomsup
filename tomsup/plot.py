@@ -1,72 +1,54 @@
 """
 Utility plotting functiona for tomsup
 """
+from typing import Callable, Union
 import seaborn as sns
 import pandas as pd
 import numpy as np
 import scipy.stats as st
 import matplotlib.pyplot as plt
-
+from functools import partial
 
 class ResultsDf(pd.DataFrame):
+    """A class wrapper around a pandas dataframe for denoting results from a compete function.
+    Function exactly like a pandas dataframe.
+    """
     pass
 
 
-def add_def_args(func, def_args):
-    """
-    func (fun): function which to add defaults arguments to
-    def_args (dict): default argument given as a dictionary
-
-    Examples
-    >>> def addn(x,n):
-    ...    return x + n
-    >>> add3 = add_def_args(addn, {'n':3})
-    >>> add3(2)
-    5
-    """
-
-    def func_wrapper(*args, **kwargs):
-        value = func(*args, **def_args, **kwargs)
-        return value
-
-    return func_wrapper
-
-
-def mean_confidence_interval(x, confidence=0.95):
+def mean_confidence_interval(x: np.array, confidence: float=0.95) -> np.array:
     return st.t.interval(confidence, len(x) - 1, loc=np.mean(x), scale=st.sem(x))
 
 
-# aggregate_col='payoff_agent'
-# aggregate_fun=np.mean
-# certainty_fun='mean_ci_95'
-# figsize=(11.7, 11.7)
-# cmap="Blues"; dpi=300,
-# na_color='xkcd:white'; x_axis=''; y_axis=''
-
-
 def plot_heatmap(
-    df,
-    aggregate_col="payoff_agent",
-    aggregate_fun=np.mean,
-    certainty_fun="mean_ci_95",
-    cmap="RdBu",
-    na_color="xkcd:white",
-    x_axis="",
-    y_axis="",
-):
-    """
-    df (ResultsDf): an outcome from the compete() function
-    aggregate_fun (fun): Function which to aggregate by, defaults is mean
-    certainty_fun (str | fun) function or string valid string include:
-    mean_ci_X: where X is a float indicating the confidence.
-    Default is mean_ci_95, i.e. a 95% confidence interval.
+    df: pd.DataFrame,
+    aggregate_col: str="payoff_agent",
+    aggregate_fun: Callable = np.mean,
+    certainty_fun: Union[Callable, str] = "mean_ci_95",
+    cmap: str ="RdBu",
+    na_color: str="xkcd:white",
+    x_axis: str="",
+    y_axis: str="",
+) -> None:
+    """plot a heatmap of the agents payoffs
+
+    Args:
+        df (pd.DataFrame): An outcome from the compete() function
+        aggregate_col (str, optional): Column to be aggregated pr agent. Defaults to "payoff_agent".
+        aggregate_fun (Callable, optional): Function which to aggregate by, defaults is mean. Defaults to np.mean.
+        certainty_fun (Union[Callable, str], optional): function should estimate uncertainty or string. Valid string include, mean_ci_X: 
+            where X is a float indicating the confidence interval. Defaults to "mean_ci_95".
+        cmap (str, optional): The color map. Defaults to "RdBu".
+        na_color (str, optional): The nan color. Defaults to "xkcd:white", e.g. white.
+        x_axis (str, optional): The name on the x axis. Defaults to "".
+        y_axis (str, optional): The name on the y axis. Defaults to "".
     """
     check_plot_input(df, None, None)
     df_ = df.copy()
     if isinstance(certainty_fun, str):
         if certainty_fun.startswith("mean_ci_"):
             ci = float(certainty_fun.split("_")[-1])
-            certainty_fun = add_def_args(mean_confidence_interval, {"confidence": ci})
+            certainty_fun = partial(mean_confidence_interval, confidence = ci)
 
     # calc aggregate matrix
     df_mean = (
@@ -125,7 +107,9 @@ def plot_heatmap(
     plt.show()
 
 
-def check_plot_input(df, agent0, agent1):
+def check_plot_input(df: pd.DataFrame, agent0: str, agent1: str) -> None:
+    """checks if plot input is valid
+    """
     if not isinstance(df, ResultsDf):
         raise ValueError(
             "The input dataframe is expected to be a ResultDf \
@@ -145,27 +129,31 @@ def check_plot_input(df, agent0, agent1):
         )
 
 
-def score(df, agent0, agent1, agent=0):
-    """
-    df (pd.DataFrame): a dataframe resulting from a compete function on an
-    AgentGroup
-    agent0 (str): agent0 in the agent pair which you seek to plot, by default
-    it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
-    agent1 (str): agent1 in the agent pair which you seek to plot
-    agent (0 | 1): Indicate whether you should plot the score of agent 0 or 1.
+
+def score(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0):
+    """plot the score of the agent pair
+
+    Args:
+        df (pd.DataFrame): a dataframe resulting from a compete function on an
+            AgentGroup
+        agent0 (str): agent0 in the agent pair which you seek to plot, by default
+            it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
+        agent1 (str): agent1 in the agent pair which you seek to plot
+        agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
 
     Examples:
-    >>> agents = ['RB', 'QL', 'WSLS'] # create a list of agents
-    >>> start_params = [{'bias': 0.7}, {'learning_rate': 0.5}, {}]
-    >>> # create a list of their starting parameters
-    >>> # (an empty dictionary {} simply assumes defaults)
-    >>> # create a group of agents
-    >>> group = ts.create_agents(agents, start_params)
-    >>> # round_robin e.g. each agent will play against all other agents
-    >>> group.set_env(env = 'round_robin')
-    >>> # make them compete for 4 simulations
-    >>> results = group.compete(p_matrix = penny, n_rounds = 20, n_sim = 4)
-    >>> ts.plot.score(results, agent0 = "RB", agent1 = "QL", agent = 0)
+        >>> agents = ['RB', 'QL', 'WSLS'] # create a list of agents
+        >>> start_params = [{'bias': 0.7}, {'learning_rate': 0.5}, {}]
+        >>> # create a list of their starting parameters
+        >>> # (an empty dictionary {} simply assumes defaults)
+        >>> # create a group of agents
+        >>> group = ts.create_agents(agents, start_params)
+        >>> # round_robin e.g. each agent will play against all other agents
+        >>> group.set_env(env = 'round_robin')
+        >>> # make them compete for 4 simulations
+        >>> penny = ts.PayoffMatrix("penny_competive")
+        >>> results = group.compete(p_matrix = penny, n_rounds = 20, n_sim = 4)
+        >>> ts.plot.score(results, agent0 = "RB", agent1 = "QL", agent = 0)
     """
     check_plot_input(df, agent0, agent1)
 
@@ -198,11 +186,17 @@ def score(df, agent0, agent1, agent=0):
     plt.show()
 
 
-def choice(df, agent0, agent1, agent=0, plot_individual_sim=False):
-    """
-    assumes multiples simulations
+def choice(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0, plot_individual_sim: bool=False):
+    """plot the score of the agent pair
 
-    agent is either 1 or 0
+    Args:
+        df (pd.DataFrame): a dataframe resulting from a compete function on an
+            AgentGroup
+        agent0 (str): agent0 in the agent pair which you seek to plot, by default
+            it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
+        agent1 (str): agent1 in the agent pair which you seek to plot
+        agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+        plot_individual_sim (bool, optional): Should individual simulations be plotted. Defaults to false.
     """
     check_plot_input(df, agent0, agent1)
 
@@ -232,15 +226,23 @@ def choice(df, agent0, agent1, agent=0, plot_individual_sim=False):
     plt.show()
 
 
+
 def plot_history(
-    df, agent0, agent1, state, agent=0, fun=lambda x: x[state], ylab="", xlab="Round"
-):
-    """
-    df (ResultsDf): an outcome from the compete() function
-    agent0 (str): an agent name in the agent0 column in the df
-    agent1 (str): an agent name in the agent1 column in the df
-    agent (0|1): An indicate of which agent of agent 0 and 1 you wish to plot
-    state (str): a state of the agent you wish to plot.
+    df: pd.DataFrame, agent0: str, agent1: str, state: str, agent: int=0, fun: Callable=lambda x: x[state], ylab: str="", xlab: str="Round"
+) -> None:
+    """plot the history of an agent.
+
+    Args:
+        df (pd.DataFrame): a dataframe resulting from a compete function on an
+            AgentGroup
+        agent0 (str): agent0 in the agent pair which you seek to plot, by default
+            it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
+        agent1 (str): agent1 in the agent pair which you seek to plot
+        state (str): The state of the agent you wish to plot.
+        agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+        fun (Callable, optional): A getter function for extracting the state. Defaults to lambdax:x[state].
+        ylab (str, optional): Label on y-axis. Defaults to "".
+        xlab (str, optional): Label on the x-axis. Defaults to "Round".
     """
     check_plot_input(df, agent0, agent1)
 
@@ -272,7 +274,18 @@ def plot_history(
     plt.show()
 
 
-def plot_p_k(df, agent0, agent1, level, agent=0):
+def plot_p_k(df: pd.DataFrame, agent0: str, agent1:str, level: int, agent=0) -> None:
+    """plot the p_k of a k-ToM agent
+
+    Args:
+        df (pd.DataFrame): a dataframe resulting from a compete function on an
+            AgentGroup
+        agent0 (str): agent0 in the agent pair which you seek to plot, by default
+            it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
+        agent1 (str): agent1 in the agent pair which you seek to plot
+        level (int): The sophistication level to plot 
+        agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+    """
     plot_history(
         df,
         agent0,
@@ -285,8 +298,17 @@ def plot_p_k(df, agent0, agent1, level, agent=0):
     )
 
 
-def plot_p_op_1(df, agent0, agent1, agent=0):
-    """"""
+def plot_p_op_1(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0) -> None:
+    """plot the p_op_1 of a k-ToM agent
+
+    Args:
+        df (pd.DataFrame): a dataframe resulting from a compete function on an
+            AgentGroup
+        agent0 (str): agent0 in the agent pair which you seek to plot, by default
+            it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
+        agent1 (str): agent1 in the agent pair which you seek to plot
+        agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+    """
     plot_history(
         df,
         agent0,
@@ -297,8 +319,17 @@ def plot_p_op_1(df, agent0, agent1, agent=0):
     )
 
 
-def plot_p_self(df, agent0, agent1, agent=0):
-    """"""
+def plot_p_self(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0) -> None:
+    """plot the p_self of a k-ToM agent
+
+    Args:
+        df (pd.DataFrame): a dataframe resulting from a compete function on an
+            AgentGroup
+        agent0 (str): agent0 in the agent pair which you seek to plot, by default
+            it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
+        agent1 (str): agent1 in the agent pair which you seek to plot
+        agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+    """
     plot_history(
         df,
         agent0,
@@ -309,7 +340,7 @@ def plot_p_self(df, agent0, agent1, agent=0):
     )
 
 
-def plot_op_states(df, agent0, agent1, state, level=0, agent=0):
+def plot_op_states(df: pd.DataFrame, agent0: str, agent1: str, state: str, level: int=0, agent: int=0):
     """
     df (ResultsDf): an outcome from the compete() function
     agent0 (str): an agent name in the agent0 column in the df

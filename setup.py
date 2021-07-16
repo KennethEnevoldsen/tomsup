@@ -1,11 +1,19 @@
 import setuptools
 
+
+
+with open("tomsup/about.py") as f:
+    v = f.read()
+    for l in v.split("\n"):
+        if l.startswith("__version__"):
+            __version__ = l.split('"')[-2]
+
 with open("README.md", "r") as f:
     long_description = f.read()
 
 setuptools.setup(
     name="tomsup",
-    version="1.0.3",
+    version=__version__,
     description="An implementation of game theory of mind in a agent based \
        framework following the implementation of Devaine, et al. (2017).",
     license="Apache License 2.0",
@@ -17,7 +25,13 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     data_files=[("", ["tomsup/*.json"])],
     # external packages as dependencies
-    install_requires=["numpy", "pandas", "scipy", "matplotlib", "seaborn"],
+    install_requires=["numpy >= 1.2.4", 
+                      "pandas >= 1.20.3", 
+                      "scipy >= 1.6.3", 
+                      "matplotlib >= 3.4.2", 
+                      "seaborn >= 0.11.1",
+                      "joblib >= 1.0.1"
+                      ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         # How mature is this project? Common values are
@@ -33,6 +47,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     keywords="theory-of-mind tom game-theory",
 )

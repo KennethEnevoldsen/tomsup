@@ -1,6 +1,7 @@
 """
 This scripts contains the PayoffMatrix
 """
+from typing import Optional
 import numpy as np
 
 
@@ -9,54 +10,63 @@ class PayoffMatrix:
     A class of 2 by 2 payoff matrices.
 
     Currently include the following games:
-    The staghunt game:
-        'staghunt'
-    The matching pennies game (coop and competive):
-        'penny_competive'
-        'penny_cooperative'
-    The party dilemma:
-        'party'
-    The Battle of the sexes:
-        'sexes'
-    The chicken game:
-        'chicken'
-    The deadlock:
-        'deadlock'
+    The staghunt game: 'staghunt',
+    The matching pennies game (coop and competive): 'penny_competive', 'penny_cooperative',
+    The party dilemma: 'party',
+    The Battle of the sexes: 'sexes',
+    The chicken game: 'chicken',
+    The deadlock: 'deadlock',
+    The prisoners dilemma: 'prisoners_dilemma'.
 
-    for custom payoff matrix supply a 2x2x2 numpy array to the
-    predefined argument. See example
+    For custom payoff matrix supply a 2x2x2 numpy array to the predefined argument.
 
-    Example:
-    >>> staghunt = PayoffMatrix(name="staghunt")
-    >>> staghunt.payoff(action_agent0=1, action_agent1=1, agent=0)
-    5
-    >>> staghunt.payoff(action_agent0=1, action_agent1=0, agent=0)
-    0
-    >>> staghunt.payoff(action_agent0=0, action_agent1=1, agent=0)
-    3
-    >>> chicken = PayoffMatrix(name="chicken")
-    >>> chicken.payoff(0, 1, 0)
-    -1
-    >>> dead = PayoffMatrix(name="deadlock")
-    >>> dead.payoff(1, 0, 1)
-    0
-    >>> sexes = PayoffMatrix(name="sexes")
-    >>> sexes.payoff(1, 1, 0)
-    5
-    >>> custom = PayoffMatrix(name="custom", np.array(([(10, 0), (0, 5)],
-                                                       [(5, 0), (0, 10)]))
+    Examples:
+        >>> import tomsup as ts
+        >>> staghunt = ts.PayoffMatrix(name="staghunt")
+        >>> staghunt.payoff(action_agent0=1, action_agent1=1, agent=0)
+        5
+        >>> staghunt.payoff(action_agent0=1, action_agent1=0, agent=0)
+        0
+        >>> staghunt.payoff(action_agent0=0, action_agent1=1, agent=0)
+        3
+        >>> chicken = ts.PayoffMatrix(name="chicken")
+        >>> chicken.payoff(0, 1, 0)
+        -1
+        >>> dead = ts.PayoffMatrix(name="deadlock")
+        >>> dead.payoff(1, 0, 1)
+        0
+        >>> sexes = ts.PayoffMatrix(name="sexes")
+        >>> sexes.payoff(1, 1, 0)
+        5
+        >>> custom = ts.PayoffMatrix(name="custom", np.array(([(10, 0), (0, 5)],
+                                                        [(5, 0), (0, 10)])))
     """
 
-    def __init__(self, name, predefined=None):
+    def __init__(self, name: str, predefined: Optional[np.array] = None):
+        """
+        Args:
+            name (str): The name of the either predefined matrix or your custom matrix.
+                Currently include the following games:
+                The staghunt game ('staghunt'),
+                the matching pennies game ('penny_competive', 'penny_cooperative'),
+                the party dilemma ('party'),
+                the Battle of the sexes ('sexes'), the chicken game ('chicken'),
+                the deadlock ('deadlock'), nad the prisoners dilemma ('prisoners_dilemma').
+            predefined (Optional[np.array], optional): A custom 2x2x2 matrix. Defaults to None.
+        """
         self.name = name
         if name == "staghunt":
-            # choice a1: 0  1 - Choice a0
             self.matrix = np.array(
                 (
-                    [(3, 3), (0, 5)],  # 0   --   Payoff matrix for a0  # 1
-                    [(3, 0), (3, 5)],  # --   Payoff matrix for a1
+                    [(3, 3), (0, 5)], 
+                    [(3, 0), (3, 5)], 
                 )
             )
+        elif name == "prisoners_dilemma":
+            self.matrix = np.array(([(1, 5), 
+                                     (0, 3)], 
+                                     [(1, 0), 
+                                     (5, 3)]))
         elif name == "penny_competitive":
             self.matrix = np.array(([(-1, 1), (1, -1)], [(1, -1), (-1, 1)]))
         elif name == "penny_cooperative":
@@ -70,7 +80,7 @@ class PayoffMatrix:
         elif name == "deadlock":
             self.matrix = np.array(([(1, 0), (3, 2)], [(1, 3), (0, 2)]))
         else:
-            if predefined:
+            if predefined is not None:
                 matrix = np.array(predefined)
                 if matrix.shape == (2, 2, 2):
                     self.matrix = np.array(predefined)
@@ -87,15 +97,20 @@ class PayoffMatrix:
                                  predefined matrix of dimension 2x2x2."
                 )
 
-    def payoff(self, action_agent0, action_agent1, agent=0):
-        """
-        assumes action_agent0 and action_agent1 to be integers
-        agent is either 'p0' or 'p1' indicating whether the agent is player
-        one or two
-        TODO: update docstring
+    def payoff(self, choice_agent0: int, choice_agent1: int, agent: int=0) -> float:
+        """[summary]
+
+        Args:
+            choice_agent0 (int): choice of agent 0
+            choice_agent1 (int): choice of agent 1
+            agent (int, optional): The perspective agent which should get the payoff, either 0 or 1.
+                Defaults to 0.
+
+        Returns:
+            float: The payoff of the agent
         """
 
-        return self.matrix[agent, action_agent0, action_agent1]
+        return self.matrix[agent, choice_agent0, choice_agent1]
 
     def __str__(self):
         print_len = max([len(str(self().min())), len(str(self().max()))])
@@ -166,14 +181,12 @@ class PayoffMatrix:
             ]
         )
 
-    def get_matrix(self):
+    def get_matrix(self) -> np.array:
+        """
+        Returns:
+            np.array: The payoff matrix
+        """
         return self.matrix
 
     def __call__(self):
         return self.matrix
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True)
