@@ -114,7 +114,6 @@ tomsup/plot_results.py
 simulations/results/*
 .Rproj.user/*
 .Rproj.user
-CogSci19_MatchingPennies_TOM_data.csv
 *.RData
 .gitignore
 .Rhistory
