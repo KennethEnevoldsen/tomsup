@@ -72,3 +72,17 @@ def test_compete():
 
     assert result['payoff_agent1'].mean() > 0  
     # We see that the WSLS() on average win more than it lose vs. the biased agent (RB)
+
+
+def test_plot_internal():
+    t2 = ts.agent.TOM(level=2)
+    wsls = ts.agent.WSLS()
+
+    result = ts.compete(t2, wsls, p_matrix = "penny_competitive", n_rounds = 10)
+    
+    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op_mean"])
+    #plotting the agent belief about its opponents theory of mind level (p_k)
+    #probability of sophistication level k=0
+    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][0])
+    # probability of sophistication level k=1
+    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][1])
