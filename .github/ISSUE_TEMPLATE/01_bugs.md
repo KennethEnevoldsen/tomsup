@@ -9,6 +9,6 @@ labels: bug
 
 ## Your Environment
 <!-- Include details of your environment. to get the version of tomsup  you can use: `python -c "import tomsup; print(tomsup.__version__)"`.-->
-* DaCy Version Used:
+* tomsup Version Used:
 * Operating System:
 * Python Version Used:
