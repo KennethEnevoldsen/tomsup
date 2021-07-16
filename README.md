@@ -21,7 +21,7 @@ A Python Package for Agent-Based simulations. The package provides a computation
   - A [speed comparison](missing) between the matlab implementation was introduced, showing the the tomsup implementation to be notably faster.
   - An extensive testsuite was introduced, for how to run it see the FAQ.
   - A [documentation](https://KennethEnevoldsen.github.io/tomsup/) site was introduced.
-  - Continiuous integration to ensure that the package always work as intended.
+  - Added continiuous integration to ensure that the package always work as intended, with support for mac, windows and linux tests.
   - A new logo was introduced 🌟
 - v. 1.0.0
   - tomsup released its first version along with a [preprint](https://psyarxiv.com/zcgkv/) on psyarxiv
