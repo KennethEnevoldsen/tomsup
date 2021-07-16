@@ -11,7 +11,7 @@ import subprocess
 test_failed = False
 try:
     grepOut = subprocess.check_output(
-        "pytest --cov=dacy --cov-config=dev/pytest-coverage/.coveragerc --cov-report term-missing",
+        "pytest --cov=tomsup --cov-config=dev/pytest-coverage/.coveragerc --cov-report term-missing",
         shell=True,
     )
     output = grepOut.decode("utf-8")
