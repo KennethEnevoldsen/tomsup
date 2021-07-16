@@ -33,7 +33,7 @@ def test_TFT():
 def test_QL():
     ql = ts.agent.QL()
     p_dilemma = ts.PayoffMatrix(name="prisoners_dilemma")   
-    assert ql.compete(p_matrix=p_dilemma, agent=0) in [0, 1]
+    assert ql.compete(p_matrix=p_dilemma, agent=0, op_choice=None) in [0, 1]
 
 def test_TOM():
     t0 = ts.agent.TOM(level=0, volatility=-2, b_temp=-1)
@@ -78,9 +78,9 @@ def test_plot_internal():
     t2 = ts.agent.TOM(level=2)
     wsls = ts.agent.WSLS()
 
-    result = ts.compete(t2, wsls, p_matrix = "penny_competitive", n_rounds = 10)
+    result = ts.compete(t2, wsls, p_matrix = "penny_competitive", n_rounds = 10, save_history=True)
     
-    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op_mean"])
+    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op"])
     #plotting the agent belief about its opponents theory of mind level (p_k)
     #probability of sophistication level k=0
     t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][0])

@@ -165,8 +165,8 @@ class Agent:
             fun (Callable): a function which to use to extract from the internal states dict
 
         Examples:
-            >>> # plotting the p_op_mean of the agent over trials
-            >>> tom1.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op_mean"])
+            >>> # plotting the est. probability of opp. choosing one over trials
+            >>> tom1.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op"])
             >>> # plotting the agent belief about its opponents theory of mind level (p_k)
             >>> # probability of sophistication level k=0
             >>> tom2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][0])
