@@ -6,7 +6,7 @@
 [![pip downloads](https://img.shields.io/pypi/dm/tomsup.svg)](https://pypi.org/project/tomsup/)
 [![Code style: black](https://img.shields.io/badge/Code%20Style-Black-black)](https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html)
 [![python version](https://img.shields.io/badge/Python-%3E=3.6-blue)](https://github.com/KennethEnevoldsen/tomsup)
-[![license](https://img.shields.io/github/license/KennethEnevoldsen/tomsup.svg?color=blue)](https://github.com/KennethEnevoldsen/tomsup/blob/master/LICENSE)
+[![license](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/KennethEnevoldsen/tomsup/blob/master/LICENSE)
 [![github actions pytest](https://github.com/KennethEnevoldsen/tomsup/actions/workflows/pytest-cov-comment.yml/badge.svg)](https://github.com/KennethEnevoldsen/tomsup/actions)
 [![github actions docs](https://github.com/KennethEnevoldsen/tomsup/actions/workflows/documentation.yml/badge.svg)](https://KennethEnevoldsen.github.io/tomsup/)
 ![github coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/KennethEnevoldsen/ba4cb2310c5b370dc2c49d0be0a7e3ec/raw/badge-tomsup-pytest-coverage.json)
@@ -20,6 +20,7 @@ A Python Package for Agent-Based simulations. The package provides a computation
 - v. 1.1.0
   - A [speed comparison](missing) between the matlab implementation was introduced, showing the the tomsup implementation to be notably faster.
   - An extensive testsuite was introduced, for how to run it see the FAQ.
+  - Code coverage was upped to 86% and code quality was raised to A.
   - A [documentation](https://KennethEnevoldsen.github.io/tomsup/) site was introduced.
   - Added continiuous integration to ensure that the package always work as intended, with support for mac, windows and linux tests.
   - A new logo was introduced 🌟
