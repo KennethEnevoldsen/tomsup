@@ -56,13 +56,13 @@ def plot_heatmap(
     df_mean = (
         df_[[aggregate_col + "0", "agent0", "agent1"]]
         .groupby(["agent0", "agent1"])
-        .apply(lambda x: aggregate_fun(x))
+        .apply(aggregate_fun)
         .reset_index()
     )
     df_mean2 = (
         df_[[aggregate_col + "1", "agent0", "agent1"]]
         .groupby(["agent0", "agent1"])
-        .apply(lambda x: aggregate_fun(x))
+        .apply(aggregate_fun)
         .reset_index()
     )
     df_mean.columns = ["agent0", "agent1", aggregate_col]
@@ -75,14 +75,14 @@ def plot_heatmap(
         df_ci = (
             df_[[aggregate_col + "0", "agent0", "agent1"]]
             .groupby(["agent0", "agent1"])
-            .apply(lambda x: mean_confidence_interval(x))
+            .apply(mean_confidence_interval)
             .reset_index()
         )
         df_ci.columns = ["agent0", "agent1", "ci"]
         df_ci2 = (
             df_[[aggregate_col + "1", "agent0", "agent1"]]
             .groupby(["agent0", "agent1"])
-            .apply(lambda x: mean_confidence_interval(x))
+            .apply(mean_confidence_interval)
             .reset_index()
         )
         df_ci2.columns = ["agent1", "agent0", "ci"]
