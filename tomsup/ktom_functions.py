@@ -544,7 +544,7 @@ def decision_function(
     agent: int,
     level: int,
     p_matrix: PayoffMatrix,
-) -> Tuple(float, float):
+) -> Tuple[float, float]:
     """The decision function of the k-ToM agent
 
     Args:
@@ -555,7 +555,7 @@ def decision_function(
         p_matrix (PayoffMatrix): a payoff matrix
 
     Returns:
-        Tuple(float, float): a tuple contain probability of self choosing 1 and op choosing 1.
+        Tuple[float, float]: a tuple contain probability of self choosing 1 and op choosing 1.
 
 
     Examples:
