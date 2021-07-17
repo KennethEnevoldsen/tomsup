@@ -1,0 +1,83 @@
+---
+title: "analysis.R"
+author: "K. Enevoldsen"
+date: "5/3/2021"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(kableExtra)
+
+df = read_csv("CogSci19_MatchingPennies_TOM_data.csv")
+df$tom_level = as.factor(df$tom_level)
+
+```
+
+```{r}
+df$Framing = factor(df$Framing, levels = c("SlotMachine", "Human"))
+df %>% 
+  group_by(participant.code, Framing, tom_level) %>% 
+  summarise(player_payoff = sum(player_payoff)) %>% 
+ggplot(aes(y=player_payoff, x=Framing, fill=Framing)) + 
+  geom_errorbar() + 
+  # geom_violin() + geom_boxplot(width=.2) + 
+  facet_wrap(~tom_level) +  
+  scale_fill_manual(values=c("red", "blue"))
+
+df %>% 
+  group_by(participant.code, Framing, tom_level) %>% 
+  summarise(player_payoff = sum(player_payoff)) %>% 
+  mutate(tom_level = as.numeric(as.character(tom_level))) %>% 
+ggplot(aes(y=player_payoff, x=tom_level, color=Framing))  +  geom_smooth(method="lm")
+
+df %>% 
+  group_by(Framing, tom_level, participant.code) %>% 
+  summarise(tom_payoff = sum(tom_payoff)) %>% 
+  group_by(Framing, tom_level) %>% 
+  summarise(m = mean(tom_payoff), sd = sd(tom_payoff))
+```
+
+```{r}
+df %>% filter(Framing == "Human" & tom_level == 2) %>% View
+df %>% filter(participant.code == "0cqyggbv") %>% View
+
+```
+
+
+```{r}
+df %>% 
+  group_by(Framing, tom_level, participant.code) %>% 
+  arrange(trial) %>% 
+  mutate(cs_player_payoff = cumsum(player_payoff), cs_tom_payoff = cumsum(tom_payoff), trial = trial - min(trial)) %>% 
+   # filter(participant.code == "0cqyggbv" & Framing == "Human" & tom_level == 2) %>%
+  group_by(Framing, tom_level, trial) %>% 
+  summarise(cs_player_payoff = mean(cs_player_payoff), cs_tom_payoff = mean(cs_tom_payoff)) %>%
+ggplot(aes(x=trial, y =cs_player_payoff, color= Framing)) + geom_line() + facet_wrap(~tom_level)
+```
+
+
+
+
+```{r}
+speed = tribble(
+  ~" ", ~"  ", ~"VBA", ~"tomsup 👍",
+  "RB", "RB",    "0.07 (0.02)", "0.01 (0.0005)",
+  "RB", "0-ToM", "0.3 (0.004)", "0.08 (0.004)",
+  "RB", "1-ToM", "0.68 (0.05)", "0.41 (0.01)",
+  "RB", "2-ToM", "1.98 (0.1)", "2.18 (0.08)",
+  "RB", "3-ToM", "5.7", "10.1",
+)
+
+speed %>% kbl(format ="latex", caption="All simulations were run using 60 trials and 5 simulations. The reported results is a mean (SD) over 20 repitions. Thus these were run a total of 6 000 pr. agent pair.") %>% 
+  kable_paper(full_width = F) %>%
+  add_header_above(c("Agent Pair" = 2, "Speed" = 2))
+
+```
+
+
+
+
+
+
+
