@@ -29,6 +29,7 @@ def plot_heatmap(
     na_color: str="xkcd:white",
     xlab: str="",
     ylab: str="",
+    show:bool = True,
 ) -> None:
     """plot a heatmap of the agents payoffs
 
@@ -42,6 +43,7 @@ def plot_heatmap(
         na_color (str, optional): The nan color. Defaults to "xkcd:white", e.g. white.
         xlab (str, optional): The name on the x axis. Defaults to "".
         ylab (str, optional): The name on the y axis. Defaults to "".
+        show (bool, optional): Should plt.show be run at the end. Defaults to True.
     """
     check_plot_input(df, None, None)
     df_ = df.copy()
@@ -104,7 +106,8 @@ def plot_heatmap(
         p1.set_facecolor(na_color)
         ax.set_xlabel(xlab)
         ax.set_ylabel(ylab)
-    plt.show()
+    if show is True:
+        plt.show()
 
 
 def check_plot_input(df: pd.DataFrame, agent0: str, agent1: str) -> None:
@@ -130,7 +133,7 @@ def check_plot_input(df: pd.DataFrame, agent0: str, agent1: str) -> None:
 
 
 
-def score(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0):
+def score(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0, show: bool=True):
     """plot the score of the agent pair
 
     Args:
@@ -140,6 +143,7 @@ def score(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0):
             it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
         agent1 (str): agent1 in the agent pair which you seek to plot
         agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+        show (bool, optional): Should plt.show be run at the end. Defaults to True.
 
     Examples:
         >>> agents = ['RB', 'QL', 'WSLS'] # create a list of agents
@@ -183,10 +187,11 @@ def score(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0):
     plt.legend()
     plt.xlabel("Round")
     plt.ylabel("Score")
-    plt.show()
+    if show is True:
+        plt.show()
 
 
-def choice(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0, plot_individual_sim: bool=False):
+def choice(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0, plot_individual_sim: bool=False, show: bool=True) -> None:
     """plot the score of the agent pair
 
     Args:
@@ -197,6 +202,7 @@ def choice(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0, plot_indivi
         agent1 (str): agent1 in the agent pair which you seek to plot
         agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
         plot_individual_sim (bool, optional): Should individual simulations be plotted. Defaults to false.
+        show (bool, optional): Should plt.show be run at the end. Defaults to True.
     """
     check_plot_input(df, agent0, agent1)
 
@@ -223,12 +229,13 @@ def choice(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0, plot_indivi
     plt.xlabel("Round")
     plt.ylabel("Choice")
     plt.ylim(0, 1)
-    plt.show()
+    if show is True:
+        plt.show()
 
 
 
 def plot_history(
-    df: pd.DataFrame, agent0: str, agent1: str, state: str, agent: int=0, fun: Callable=lambda x: x[state], ylab: str="", xlab: str="Round"
+    df: pd.DataFrame, agent0: str, agent1: str, state: str, agent: int=0, fun: Callable=lambda x: x[state], ylab: str="", xlab: str="Round", show: bool = True
 ) -> None:
     """plot the history of an agent.
 
@@ -243,6 +250,7 @@ def plot_history(
         fun (Callable, optional): A getter function for extracting the state. Defaults to lambdax:x[state].
         ylab (str, optional): Label on y-axis. Defaults to "".
         xlab (str, optional): Label on the x-axis. Defaults to "Round".
+        show (bool, optional): Should plt.show be run at the end. Defaults to True.
     """
     check_plot_input(df, agent0, agent1)
 
@@ -271,10 +279,11 @@ def plot_history(
     )
     plt.xlabel(xlab)
     plt.ylabel(ylab)
-    plt.show()
+    if show is True:
+        plt.show()
 
 
-def plot_p_k(df: pd.DataFrame, agent0: str, agent1:str, level: int, agent=0) -> None:
+def plot_p_k(df: pd.DataFrame, agent0: str, agent1:str, level: int, agent=0, show: bool = True) -> None:
     """plot the p_k of a k-ToM agent
 
     Args:
@@ -285,6 +294,7 @@ def plot_p_k(df: pd.DataFrame, agent0: str, agent1:str, level: int, agent=0) -> 
         agent1 (str): agent1 in the agent pair which you seek to plot
         level (int): The sophistication level to plot 
         agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+        show (bool, optional): Should plt.show be run at the end. Defaults to True.
     """
     plot_history(
         df,
@@ -295,10 +305,11 @@ def plot_p_k(df: pd.DataFrame, agent0: str, agent1:str, level: int, agent=0) -> 
         fun=lambda x: x["internal_states"]["own_states"]["p_k"][level],
         ylab=f"Probability of k={level}",
         xlab="Round",
+        show=show
     )
 
 
-def plot_p_op_1(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0) -> None:
+def plot_p_op_1(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0, show: bool=True) -> None:
     """plot the p_op_1 of a k-ToM agent
 
     Args:
@@ -308,6 +319,7 @@ def plot_p_op_1(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0) -> Non
             it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
         agent1 (str): agent1 in the agent pair which you seek to plot
         agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+        show (bool, optional): Should plt.show be run at the end. Defaults to True.
     """
     plot_history(
         df,
@@ -316,10 +328,11 @@ def plot_p_op_1(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0) -> Non
         state="p_op",
         agent=agent,
         fun=lambda x: x["internal_states"]["own_states"]["p_op"][0],
+        show=show
     )
 
 
-def plot_p_self(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0) -> None:
+def plot_p_self(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0, show: bool=True) -> None:
     """plot the p_self of a k-ToM agent
 
     Args:
@@ -329,6 +342,7 @@ def plot_p_self(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0) -> Non
             it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
         agent1 (str): agent1 in the agent pair which you seek to plot
         agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+        show (bool, optional): Should plt.show be run at the end. Defaults to True.
     """
     plot_history(
         df,
@@ -337,10 +351,11 @@ def plot_p_self(df: pd.DataFrame, agent0: str, agent1: str, agent: int=0) -> Non
         state="p_self",
         agent=agent,
         fun=lambda x: x["internal_states"]["own_states"]["p_self"],
+        show=show
     )
 
 
-def plot_op_states(df: pd.DataFrame, agent0: str, agent1: str, state: str, level: int=0, agent: int=0):
+def plot_op_states(df: pd.DataFrame, agent0: str, agent1: str, state: str, level: int=0, agent: int=0, show: bool=True):
     """
     df (ResultsDf): an outcome from the compete() function
     agent0 (str): an agent name in the agent0 column in the df
@@ -349,6 +364,7 @@ def plot_op_states(df: pd.DataFrame, agent0: str, agent1: str, state: str, level
     the indicated agent must be a theory of mind agent (ToM)
     state (str): a state of the simulated opponent you wish to plot.
     level (str): level of the similated opponent you wish to plot.
+    show (bool, optional): Should plt.show be run at the end. Defaults to True.
     """
     plot_history(
         df,
@@ -359,4 +375,5 @@ def plot_op_states(df: pd.DataFrame, agent0: str, agent1: str, state: str, level
         fun=lambda x: x["internal_states"]["opponent_states"][level]["own_states"][
             state
         ],
+        show=show
     )

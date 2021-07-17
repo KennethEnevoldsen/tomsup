@@ -147,15 +147,18 @@ class Agent:
             )
 
     # plotters
-    def plot_choice(self) -> None:
+    def plot_choice(self, show: bool=True) -> None:
         """Plot the choices of the agent
+        Args:
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         df = self.get_history()
         plt.plot(df.index, df["choice"], color="lightblue", linewidth=4)
         plt.xlabel("Round")
         plt.ylabel("Choice")
         plt.ylim(0, 1)
-        plt.show()
+        if show is True:
+            plt.show()
 
     def plot_internal(self, fun: Callable, show: bool=True) -> None:
         """
@@ -1039,6 +1042,7 @@ class AgentGroup:
         fun: Callable=lambda x: x[state],
         ylab: str="",
         xlab: str="Round",
+        show: bool = True
     ) -> None:
         """pPlots the history of an agent in a defined agent pair
 
@@ -1050,38 +1054,42 @@ class AgentGroup:
             fun (Callable, optional): A function for extracting the state. Defaults to lambdax:x[state].
             xlab (str, optional): The name on the x-axis. Defaults to "Agent".
             ylab (str, optional): The name of the y-axis. Defaults to "Opponent".
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
-        plot_history(self.__df, agent0, agent1, state, agent, fun, ylab=ylab, xlab=xlab)
+        plot_history(self.__df, agent0, agent1, state, agent, fun, ylab=ylab, xlab=xlab, show=show)
 
-    def plot_p_op_1(self, agent0: str, agent1: str, agent: int=0) -> None:
+    def plot_p_op_1(self, agent0: str, agent1: str, agent: int=0, show: bool=True) -> None:
         """plots the p_op_1 of a k-ToM agent in a defined agent pair
 
         Args:
             agent0 (str): The name of agent0
             agent1 (str): The name of agent1
             agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         self.__tom_in_group(agent0, agent1, agent)
-        plot_p_op_1(self.__df, agent0, agent1, agent)
+        plot_p_op_1(self.__df, agent0, agent1, agent, show=show)
 
-    def plot_p_k(self, agent0: str, agent1: str, level: int, agent: int=0) -> None:
+    def plot_p_k(self, agent0: str, agent1: str, level: int, agent: int=0, show: bool=True) -> None:
         """plots the p_k of a k-ToM agent in a defined agent pair
 
         Args:
             agent0 (str): The name of agent0
             agent1 (str): The name of agent1
             agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         self.__tom_in_group(agent0, agent1, agent)
-        plot_p_k(self.__df, agent0, agent1, agent=agent, level=level)
+        plot_p_k(self.__df, agent0, agent1, agent=agent, level=level, show=show)
 
-    def plot_p_self(self, agent0: str, agent1: str, agent: int=0) -> None:
+    def plot_p_self(self, agent0: str, agent1: str, agent: int=0, show: bool=True) -> None:
         """plots the p_self of a k-ToM agent in a defined agent pair
 
         Args:
             agent0 (str): The name of agent0
             agent1 (str): The name of agent1
             agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         self.__tom_in_group(agent0, agent1, agent)
         plot_p_self(self.__df, agent0, agent1, agent)
@@ -1097,7 +1105,7 @@ class AgentGroup:
             level (str): level of the similated opponent you wish to plot.
         """
         self.__tom_in_group(agent0, agent1, agent)
-        plot_op_states(self.__df, agent0, agent1, state, level=0, agent=0)
+        plot_op_states(self.__df, agent0, agent1, state, level=0, agent=0, show=show)
 
     def plot_tom_op_estimate(
         self,
@@ -1108,6 +1116,7 @@ class AgentGroup:
         agent: int=0,
         plot: str="mean",
         transformation: Optional[bool]=None,
+        show: bool=True
     ):
         """plot a k-ToM's estimates the opponent in a given pair
 
@@ -1122,6 +1131,7 @@ class AgentGroup:
                "dilution".
             level (str): Sophistication level of the similated opponent you wish to plot.
             plot (str, optional): Toggle between plotting mean ("mean") or variance ("var"). Default to "mean".
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         a = self.__tom_in_group(agent0, agent1, agent)
 
@@ -1188,6 +1198,7 @@ class AgentGroup:
                 x["internal_states"]["opponent_states"][level]["own_states"][p_key][loc]
             ),
             ylab=ylab,
+            show=show
         )
 
     def __tom_in_group(self, agent0: str, agent1: str, agent: int) -> TOM:
