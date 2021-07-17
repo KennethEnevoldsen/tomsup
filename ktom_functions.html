@@ -7,7 +7,7 @@
   <meta property="og:title" content="k-ToM Functions" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="ktom_functions.html" />
-  <meta property="og:description" content="These are the internal functions used for the k-ToM agents. tomsup.ktom_functions: This script contains all function related to the implementation of the k-ToM agent." />
+  <meta property="og:description" content="These are the internal functions used for the k-ToM agents. In general, we don’t recommend using these directly, as they are mostly for internal use in the TOM agent. tomsup.ktom_functions: This sc..." />
   <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Utility Functions" href="utils.html" />
 
     <meta name="generator" content="sphinx-4.1.1, furo 2021.07.05.beta38"/>
@@ -156,61 +156,135 @@
         </label>
         <section id="k-tom-functions">
 <h1>k-ToM Functions<a class="headerlink" href="#k-tom-functions" title="Permalink to this headline">¶</a></h1>
-<p>These are the internal functions used for the k-ToM agents.</p>
+<p>These are the internal functions used for the k-ToM agents. In general, we don’t recommend using these directly, as they are mostly for internal use in the TOM agent.</p>
 <section id="module-tomsup.ktom_functions">
 <span id="tomsup-ktom-functions"></span><h2>tomsup.ktom_functions<a class="headerlink" href="#module-tomsup.ktom_functions" title="Permalink to this headline">¶</a></h2>
 <p>This script contains all function related to the implementation of the
 k-ToM agent.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.decision_function">
-<span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">decision_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_internal_states</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><span class="pre">tomsup.payoffmatrix.PayoffMatrix</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#decision_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.decision_function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Examples:
-&gt;&gt;&gt; penny = PayoffMatrix(name = “penny_competitive”)
-&gt;&gt;&gt; new_internal_states = {‘opponent_states’: {},     ‘own_states’: {‘p_op_mean0’: 30, ‘p_op_var0’: 2}}
-&gt;&gt;&gt; params = {‘volatility’: -2, ‘b_temp’: -1}
-&gt;&gt;&gt; decision_function(new_internal_states, params, agent = 0,         level = 0, p_matrix = penny)
--5.436561973742046</p>
+<span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">decision_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_internal_states</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><span class="pre">tomsup.payoffmatrix.PayoffMatrix</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#decision_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.decision_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>The decision function of the k-ToM agent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_internal_states</strong> (<em>dict</em>) – Dict of updated internal states</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – The parameters</p></li>
+<li><p><strong>agent</strong> (<em>int</em>) – the perspective of the agent in the payoff matrix</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The sophistication level of the agent</p></li>
+<li><p><strong>p_matrix</strong> (<a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><em>PayoffMatrix</em></a>) – a payoff matrix</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a tuple contain probability of self choosing 1 and op choosing 1.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[float, float]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">penny</span> <span class="o">=</span> <span class="n">PayoffMatrix</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"penny_competitive"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_internal_states</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'opponent_states'</span><span class="p">:</span> <span class="p">{},</span>         <span class="s1">'own_states'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'p_op_mean0'</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">'p_op_var0'</span><span class="p">:</span> <span class="mi">2</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'volatility'</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'b_temp'</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decision_function</span><span class="p">(</span><span class="n">new_internal_states</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">agent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>             <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">p_matrix</span> <span class="o">=</span> <span class="n">penny</span><span class="p">)</span>
+<span class="go">-5.436561973742046</span>
+</pre></div>
+</div>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.expected_payoff_fun">
 <span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">expected_payoff_fun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_op</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><span class="pre">tomsup.payoffmatrix.PayoffMatrix</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#expected_payoff_fun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.expected_payoff_fun" title="Permalink to this definition">¶</a></dt>
-<dd><p>p_op (0 &lt;= float &lt;= 1): The probability of the opponent choosing 1
-agent (0 &lt;= int &lt;= 1): the perspective of the agent
-p_matrix (PayoffMatix): a payoff matrix</p>
-<p>Calculate expected payoff of choosing 1 over 0</p>
-<p>Examples:
-&gt;&gt;&gt; staghunt = PayoffMatrix(name = ‘staghunt’)
-&gt;&gt;&gt; expected_payoff_fun(1, agent = 0, p_matrix = staghunt)
-2</p>
+<dd><p>Calculate expected payoff of choosing 1 over 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_op</strong> (<em>float</em>) – The probability of the opponent choosing 1</p></li>
+<li><p><strong>agent</strong> (<em>int</em>) – The perspective of the agent</p></li>
+<li><p><strong>p_matrix</strong> (<a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><em>PayoffMatrix</em></a>) – A payoff matrix</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The expected payoff</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">staghunt</span> <span class="o">=</span> <span class="n">PayoffMatrix</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s1">'staghunt'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">expected_payoff_fun</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">agent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">p_matrix</span> <span class="o">=</span> <span class="n">staghunt</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.gradient_update">
 <span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">gradient_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_op_mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_prev_internal_states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_self_choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_op_choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_matrix</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#gradient_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.gradient_update" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The gradient update of the k-ToM agent</p>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.init_k_tom">
 <span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">init_k_tom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priors</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#init_k_tom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.init_k_tom" title="Permalink to this definition">¶</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">init_k_tom</span><span class="p">(</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'volatility'</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'b_temp'</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'bias'</span><span class="p">:</span><span class="mi">0</span> <span class="p">},</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="s1">'default'</span><span class="p">)</span>
+<dd><p>Initialization function of the k-ToM agent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dict</em>) – The starting parameters</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The sophistication level of the agent</p></li>
+<li><p><strong>priors</strong> (<em>Union</em><em>[</em><em>dict</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The priors of the k-ToM. Default to “default”.
+See tutorial on how to set internal states of the k-ToM agent.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">init_k_tom</span><span class="p">(</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'volatility'</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'b_temp'</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'bias'</span><span class="p">:</span><span class="mi">0</span> <span class="p">},</span> <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="s1">'default'</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.k_tom">
-<span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">k_tom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_internal_states</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_choice</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_choice</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><span class="pre">tomsup.payoffmatrix.PayoffMatrix</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#k_tom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.k_tom" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">k_tom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_internal_states</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_choice</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_choice</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><span class="pre">tomsup.payoffmatrix.PayoffMatrix</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#k_tom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.k_tom" title="Permalink to this definition">¶</a></dt>
+<dd><p>The full k-ToM implementation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prev_internal_states</strong> (<em>dict</em>) – Dict of previous internal states</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – The parameters</p></li>
+<li><p><strong>self_choice</strong> (<em>int</em>) – the agent choice the previous round</p></li>
+<li><p><strong>op_choice</strong> (<em>int</em>) – The opponents choice the previous round</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The sophistication level of the agent</p></li>
+<li><p><strong>agent</strong> (<em>int</em>) – the perspective of the agent in the payoff matrix</p></li>
+<li><p><strong>p_matrix</strong> (<a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><em>PayoffMatrix</em></a>) – a payoff matrix</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a tuple containing the choice and the updated internal states</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[int, dict]</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.learning_function">
-<span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">learning_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_internal_states</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_choice</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_choice</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><span class="pre">tomsup.payoffmatrix.PayoffMatrix</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#learning_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.learning_function" title="Permalink to this definition">¶</a></dt>
-<dd><p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">penny</span> <span class="o">=</span> <span class="n">PayoffMatrix</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"penny_competitive"</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">prev_internal_states</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'opponent_states'</span><span class="p">:</span> <span class="p">{},</span>             <span class="s1">'own_states'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'p_op_mean0'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'p_op_var0'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'volatility'</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'b_temp'</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">learning_function</span><span class="p">(</span><span class="n">prev_internal_states</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">self_choice</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>             <span class="n">op_choice</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">p_matrix</span><span class="o">=</span><span class="n">penny</span><span class="p">)</span>
-<span class="go">{'opponent_states': {},</span>
-<span class="go">'own_states': {'p_op_mean0': 0.44216598162254866,</span>
-<span class="go">'p_op_var0': -0.12292276280308079}}</span>
-</pre></div>
-</div>
+<span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">learning_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_internal_states</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_choice</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_choice</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_matrix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><span class="pre">tomsup.payoffmatrix.PayoffMatrix</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#learning_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.learning_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>The general learning function for the k-ToM agent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prev_internal_states</strong> (<em>dict</em>) – Previous internal states</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – The parameters</p></li>
+<li><p><strong>self_choice</strong> (<em>int</em>) – Previous choice of the agent</p></li>
+<li><p><strong>op_choice</strong> (<em>int</em>) – Opponents choice</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – sophistication level</p></li>
+<li><p><strong>agent</strong> (<em>int</em>) – the perspective of the agent in the payoff matrix (0 or 1)</p></li>
+<li><p><strong>p_matrix</strong> (<a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix" title="tomsup.payoffmatrix.PayoffMatrix"><em>PayoffMatrix</em></a>) – a payoff matrix</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The updated internal states</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.p_k_udpate">
@@ -228,65 +302,54 @@ estimates.</p>
 <span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">p_op0_fun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_op_mean0</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_op_var0</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#p_op0_fun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.p_op0_fun" title="Permalink to this definition">¶</a></dt>
 <dd><p>0-ToM combines the mean and variance of its parameter estimate into a
 final choice probability estimate.
-NB: This is the function taken from the VBA package (Daunizeau 2014),
-which does not use 0-ToM’s volatility parameter to avoid unidentifiability
-problems.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p_op0_fun</span><span class="p">(</span><span class="n">p_op_mean0</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">p_op_var0</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">)</span>
-</pre></div>
-</div>
+To avoid unidentifiability problems this function does not use 0-ToM’s volatility parameter.</p>
+<p>Examples:
+&gt;&gt;&gt; p_op0_fun(p_op_mean0 = 0.7, p_op_var0 = 0.3)</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.p_op_mean0_update">
 <span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">p_op_mean0_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_p_op_mean0</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_op_var0</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_choice</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#p_op_mean0_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.p_op_mean0_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>prev_p_op_mean0 (float)
-p_op_var0       (float)
-op_choice       (int)</p>
-<p>0-ToM updates mean choice probability estimate</p>
+<dd><p>0-ToM updates mean choice probability estimate</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.p_op_var0_update">
 <span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">p_op_var0_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_p_op_mean0</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_p_op_var0</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volatility</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#p_op_var0_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.p_op_var0_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>prev_p_op_mean0   (float)
-prev_p_op_var0    (float)
-volatility        (float)</p>
-<p>0-ToM updates variance / uncertainty on choice probability estimate</p>
-<p>Examples:
-&gt;&gt;&gt; p_op_var0_update(1, 0.2, 1)
-0.8348496471878395
-&gt;&gt;&gt; #Higher volatility results in a higher variance
-&gt;&gt;&gt; p_op_var0_update(1, 0.2, 1) &lt; p_op_var0_update (1, 0.2, 2)
-True
-&gt;&gt;&gt; #Mean close to 0.5 gives lower variance
-&gt;&gt;&gt; p_op_var0_update(1, 0.45, 1) &lt; p_op_var0_update (1, 0.2, 2)
-True</p>
+<dd><p>Variance update of the 0-ToM</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p_op_var0_update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">0.8348496471878395</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#Higher volatility results in a higher variance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p_op_var0_update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">p_op_var0_update</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#Mean close to 0.5 gives lower variance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p_op_var0_update</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">p_op_var0_update</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.p_opk_approx_fun">
 <span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">p_opk_approx_fun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_p_op_mean</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_param_var</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_gradient</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#p_opk_approx_fun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.p_opk_approx_fun" title="Permalink to this definition">¶</a></dt>
-<dd><p>prev_p_op_mean  (numpy.ndarray)
-prev_param_var  (numpy.ndarray)
-prev_gradient   (numpy.ndarray)
-level           (int)</p>
-<p>Approximates the estimated choice probability of the opponent on the
+<dd><p>Approximates the estimated choice probability of the opponent on the
 previous round.
 A semi-analytical approximation derived in Daunizeau, J. (2017)</p>
+<p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p_opk_approx_fun</span><span class="p">(</span><span class="n">prev_p_op_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">prev_param_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span> <span class="n">prev_gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.p_opk_fun">
-<span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">p_opk_fun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_op_mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#p_opk_fun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.p_opk_fun" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">p_opk_fun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_op_mean</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_var</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#p_opk_fun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.p_opk_fun" title="Permalink to this definition">¶</a></dt>
 <dd><p>k-ToM combines the mean choice probability estimate and the variances of
 its parameter estimates into a final choice probability estimate.
-NB: this is the function taken from the VBA package (Daunizeau 2014),
-which does not use k-ToM’s volatility parameter to avoid unidentifiability
-issues.</p>
+To avoid unidentifiability problems this function does not use 0-ToM’s volatility parameter.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.ktom_functions.param_mean_update">
 <span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">param_mean_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_p_op_mean</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_param_mean</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_gradient</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_k</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_choice</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#param_mean_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.param_mean_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>k-ToM updates its estimates of opponent’s parameter values</p>
+<p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">param_mean_update</span><span class="p">(</span><span class="n">prev_p_op_mean</span><span class="p">,</span> <span class="n">prev_param_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span> <span class="n">prev_gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">p_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">param_var</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -295,14 +358,12 @@ issues.</p>
 <dt class="sig sig-object py" id="tomsup.ktom_functions.param_var_update">
 <span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">param_var_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_p_op_mean</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_param_var</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_gradient</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_k</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volatility</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volatility_dummy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#param_var_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.param_var_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>k-ToM updates its uncertainty / variance on its estimates of opponent’s
-parameter values
-&gt;&gt;&gt; param_var_update(prev_param_mean = np.array([[0, 0, 0]]),         prev_param_var = np.array([[0, 0, 0]]),         prev_gradient = np.array([0, 0, 0]), p_k = np.array([1.]),         volatility = -2, volatility_dummy = None)
-array([[0.12692801, 0.        , 0.        ]])</p>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="tomsup.ktom_functions.softmax">
-<span class="sig-prename descclassname"><span class="pre">tomsup.ktom_functions.</span></span><span class="sig-name descname"><span class="pre">softmax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expected_payoff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tomsup/ktom_functions.html#softmax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.ktom_functions.softmax" title="Permalink to this definition">¶</a></dt>
-<dd><p>Softmax function for calculating own probability of choosing 1</p>
+parameter values</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">param_var_update</span><span class="p">(</span><span class="n">prev_param_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span>             <span class="n">prev_param_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span>             <span class="n">prev_gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">p_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">]),</span>             <span class="n">volatility</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">volatility_dummy</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">array([[0.12692801, 0.        , 0.        ]])</span>
+</pre></div>
+</div>
 </dd></dl>
 </section>
 </section>
