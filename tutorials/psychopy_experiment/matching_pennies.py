@@ -34,7 +34,7 @@ if popup.OK:
     k = popup.data[3]
     n_trials = popup.data[4]
 elif popup.Cancel:
-    core.quit
+    core.quit()
 
 print(f"this is {k}")
 

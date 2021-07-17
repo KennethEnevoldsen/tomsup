@@ -138,15 +138,14 @@ class Agent:
             )
         if format == "df":
             return _return
-        elif format == "dict":
+        if format == "dict":
             return dict(_return)
-        elif format == "list":
+        if format == "list":
             return list(_return)
-        else:
-            raise Exception(
-                "Please input valid format e.g. 'df' or 'list' or \
+        raise Exception(
+            "Please input valid format e.g. 'df' or 'list' or \
                 leave format unspecified"
-            )
+        )
 
     # plotters
     def plot_choice(self, show: bool = True) -> None:
@@ -834,11 +833,10 @@ class AgentGroup:
         """
         if self.environment:
             return self.environment
-        else:
-            raise Exception(
-                "Environment in not set, use set_env() to set \
+        raise Exception(
+            "Environment in not set, use set_env() to set \
                              environment"
-            )
+        )
 
     def get_environment(self):
         """
@@ -847,11 +845,10 @@ class AgentGroup:
         """
         if self.pairing:
             return self.pairing
-        else:
-            raise Exception(
-                "Environment in not set, use set_env() to set \
+        raise Exception(
+            "Environment in not set, use set_env() to set \
                              environment"
-            )
+        )
 
     def get_names(self) -> List[str]:
         """

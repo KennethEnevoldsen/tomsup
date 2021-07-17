@@ -15,8 +15,6 @@ class ResultsDf(pd.DataFrame):
     Function exactly like a pandas dataframe.
     """
 
-    pass
-
 
 def mean_confidence_interval(x: np.array, confidence: float = 0.95) -> np.array:
     return st.t.interval(confidence, len(x) - 1, loc=np.mean(x), scale=st.sem(x))

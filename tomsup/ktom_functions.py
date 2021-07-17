@@ -242,7 +242,7 @@ def gradient_update(
     gradient = np.zeros(len(param_mean))
 
     # The gradient is calculated for each parameter one at a time
-    for param in range(len(param_mean)):
+    for param, _ in enumerate(param_mean):
         # Calculate increment
         increment = max(abs(1e-4 * param_mean[param]), 1e-4)
         # Use normal parameter estimates

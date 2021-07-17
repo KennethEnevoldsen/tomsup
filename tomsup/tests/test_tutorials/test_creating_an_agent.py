@@ -9,8 +9,6 @@ def test_tutorial():
     if isinstance(sigmund, ts.Agent):
         print(f"but sigmund is also of has the parent class ts.Agent")
 
-    import numpy as np
-
     class ReversedWSLS(ts.Agent):  # make sure that the parent class is ts.Agent
         """
         ReversedWSLS: Win-switch, lose-stay.
@@ -115,8 +113,6 @@ def test_tutorial():
     print(f"what is freud's choice the first round? {choice}")
     choice = freud.compete(penny, op_choice=1)
     print(f"what is freud's choice the second round if his opponent chose 1? {choice}")
-
-    import numpy as np
 
     class ReversedWSLS(ts.Agent):
         """
