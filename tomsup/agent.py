@@ -389,13 +389,13 @@ class QL(Agent):
         """
         self.strategy = "QL"
         self.learning_rate = learning_rate
-        self.expec_val = expec_val
+        self.expec_val = list(expec_val)
         self.b_temp = b_temp
         super().__init__(**kwargs)
         self._start_params = {
             "learning_rate": learning_rate,
             "b_temp": b_temp,
-            "expec_val": expec_val,
+            "expec_val": list(expec_val),
             **kwargs,
         }
 
@@ -449,7 +449,7 @@ class QL(Agent):
         Returns:
             Tuple[float, float]: The preference for choice 0 and 1.
         """
-        return self.expec_val
+        return tuple(self.expec_val)
 
     def get_learning_rate(self) -> float:
         """
@@ -970,8 +970,8 @@ class AgentGroup:
         certainty_fun: Union[Callable, str]="mean_ci_95",
         cmap: str="Blues",
         na_color: str="xkcd:white",
-        x_axis : str="Agent",
-        y_axis: str="Opponent",
+        xlab : str="Agent",
+        ylab: str="Opponent",
     ) -> None:
         """plot a heatmap of the results.
 
@@ -983,8 +983,8 @@ class AgentGroup:
                 Defaults to "mean_ci_95".
             cmap (str, optional): The color map. Defaults to "Blues".
             na_color (str, optional): The color of NAs. Defaults to "xkcd:white", e.g. white.
-            x_axis (str, optional): The name on the x-axis. Defaults to "Agent".
-            y_axis (str, optional): The name of the y-axis. Defaults to "Opponent".
+            xlab (str, optional): The name on the x-axis. Defaults to "Agent".
+            ylab (str, optional): The name of the y-axis. Defaults to "Opponent".
         """
         plot_heatmap(
             self.__df,
@@ -993,8 +993,8 @@ class AgentGroup:
             certainty_fun,
             cmap,
             na_color,
-            x_axis,
-            y_axis,
+            xlab,
+            ylab,
         )
 
     def plot_choice(
@@ -1037,8 +1037,8 @@ class AgentGroup:
         state: str,
         agent: int=0,
         fun: Callable=lambda x: x[state],
-        y_axis: str="",
-        x_axis: str="Round",
+        ylab: str="",
+        xlab: str="Round",
     ) -> None:
         """pPlots the history of an agent in a defined agent pair
 
@@ -1048,10 +1048,10 @@ class AgentGroup:
             agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
             state (str):  The state of the agent you wish to plot.
             fun (Callable, optional): A function for extracting the state. Defaults to lambdax:x[state].
-            x_axis (str, optional): The name on the x-axis. Defaults to "Agent".
-            y_axis (str, optional): The name of the y-axis. Defaults to "Opponent".
+            xlab (str, optional): The name on the x-axis. Defaults to "Agent".
+            ylab (str, optional): The name of the y-axis. Defaults to "Opponent".
         """
-        plot_history(self.__df, agent0, agent1, state, agent, fun, ylab=y_axis, xlab=x_axis)
+        plot_history(self.__df, agent0, agent1, state, agent, fun, ylab=ylab, xlab=xlab)
 
     def plot_p_op_1(self, agent0: str, agent1: str, agent: int=0) -> None:
         """plots the p_op_1 of a k-ToM agent in a defined agent pair

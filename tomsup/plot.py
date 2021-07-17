@@ -27,8 +27,8 @@ def plot_heatmap(
     certainty_fun: Union[Callable, str] = "mean_ci_95",
     cmap: str ="RdBu",
     na_color: str="xkcd:white",
-    x_axis: str="",
-    y_axis: str="",
+    xlab: str="",
+    ylab: str="",
 ) -> None:
     """plot a heatmap of the agents payoffs
 
@@ -40,8 +40,8 @@ def plot_heatmap(
             where X is a float indicating the confidence interval. Defaults to "mean_ci_95".
         cmap (str, optional): The color map. Defaults to "RdBu".
         na_color (str, optional): The nan color. Defaults to "xkcd:white", e.g. white.
-        x_axis (str, optional): The name on the x axis. Defaults to "".
-        y_axis (str, optional): The name on the y axis. Defaults to "".
+        xlab (str, optional): The name on the x axis. Defaults to "".
+        ylab (str, optional): The name on the y axis. Defaults to "".
     """
     check_plot_input(df, None, None)
     df_ = df.copy()
@@ -96,14 +96,14 @@ def plot_heatmap(
         fig, ax = plt.subplots(1, 1)
         p1 = sns.heatmap(heat_df, cmap=cmap, annot=annot_df.to_numpy(), fmt="")
         p1.set_facecolor(na_color)
-        ax.set_xlabel(x_axis)
-        ax.set_ylabel(y_axis)
+        ax.set_xlabel(xlab)
+        ax.set_ylabel(ylab)
     else:
         fig, ax = plt.subplots(1, 1)
         p1 = sns.heatmap(heat_df, cmap=cmap, fmt="")
         p1.set_facecolor(na_color)
-        ax.set_xlabel(x_axis)
-        ax.set_ylabel(y_axis)
+        ax.set_xlabel(xlab)
+        ax.set_ylabel(ylab)
     plt.show()
 
 
