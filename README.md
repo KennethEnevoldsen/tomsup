@@ -1,6 +1,6 @@
 <a href="https://github.com/KennethEnevoldsen/tomsup"><img src="img/icon_black.png" width="190" align="right" /></a>
 
-# tomsup 👍 Theory of Mind Simulation using Python 
+# tomsup: Theory of Mind Simulation using Python 
 
 [![PyPI version](https://badge.fury.io/py/tomsup.svg)](https://pypi.org/project/tomsup/)
 [![pip downloads](https://img.shields.io/pypi/dm/tomsup.svg)](https://pypi.org/project/tomsup/)
