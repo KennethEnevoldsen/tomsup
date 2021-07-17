@@ -1,4 +1,4 @@
-<a href="https://github.com/KennethEnevoldsen/tomsup"><img src="img/icon_black.png" width="190" align="right" /></a>
+<a href="https://github.com/KennethEnevoldsen/tomsup"><img src="img/icon_black2.png" width="190" align="right" /></a>
 
 # tomsup: Theory of Mind Simulation using Python 
 
