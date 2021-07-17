@@ -1,31 +1,24 @@
 Installation
 ==================
-To get started using DaCy simply install it using pip by running the following line in your terminal:
+To get started using tomsup simply install it using pip by running the following line in your terminal:
 
 .. code-block::
 
-   pip install dacy
+   pip install tomsup 
 
 
 Detailed instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-The default installation of DaCy does not install danlp as it has a lot of dependencies that might collide with the packages you might wish to use. DaCy only uses danlp for downloading its wrapped models for sentiment.
-If you wish to install danlp with dacy you can run:
+You can also install it directly from github by simply running:
 
 .. code-block::
+   pip install git+https://github.com/KennethEnevoldsen/tomsup.git
 
-   pip install dacy[all]
-
-You can also install DaCy directly from source using:
-
+   or more explicitly:
+   
 .. code-block::
 
-   git clone https://github.com/centre-for-humanities-computing/DaCy.git
-   cd DaCy
-   pip install .
+   git clone https://github.com/KennethEnevoldsen/tomsup.git
+   cd tomsup
+   pip3 install -e .
 
-or
-
-.. code-block::
-
-   pip install git+https://github.com/centre-for-humanities-computing/DaCy
