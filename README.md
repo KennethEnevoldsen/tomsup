@@ -9,7 +9,7 @@
 [![license](https://img.shields.io/github/license/KennethEnevoldsen/tomsup.svg?color=blue)](https://github.com/KennethEnevoldsen/tomsup/blob/master/LICENSE)
 [![github actions pytest](https://github.com/KennethEnevoldsen/tomsup/actions/workflows/pytest-cov-comment.yml/badge.svg)](https://github.com/KennethEnevoldsen/tomsup/actions)
 [![github actions docs](https://github.com/KennethEnevoldsen/tomsup/actions/workflows/documentation.yml/badge.svg)](https://KennethEnevoldsen.github.io/tomsup/)
-![github coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/KennethEnevoldsen/af8637d94475ea8bcb6b6a03c4fbcd3e/raw/badge-tomsup-pytest-coverage.json)
+![github coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/KennethEnevoldsen/ba4cb2310c5b370dc2c49d0be0a7e3ec/raw/badge-tomsup-pytest-coverage.json)
 [![CodeFactor](https://www.codefactor.io/repository/github/KennethEnevoldsen/tomsup/badge)](https://www.codefactor.io/repository/github/KennethEnevoldsen/tomsupy)
 
 
