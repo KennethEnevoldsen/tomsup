@@ -95,8 +95,7 @@ class PayoffMatrix:
                 )
 
     def payoff(self, choice_agent0: int, choice_agent1: int, agent: int = 0) -> float:
-        """[summary]
-
+        """
         Args:
             choice_agent0 (int): choice of agent 0
             choice_agent1 (int): choice of agent 1

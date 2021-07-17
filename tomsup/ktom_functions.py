@@ -8,7 +8,7 @@ k-ToM agent.
 # [3] Dilution
 # [4] Bias
 
-from typing import Union
+from typing import Tuple, Union
 import numpy as np
 from tomsup.payoffmatrix import PayoffMatrix
 import copy
@@ -17,23 +17,19 @@ from scipy.special import logit
 
 
 # Learning subfunctions
-def p_op_var0_update(prev_p_op_mean0: float, prev_p_op_var0: float, volatility: float):
-    """
-    prev_p_op_mean0   (float)
-    prev_p_op_var0    (float)
-    volatility        (float)
 
-    0-ToM updates variance / uncertainty on choice probability estimate
+def p_op_var0_update(prev_p_op_mean0: float, prev_p_op_var0: float, volatility: float):
+    """Variance update of the 0-ToM
 
     Examples:
-    >>> p_op_var0_update(1, 0.2, 1)
-    0.8348496471878395
-    >>> #Higher volatility results in a higher variance
-    >>> p_op_var0_update(1, 0.2, 1) < p_op_var0_update (1, 0.2, 2)
-    True
-    >>> #Mean close to 0.5 gives lower variance
-    >>> p_op_var0_update(1, 0.45, 1) < p_op_var0_update (1, 0.2, 2)
-    True
+        >>> p_op_var0_update(1, 0.2, 1)
+        0.8348496471878395
+        >>> #Higher volatility results in a higher variance
+        >>> p_op_var0_update(1, 0.2, 1) < p_op_var0_update (1, 0.2, 2)
+        True
+        >>> #Mean close to 0.5 gives lower variance
+        >>> p_op_var0_update(1, 0.45, 1) < p_op_var0_update (1, 0.2, 2)
+        True
     """
     # Input variable transforms
     volatility = np.exp(volatility)
@@ -53,12 +49,7 @@ def p_op_var0_update(prev_p_op_mean0: float, prev_p_op_var0: float, volatility: 
 
 
 def p_op_mean0_update(prev_p_op_mean0: float, p_op_var0: float, op_choice: int):
-    """
-    prev_p_op_mean0 (float)
-    p_op_var0       (float)
-    op_choice       (int)
-
-    0-ToM updates mean choice probability estimate
+    """0-ToM updates mean choice probability estimate
     """
     # Input variable transforms
     p_op_var0 = np.exp(p_op_var0)
@@ -80,17 +71,14 @@ def p_opk_approx_fun(
     prev_gradient: np.array,
     level: int,
 ):
-    """
-    prev_p_op_mean  (numpy.ndarray)
-    prev_param_var  (numpy.ndarray)
-    prev_gradient   (numpy.ndarray)
-    level           (int)
 
+    """
     Approximates the estimated choice probability of the opponent on the
     previous round.
     A semi-analytical approximation derived in Daunizeau, J. (2017)
 
-    >>> p_opk_approx_fun(prev_p_op_mean = np.array([0]), prev_param_var = np.array([[0, 0, 0]]), prev_gradient = np.array([[0, 0, 0]]), level = 1)
+    Examples:
+        >>> p_opk_approx_fun(prev_p_op_mean = np.array([0]), prev_param_var = np.array([[0, 0, 0]]), prev_gradient = np.array([[0, 0, 0]]), level = 1)
     """
     # Constants
     a = 0.205
@@ -163,11 +151,13 @@ def param_var_update(
     """
     k-ToM updates its uncertainty / variance on its estimates of opponent's
     parameter values
-    >>> param_var_update(prev_param_mean = np.array([[0, 0, 0]]), \
-        prev_param_var = np.array([[0, 0, 0]]), \
-        prev_gradient = np.array([0, 0, 0]), p_k = np.array([1.]), \
-        volatility = -2, volatility_dummy = None)
-    array([[0.12692801, 0.        , 0.        ]])
+
+    Examples:
+        >>> param_var_update(prev_param_mean = np.array([[0, 0, 0]]), \
+            prev_param_var = np.array([[0, 0, 0]]), \
+            prev_gradient = np.array([0, 0, 0]), p_k = np.array([1.]), \
+            volatility = -2, volatility_dummy = None)
+        array([[0.12692801, 0.        , 0.        ]])
     """
     # Dummy constant: sets volatility to 0 for all except volatility opponent
     # parameter estimates
@@ -206,7 +196,8 @@ def param_mean_update(
     """
     k-ToM updates its estimates of opponent's parameter values
 
-    >>> param_mean_update(prev_p_op_mean, prev_param_mean = np.array([[0, 0, 0]]), prev_gradient = np.array([0, 0, 0]), p_k = np.array([0, 0, 0]), param_var, op_choice)
+    Examples:
+        >>> param_mean_update(prev_p_op_mean, prev_param_mean = np.array([[0, 0, 0]]), prev_gradient = np.array([0, 0, 0]), p_k = np.array([0, 0, 0]), param_var, op_choice)
     """
     # Input variable transforms
     param_var = np.exp(param_var) * prev_gradient
@@ -237,7 +228,8 @@ def gradient_update(
     p_matrix,
     **kwargs
 ):
-    """"""
+    """The gradient update of the k-ToM agent
+    """
     # Make empty list for fillin in gradients
     gradient = np.zeros(len(param_mean))
 
@@ -291,10 +283,9 @@ def p_op0_fun(p_op_mean0: float, p_op_var0: float):
     """
     0-ToM combines the mean and variance of its parameter estimate into a
     final choice probability estimate.
-    NB: This is the function taken from the VBA package (Daunizeau 2014),
-    which does not use 0-ToM's volatility parameter to avoid unidentifiability
-    problems.
+    To avoid unidentifiability problems this function does not use 0-ToM's volatility parameter.
 
+    Examples:
     >>> p_op0_fun(p_op_mean0 = 0.7, p_op_var0 = 0.3)
     """
     # Constants
@@ -311,13 +302,11 @@ def p_op0_fun(p_op_mean0: float, p_op_var0: float):
     return p_op0
 
 
-def p_opk_fun(p_op_mean, param_var, gradient):
+def p_opk_fun(p_op_mean: np.array, param_var: np.array, gradient: np.array):
     """
     k-ToM combines the mean choice probability estimate and the variances of
     its parameter estimates into a final choice probability estimate.
-    NB: this is the function taken from the VBA package (Daunizeau 2014),
-    which does not use k-ToM's volatility parameter to avoid unidentifiability
-    issues.
+    To avoid unidentifiability problems this function does not use 0-ToM's volatility parameter.
     """
     # Constants
     a = 0.36
@@ -338,17 +327,21 @@ def p_opk_fun(p_op_mean, param_var, gradient):
 
 
 def expected_payoff_fun(p_op: float, agent: int, p_matrix: PayoffMatrix):
-    """
-    p_op (0 <= float <= 1): The probability of the opponent choosing 1
-    agent (0 <= int <= 1): the perspective of the agent
-    p_matrix (PayoffMatix): a payoff matrix
+    """Calculate expected payoff of choosing 1 over 0
 
-    Calculate expected payoff of choosing 1 over 0
+
+    Args:
+        p_op (float): The probability of the opponent choosing 1
+        agent (int): The perspective of the agent
+        p_matrix (PayoffMatrix): A payoff matrix
+
+    Returns:
+        The expected payoff
 
     Examples:
-    >>> staghunt = PayoffMatrix(name = 'staghunt')
-    >>> expected_payoff_fun(1, agent = 0, p_matrix = staghunt)
-    2
+        >>> staghunt = PayoffMatrix(name = 'staghunt')
+        >>> expected_payoff_fun(1, agent = 0, p_matrix = staghunt)
+        2
     """
     # Calculate
     expected_payoff = p_op * (
@@ -358,7 +351,7 @@ def expected_payoff_fun(p_op: float, agent: int, p_matrix: PayoffMatrix):
     return expected_payoff
 
 
-def softmax(expected_payoff, params: dict):
+def softmax(expected_payoff, params: dict) -> float:
     """
     Softmax function for calculating own probability of choosing 1
     """
@@ -403,18 +396,20 @@ def learning_function(
     agent: int,
     p_matrix: PayoffMatrix,
     **kwargs
-):
-    """
-    Examples:
-        >>> penny = PayoffMatrix(name = "penny_competitive")
-        >>> prev_internal_states = {'opponent_states': {}, \
-            'own_states': {'p_op_mean0': 0, 'p_op_var0': 0}}
-        >>> params = {'volatility': -2, 'b_temp': -1}
-        >>> learning_function(prev_internal_states, params, self_choice=1, \
-            op_choice=1, level=0, agent=0, p_matrix=penny)
-        {'opponent_states': {},
-        'own_states': {'p_op_mean0': 0.44216598162254866,
-        'p_op_var0': -0.12292276280308079}}
+) -> dict:
+    """The general learning function for the k-ToM agent
+
+    Args:
+        prev_internal_states (dict): Previous internal states
+        params (dict): The parameters
+        self_choice (int): Previous choice of the agent
+        op_choice (int): Opponents choice
+        level (int): sophistication level
+        agent (int): the perspective of the agent in the payoff matrix (0 or 1)
+        p_matrix (PayoffMatrix): a payoff matrix
+
+    Returns:
+        dict: The updated internal states
     """
     # Extract needed parameters
     volatility = params["volatility"]
@@ -549,17 +544,28 @@ def decision_function(
     agent: int,
     level: int,
     p_matrix: PayoffMatrix,
-):
-    """
+) -> Tuple(float, float):
+    """The decision function of the k-ToM agent
+
+    Args:
+        new_internal_states (dict): Dict of updated internal states
+        params (dict): The parameters
+        agent (int): the perspective of the agent in the payoff matrix
+        level (int): The sophistication level of the agent
+        p_matrix (PayoffMatrix): a payoff matrix
+
+    Returns:
+        Tuple(float, float): a tuple contain probability of self choosing 1 and op choosing 1.
+
 
     Examples:
-    >>> penny = PayoffMatrix(name = "penny_competitive")
-    >>> new_internal_states = {'opponent_states': {}, \
-    'own_states': {'p_op_mean0': 30, 'p_op_var0': 2}}
-    >>> params = {'volatility': -2, 'b_temp': -1}
-    >>> decision_function(new_internal_states, params, agent = 0, \
-        level = 0, p_matrix = penny)
-    -5.436561973742046
+        >>> penny = PayoffMatrix(name = "penny_competitive")
+        >>> new_internal_states = {'opponent_states': {}, \
+        'own_states': {'p_op_mean0': 30, 'p_op_var0': 2}}
+        >>> params = {'volatility': -2, 'b_temp': -1}
+        >>> decision_function(new_internal_states, params, agent = 0, \
+            level = 0, p_matrix = penny)
+        -5.436561973742046
     """
     # If (simulated) agent is a 0-ToM
     if level == 0:
@@ -607,8 +613,22 @@ def k_tom(
     agent: int,
     p_matrix: PayoffMatrix,
     **kwargs
-):
-    """"""
+) -> Tuple[int, dict]:
+    """The full k-ToM implementation
+
+    Args:
+        prev_internal_states (dict):  Dict of previous internal states
+        params (dict): The parameters
+        self_choice (int): the agent choice the previous round
+        op_choice (int): The opponents choice the previous round
+        level (int): The sophistication level of the agent
+        agent (int): the perspective of the agent in the payoff matrix
+        p_matrix (PayoffMatrix): a payoff matrix
+
+
+    Returns:
+        Tuple[int, dict]: a tuple containing the choice and the updated internal states
+    """
 
     # Update estimates of opponent based on behaviour
     if self_choice is not None:
@@ -647,7 +667,15 @@ def k_tom(
 # Initializing function
 def init_k_tom(params: dict, level: int, priors: Union[dict, str] = "default"):
     """
-    >>> init_k_tom(params = {'volatility': -2, 'b_temp': -1, 'bias':0 }, level=1, priors='default')
+    Initialization function of the k-ToM agent
+
+    Args:
+        params (dict): The starting parameters
+        level (int): The sophistication level of the agent
+        priors (Union[dict, str], optional): The priors of the k-ToM. Default to "default". 
+            See tutorial on how to set internal states of the k-ToM agent.
+    Examples:
+        >>> init_k_tom(params = {'volatility': -2, 'b_temp': -1, 'bias':0 }, level=1, priors='default')
     """
     # If no priors are specified
     if priors == "default":
