@@ -207,13 +207,13 @@
     <span class="n">df_mean</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">df_</span><span class="p">[[</span><span class="n">aggregate_col</span> <span class="o">+</span> <span class="s2">"0"</span><span class="p">,</span> <span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"agent1"</span><span class="p">]]</span>
         <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"agent1"</span><span class="p">])</span>
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">aggregate_fun</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">aggregate_fun</span><span class="p">)</span>
         <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="p">)</span>
     <span class="n">df_mean2</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">df_</span><span class="p">[[</span><span class="n">aggregate_col</span> <span class="o">+</span> <span class="s2">"1"</span><span class="p">,</span> <span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"agent1"</span><span class="p">]]</span>
         <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"agent1"</span><span class="p">])</span>
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">aggregate_fun</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">aggregate_fun</span><span class="p">)</span>
         <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="p">)</span>
     <span class="n">df_mean</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"agent1"</span><span class="p">,</span> <span class="n">aggregate_col</span><span class="p">]</span>
@@ -226,14 +226,14 @@
         <span class="n">df_ci</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">df_</span><span class="p">[[</span><span class="n">aggregate_col</span> <span class="o">+</span> <span class="s2">"0"</span><span class="p">,</span> <span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"agent1"</span><span class="p">]]</span>
             <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"agent1"</span><span class="p">])</span>
-            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">mean_confidence_interval</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">mean_confidence_interval</span><span class="p">)</span>
             <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="n">df_ci</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"agent1"</span><span class="p">,</span> <span class="s2">"ci"</span><span class="p">]</span>
         <span class="n">df_ci2</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">df_</span><span class="p">[[</span><span class="n">aggregate_col</span> <span class="o">+</span> <span class="s2">"1"</span><span class="p">,</span> <span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"agent1"</span><span class="p">]]</span>
             <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"agent1"</span><span class="p">])</span>
-            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">mean_confidence_interval</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">mean_confidence_interval</span><span class="p">)</span>
             <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="n">df_ci2</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"agent1"</span><span class="p">,</span> <span class="s2">"agent0"</span><span class="p">,</span> <span class="s2">"ci"</span><span class="p">]</span>
