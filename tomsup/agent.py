@@ -157,12 +157,13 @@ class Agent:
         plt.ylim(0, 1)
         plt.show()
 
-    def plot_internal(self, fun: Callable) -> None:
+    def plot_internal(self, fun: Callable, show: bool=True) -> None:
         """
         Function for plotting internal states of agent
 
         Args:
             fun (Callable): a function which to use to extract from the internal states dict
+            show (bool): Should it run plt.show at the end of plotting? Default to True
 
         Examples:
             >>> # plotting the est. probability of opp. choosing one over trials
@@ -176,7 +177,8 @@ class Agent:
         df = self.get_history()
         df["extracted"] = df["internal_states"].apply(fun)
         plt.plot(df.index, df["extracted"], color="lightblue", linewidth=4)
-        plt.show()
+        if show is True:
+            plt.show()
 
 
 class RB(Agent):

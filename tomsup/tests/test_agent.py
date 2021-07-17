@@ -80,9 +80,9 @@ def test_plot_internal():
 
     result = ts.compete(t2, wsls, p_matrix = "penny_competitive", n_rounds = 10, save_history=True)
     
-    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op"])
+    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op"], show=False)
     #plotting the agent belief about its opponents theory of mind level (p_k)
     #probability of sophistication level k=0
-    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][0])
+    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][0], show=False)
     # probability of sophistication level k=1
-    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][1])
+    t2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][1], show=False)
