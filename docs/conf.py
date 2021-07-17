@@ -23,7 +23,6 @@ from tomsup.about import __version__
 # -- Project information -----------------------------------------------------
 
 project = "tomsup"
-copyright = "2021, Kenneth Enevoldsen and Peter Waade"
 author = "Kenneth Enevoldsen and Peter Waade"
 
 # The full version, including alpha/beta/rc tags

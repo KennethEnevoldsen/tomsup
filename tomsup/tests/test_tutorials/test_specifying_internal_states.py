@@ -7,8 +7,7 @@ def test_tutorial():
 
     tom_1 = ts.TOM(level=1)
     init_states = tom_1.get_internal_states()
-    init_states
-
+    
     init_states["own_states"]["p_k"] = [0.3, 0.7]
     tom_1.set_internal_states(init_states)
 

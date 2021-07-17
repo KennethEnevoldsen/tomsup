@@ -8,8 +8,9 @@ import io
 import pstats
 
 import sys
-sys.path.append('/Users/au568658/Desktop/Academ/Projects/tomsup')
-sys.path.append('/Users/ptwaade/Desktop/Uni/tomsup/tomsup_package')
+
+sys.path.append("/Users/au568658/Desktop/Academ/Projects/tomsup")
+sys.path.append("/Users/ptwaade/Desktop/Uni/tomsup/tomsup_package")
 
 import tomsup as ts
 
@@ -20,10 +21,10 @@ random.seed(1995)
 n_tests = 20
 n_sim = 8
 n_rounds = 60
-#(Short run)
-#n_tests = 2
-#n_sim = 2
-#n_rounds = 10
+# (Short run)
+# n_tests = 2
+# n_sim = 2
+# n_rounds = 10
 
 # Get payoff matrix
 penny_comp = ts.PayoffMatrix(name="penny_competitive")
@@ -42,7 +43,7 @@ elapsed_times = [None] * n_tests
 
 for test in range(n_tests):
 
-    #print(test)
+    # print(test)
 
     # Get start time
     start_time = time()
@@ -52,7 +53,7 @@ for test in range(n_tests):
 
     # Set as round robin tournament
     group.set_env(env="round_robin")
-    
+
     # Run tournament
     results = group.compete(
         p_matrix=penny_comp,

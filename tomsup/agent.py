@@ -129,7 +129,7 @@ class Agent:
             )
         if key is None:
             _return = self.history
-        elif isinstance(key, list) or isinstance(key, str):
+        elif isinstance(key, (list, str)):
             _return = self.history[key]
         else:
             raise Exception(
