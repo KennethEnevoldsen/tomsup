@@ -58,15 +58,12 @@ class PayoffMatrix:
         if name == "staghunt":
             self.matrix = np.array(
                 (
-                    [(3, 3), (0, 5)], 
-                    [(3, 0), (3, 5)], 
+                    [(3, 3), (0, 5)],
+                    [(3, 0), (3, 5)],
                 )
             )
         elif name == "prisoners_dilemma":
-            self.matrix = np.array(([(1, 5), 
-                                     (0, 3)], 
-                                     [(1, 0), 
-                                     (5, 3)]))
+            self.matrix = np.array(([(1, 5), (0, 3)], [(1, 0), (5, 3)]))
         elif name == "penny_competitive":
             self.matrix = np.array(([(-1, 1), (1, -1)], [(1, -1), (-1, 1)]))
         elif name == "penny_cooperative":
@@ -97,7 +94,7 @@ class PayoffMatrix:
                                  predefined matrix of dimension 2x2x2."
                 )
 
-    def payoff(self, choice_agent0: int, choice_agent1: int, agent: int=0) -> float:
+    def payoff(self, choice_agent0: int, choice_agent1: int, agent: int = 0) -> float:
         """[summary]
 
         Args:

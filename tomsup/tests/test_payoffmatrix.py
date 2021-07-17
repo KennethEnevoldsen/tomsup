@@ -18,7 +18,9 @@ def test_PayoffMatrix():
     sexes = ts.PayoffMatrix(name="sexes")
     assert sexes.payoff(1, 1, 0) == 5
 
-    custom = ts.PayoffMatrix(name="custom", predefined=np.array(([(10, 0), (0, 5)], [(5, 0), (0, 10)])))
+    custom = ts.PayoffMatrix(
+        name="custom", predefined=np.array(([(10, 0), (0, 5)], [(5, 0), (0, 10)]))
+    )
 
     prison = ts.PayoffMatrix(name="prisoners_dilemma")
     assert prison.payoff(choice_agent0=0, choice_agent1=1, agent=0) == 5

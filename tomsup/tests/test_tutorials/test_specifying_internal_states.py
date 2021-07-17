@@ -1,9 +1,8 @@
-
 import tomsup as ts
 
 
 def test_tutorial():
-    #Get the competitive penny game payoff matrix
+    # Get the competitive penny game payoff matrix
     penny = ts.PayoffMatrix("penny_competitive")
 
     tom_1 = ts.TOM(level=1)

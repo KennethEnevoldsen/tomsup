@@ -74,7 +74,12 @@ def p_op_mean0_update(prev_p_op_mean0: float, p_op_var0: float, op_choice: int):
     return new_p_op_mean0
 
 
-def p_opk_approx_fun(prev_p_op_mean: np.array, prev_param_var: np.array, prev_gradient: np.array, level: int):
+def p_opk_approx_fun(
+    prev_p_op_mean: np.array,
+    prev_param_var: np.array,
+    prev_gradient: np.array,
+    level: int,
+):
     """
     prev_p_op_mean  (numpy.ndarray)
     prev_param_var  (numpy.ndarray)
@@ -114,7 +119,9 @@ def p_opk_approx_fun(prev_p_op_mean: np.array, prev_param_var: np.array, prev_gr
     return p_opk_approx
 
 
-def p_k_udpate(prev_p_k: np.array, p_opk_approx: np.array, op_choice: int, dilution=None):
+def p_k_udpate(
+    prev_p_k: np.array, p_opk_approx: np.array, op_choice: int, dilution=None
+):
     """
     k-ToM updates its estimate of opponents sophistication level.
     If k-ToM has a dilution parameter, it does a partial forgetting of learned
@@ -189,7 +196,12 @@ def param_var_update(
 
 
 def param_mean_update(
-    prev_p_op_mean: np.array, prev_param_mean: np.array, prev_gradient: np.array, p_k: np.array, param_var, op_choice: int
+    prev_p_op_mean: np.array,
+    prev_param_mean: np.array,
+    prev_gradient: np.array,
+    p_k: np.array,
+    param_var,
+    op_choice: int,
 ):
     """
     k-ToM updates its estimates of opponent's parameter values
@@ -383,13 +395,13 @@ def softmax(expected_payoff, params: dict):
 
 # Full learning and decision functions
 def learning_function(
-    prev_internal_states : dict,
-    params : dict,
-    self_choice : int,
-    op_choice : int,
+    prev_internal_states: dict,
+    params: dict,
+    self_choice: int,
+    op_choice: int,
     level: int,
-    agent : int,
-    p_matrix : PayoffMatrix,
+    agent: int,
+    p_matrix: PayoffMatrix,
     **kwargs
 ):
     """
@@ -531,7 +543,13 @@ def learning_function(
     return new_internal_states
 
 
-def decision_function(new_internal_states: dict, params: dict, agent: int, level: int, p_matrix: PayoffMatrix):
+def decision_function(
+    new_internal_states: dict,
+    params: dict,
+    agent: int,
+    level: int,
+    p_matrix: PayoffMatrix,
+):
     """
 
     Examples:
@@ -587,7 +605,7 @@ def k_tom(
     op_choice: int,
     level: int,
     agent: int,
-    p_matrix : PayoffMatrix,
+    p_matrix: PayoffMatrix,
     **kwargs
 ):
     """"""
@@ -627,7 +645,7 @@ def k_tom(
 
 
 # Initializing function
-def init_k_tom(params: dict, level: int, priors: Union[dict, str]="default"):
+def init_k_tom(params: dict, level: int, priors: Union[dict, str] = "default"):
     """
     >>> init_k_tom(params = {'volatility': -2, 'b_temp': -1, 'bias':0 }, level=1, priors='default')
     """

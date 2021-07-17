@@ -10,6 +10,7 @@ import pandas as pd
 from tomsup.agent import AgentGroup
 from tomsup.agent import Agent
 
+
 def valid_agents() -> dict:
     """
     Returns:
@@ -36,7 +37,10 @@ def valid_agents() -> dict:
         agent_dict = json.load(fp)
     return agent_dict
 
-def create_agents(agents: Union[str, list], start_params: Optional[List[dict]]=None, **kwargs) -> Union[AgentGroup, Agent]:
+
+def create_agents(
+    agents: Union[str, list], start_params: Optional[List[dict]] = None, **kwargs
+) -> Union[AgentGroup, Agent]:
     """
     Args:
         agents (Union[str, list]): A str denoting an agent or a list of agents. To see option use `valid_agents()`.
@@ -45,7 +49,7 @@ def create_agents(agents: Union[str, list], start_params: Optional[List[dict]]=N
 
     Returns:
         Union[AgentGroup, Agent]: If only one agent is specified returns an Agent otherwise returns an AgentGroup.
-    
+
     Examples:
         >>> group = create_agents(agents = ['RB']*3)
         >>> isinstance(group, AgentGroup)
@@ -63,4 +67,3 @@ def create_agents(agents: Union[str, list], start_params: Optional[List[dict]]=N
             save_history = False
         return Agent(strategy=agents, save_history=save_history, **kwargs)
     return AgentGroup(agents=agents, start_params=start_params)
-
