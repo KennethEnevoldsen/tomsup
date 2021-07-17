@@ -5,4 +5,4 @@ import tomsup.plot as plot
 from tomsup.ktom_functions import logit, inv_logit
 from numpy import log, exp
 
-from tomsup._version import __version__
+from tomsup.about import __version__, __title__, __download_url__

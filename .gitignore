@@ -111,3 +111,11 @@ tomsup/__pycache__/*
 .vscode/settings.json
 tomsup/plot_results.py
 .vscode/settings.json
+simulations/results/*
+.Rproj.user/*
+.Rproj.user
+*.RData
+.gitignore
+.Rhistory
+*.Rproj
+
