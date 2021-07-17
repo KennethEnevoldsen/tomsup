@@ -161,6 +161,7 @@
 <span class="kn">from</span> <span class="nn">tomsup.agent</span> <span class="k">import</span> <span class="n">AgentGroup</span>
 <span class="kn">from</span> <span class="nn">tomsup.agent</span> <span class="k">import</span> <span class="n">Agent</span>
 
+
 <div class="viewcode-block" id="valid_agents"><a class="viewcode-back" href="../../utils.html#tomsup.utils.valid_agents">[docs]</a><span class="k">def</span> <span class="nf">valid_agents</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">"""</span>
 <span class="sd">    Returns:</span>
@@ -187,7 +188,10 @@
         <span class="n">agent_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">agent_dict</span></div>
 
-<div class="viewcode-block" id="create_agents"><a class="viewcode-back" href="../../utils.html#tomsup.utils.create_agents">[docs]</a><span class="k">def</span> <span class="nf">create_agents</span><span class="p">(</span><span class="n">agents</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">],</span> <span class="n">start_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">AgentGroup</span><span class="p">,</span> <span class="n">Agent</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="create_agents"><a class="viewcode-back" href="../../utils.html#tomsup.utils.create_agents">[docs]</a><span class="k">def</span> <span class="nf">create_agents</span><span class="p">(</span>
+    <span class="n">agents</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">],</span> <span class="n">start_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">AgentGroup</span><span class="p">,</span> <span class="n">Agent</span><span class="p">]:</span>
     <span class="sd">"""</span>
 <span class="sd">    Args:</span>
 <span class="sd">        agents (Union[str, list]): A str denoting an agent or a list of agents. To see option use `valid_agents()`.</span>
@@ -196,7 +200,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Union[AgentGroup, Agent]: If only one agent is specified returns an Agent otherwise returns an AgentGroup.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; group = create_agents(agents = ['RB']*3)</span>
 <span class="sd">        &gt;&gt;&gt; isinstance(group, AgentGroup)</span>
@@ -214,7 +218,6 @@
             <span class="n">save_history</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">Agent</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="n">agents</span><span class="p">,</span> <span class="n">save_history</span><span class="o">=</span><span class="n">save_history</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">AgentGroup</span><span class="p">(</span><span class="n">agents</span><span class="o">=</span><span class="n">agents</span><span class="p">,</span> <span class="n">start_params</span><span class="o">=</span><span class="n">start_params</span><span class="p">)</span></div>
-
 </pre></div>
       </article>
       <footer>

@@ -160,27 +160,27 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 
+
 <div class="viewcode-block" id="ResultsDf"><a class="viewcode-back" href="../../plot.html#tomsup.plot.ResultsDf">[docs]</a><span class="k">class</span> <span class="nc">ResultsDf</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
     <span class="sd">"""A class wrapper around a pandas dataframe for denoting results from a compete function.</span>
 <span class="sd">    Function exactly like a pandas dataframe.</span>
-<span class="sd">    """</span>
-    <span class="k">pass</span></div>
+<span class="sd">    """</span></div>
 
 
-<div class="viewcode-block" id="mean_confidence_interval"><a class="viewcode-back" href="../../plot.html#tomsup.plot.mean_confidence_interval">[docs]</a><span class="k">def</span> <span class="nf">mean_confidence_interval</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<div class="viewcode-block" id="mean_confidence_interval"><a class="viewcode-back" href="../../plot.html#tomsup.plot.mean_confidence_interval">[docs]</a><span class="k">def</span> <span class="nf">mean_confidence_interval</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="n">confidence</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">sem</span><span class="p">(</span><span class="n">x</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="plot_heatmap"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_heatmap">[docs]</a><span class="k">def</span> <span class="nf">plot_heatmap</span><span class="p">(</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-    <span class="n">aggregate_col</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">"payoff_agent"</span><span class="p">,</span>
+    <span class="n">aggregate_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"payoff_agent"</span><span class="p">,</span>
     <span class="n">aggregate_fun</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span>
     <span class="n">certainty_fun</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"mean_ci_95"</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s2">"RdBu"</span><span class="p">,</span>
-    <span class="n">na_color</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">"xkcd:white"</span><span class="p">,</span>
-    <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
-    <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
-    <span class="n">show</span><span class="p">:</span><span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"RdBu"</span><span class="p">,</span>
+    <span class="n">na_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"xkcd:white"</span><span class="p">,</span>
+    <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">"""plot a heatmap of the agents payoffs</span>
 
@@ -188,7 +188,7 @@
 <span class="sd">        df (pd.DataFrame): An outcome from the compete() function</span>
 <span class="sd">        aggregate_col (str, optional): Column to be aggregated pr agent. Defaults to "payoff_agent".</span>
 <span class="sd">        aggregate_fun (Callable, optional): Function which to aggregate by, defaults is mean. Defaults to np.mean.</span>
-<span class="sd">        certainty_fun (Union[Callable, str], optional): function should estimate uncertainty or string. Valid string include, mean_ci_X: </span>
+<span class="sd">        certainty_fun (Union[Callable, str], optional): function should estimate uncertainty or string. Valid string include, mean_ci_X:</span>
 <span class="sd">            where X is a float indicating the confidence interval. Defaults to "mean_ci_95".</span>
 <span class="sd">        cmap (str, optional): The color map. Defaults to "RdBu".</span>
 <span class="sd">        na_color (str, optional): The nan color. Defaults to "xkcd:white", e.g. white.</span>
@@ -201,7 +201,7 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">certainty_fun</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">certainty_fun</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"mean_ci_"</span><span class="p">):</span>
             <span class="n">ci</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">certainty_fun</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">certainty_fun</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">mean_confidence_interval</span><span class="p">,</span> <span class="n">confidence</span> <span class="o">=</span> <span class="n">ci</span><span class="p">)</span>
+            <span class="n">certainty_fun</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">mean_confidence_interval</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">ci</span><span class="p">)</span>
 
     <span class="c1"># calc aggregate matrix</span>
     <span class="n">df_mean</span> <span class="o">=</span> <span class="p">(</span>
@@ -262,8 +262,7 @@
 
 
 <div class="viewcode-block" id="check_plot_input"><a class="viewcode-back" href="../../plot.html#tomsup.plot.check_plot_input">[docs]</a><span class="k">def</span> <span class="nf">check_plot_input</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">"""checks if plot input is valid</span>
-<span class="sd">    """</span>
+    <span class="sd">"""checks if plot input is valid"""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">ResultsDf</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">"The input dataframe is expected to be a ResultDf </span><span class="se">\</span>
@@ -283,8 +282,9 @@
         <span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="score"><a class="viewcode-back" href="../../plot.html#tomsup.plot.score">[docs]</a><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="score"><a class="viewcode-back" href="../../plot.html#tomsup.plot.score">[docs]</a><span class="k">def</span> <span class="nf">score</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
     <span class="sd">"""plot the score of the agent pair</span>
 
 <span class="sd">    Args:</span>
@@ -342,7 +342,14 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="choice"><a class="viewcode-back" href="../../plot.html#tomsup.plot.choice">[docs]</a><span class="k">def</span> <span class="nf">choice</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">plot_individual_sim</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="choice"><a class="viewcode-back" href="../../plot.html#tomsup.plot.choice">[docs]</a><span class="k">def</span> <span class="nf">choice</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">plot_individual_sim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">"""plot the score of the agent pair</span>
 
 <span class="sd">    Args:</span>
@@ -384,9 +391,16 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-
 <div class="viewcode-block" id="plot_history"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_history">[docs]</a><span class="k">def</span> <span class="nf">plot_history</span><span class="p">(</span>
-    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">state</span><span class="p">],</span> <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">"Round"</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">state</span><span class="p">],</span>
+    <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Round"</span><span class="p">,</span>
+    <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">"""plot the history of an agent.</span>
 
@@ -434,7 +448,9 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_p_k"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_p_k">[docs]</a><span class="k">def</span> <span class="nf">plot_p_k</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="plot_p_k"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_p_k">[docs]</a><span class="k">def</span> <span class="nf">plot_p_k</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">"""plot the p_k of a k-ToM agent</span>
 
 <span class="sd">    Args:</span>
@@ -443,7 +459,7 @@
 <span class="sd">        agent0 (str): agent0 in the agent pair which you seek to plot, by default</span>
 <span class="sd">            it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.</span>
 <span class="sd">        agent1 (str): agent1 in the agent pair which you seek to plot</span>
-<span class="sd">        level (int): The sophistication level to plot </span>
+<span class="sd">        level (int): The sophistication level to plot</span>
 <span class="sd">        agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.</span>
 <span class="sd">        show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
 <span class="sd">    """</span>
@@ -456,11 +472,13 @@
         <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">"internal_states"</span><span class="p">][</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_k"</span><span class="p">][</span><span class="n">level</span><span class="p">],</span>
         <span class="n">ylab</span><span class="o">=</span><span class="n">f</span><span class="s2">"Probability of k=</span><span class="si">{level}</span><span class="s2">"</span><span class="p">,</span>
         <span class="n">xlab</span><span class="o">=</span><span class="s2">"Round"</span><span class="p">,</span>
-        <span class="n">show</span><span class="o">=</span><span class="n">show</span>
+        <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot_p_op_1"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_p_op_1">[docs]</a><span class="k">def</span> <span class="nf">plot_p_op_1</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="plot_p_op_1"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_p_op_1">[docs]</a><span class="k">def</span> <span class="nf">plot_p_op_1</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">"""plot the p_op_1 of a k-ToM agent</span>
 
 <span class="sd">    Args:</span>
@@ -479,11 +497,13 @@
         <span class="n">state</span><span class="o">=</span><span class="s2">"p_op"</span><span class="p">,</span>
         <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span>
         <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">"internal_states"</span><span class="p">][</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_op"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-        <span class="n">show</span><span class="o">=</span><span class="n">show</span>
+        <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot_p_self"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_p_self">[docs]</a><span class="k">def</span> <span class="nf">plot_p_self</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="plot_p_self"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_p_self">[docs]</a><span class="k">def</span> <span class="nf">plot_p_self</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">"""plot the p_self of a k-ToM agent</span>
 
 <span class="sd">    Args:</span>
@@ -502,11 +522,19 @@
         <span class="n">state</span><span class="o">=</span><span class="s2">"p_self"</span><span class="p">,</span>
         <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span>
         <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">"internal_states"</span><span class="p">][</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_self"</span><span class="p">],</span>
-        <span class="n">show</span><span class="o">=</span><span class="n">show</span>
+        <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot_op_states"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_op_states">[docs]</a><span class="k">def</span> <span class="nf">plot_op_states</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_op_states"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_op_states">[docs]</a><span class="k">def</span> <span class="nf">plot_op_states</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    df (ResultsDf): an outcome from the compete() function</span>
 <span class="sd">    agent0 (str): an agent name in the agent0 column in the df</span>
@@ -526,7 +554,7 @@
         <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">"internal_states"</span><span class="p">][</span><span class="s2">"opponent_states"</span><span class="p">][</span><span class="n">level</span><span class="p">][</span><span class="s2">"own_states"</span><span class="p">][</span>
             <span class="n">state</span>
         <span class="p">],</span>
-        <span class="n">show</span><span class="o">=</span><span class="n">show</span>
+        <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">,</span>
     <span class="p">)</span></div>
 </pre></div>
       </article>
