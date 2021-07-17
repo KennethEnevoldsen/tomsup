@@ -975,6 +975,7 @@ class AgentGroup:
         na_color: str="xkcd:white",
         xlab : str="Agent",
         ylab: str="Opponent",
+        show: bool=True
     ) -> None:
         """plot a heatmap of the results.
 
@@ -988,6 +989,7 @@ class AgentGroup:
             na_color (str, optional): The color of NAs. Defaults to "xkcd:white", e.g. white.
             xlab (str, optional): The name on the x-axis. Defaults to "Agent".
             ylab (str, optional): The name of the y-axis. Defaults to "Opponent".
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         plot_heatmap(
             self.__df,
@@ -998,6 +1000,7 @@ class AgentGroup:
             na_color,
             xlab,
             ylab,
+            show=show
         )
 
     def plot_choice(
@@ -1006,6 +1009,7 @@ class AgentGroup:
         agent1: str,
         agent: int = 0,
         plot_individual_sim: bool = False,
+        show: bool = True,
     ) -> None:
         """plots the choice of an agent in a defined agent pair
 
@@ -1014,6 +1018,7 @@ class AgentGroup:
             agent1 (str): The name of agent1
             agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
             plot_individual_sim (bool, optional): Should you plot each individual simulation. Defaults to False.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         choice(
             self.__df,
@@ -1021,17 +1026,19 @@ class AgentGroup:
             agent1=agent1,
             agent=agent,
             plot_individual_sim=plot_individual_sim,
+            show=show
         )
 
-    def plot_score(self, agent0: str, agent1: str, agent:int=0) -> None:
+    def plot_score(self, agent0: str, agent1: str, agent:int=0, show:bool=True) -> None:
         """plots the score of an agent in a defined agent pair
 
         Args:
             agent0 (str): The name of agent0
             agent1 (str): The name of agent1
             agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
-        score(self.__df, agent0, agent1, agent=agent)
+        score(self.__df, agent0, agent1, agent=agent, show=show)
 
     def plot_history(
         self,
@@ -1092,9 +1099,9 @@ class AgentGroup:
             show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         self.__tom_in_group(agent0, agent1, agent)
-        plot_p_self(self.__df, agent0, agent1, agent)
+        plot_p_self(self.__df, agent0, agent1, agent, show=show)
 
-    def plot_op_states(self, agent0: str, agent1: str, state: str, level: int=0, agent: int=0) -> None:
+    def plot_op_states(self, agent0: str, agent1: str, state: str, level: int=0, agent: int=0, show: bool=True) -> None:
         """plots the p_self of a k-ToM agent in a defined agent pair
 
         Args:
@@ -1103,6 +1110,7 @@ class AgentGroup:
             agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
             state (str): a state of the simulated opponent you wish to plot.
             level (str): level of the similated opponent you wish to plot.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         self.__tom_in_group(agent0, agent1, agent)
         plot_op_states(self.__df, agent0, agent1, state, level=0, agent=0, show=show)
