@@ -11,8 +11,11 @@ Made bias gradient prior = 0.999999997998081, like in the VBA package
 
 # Import packages
 import os
+import sys
 
+sys.path.append("/Users/au568658/Desktop/Academ/Projects/tomsup")
 os.chdir("..")
+
 import tomsup as ts
 import random
 import numpy as np
@@ -85,13 +88,13 @@ for sim in range(n_sim):
     if sim == 0:
         # Do the tournament and initate the results dataframe
         results = group.compete(
-            p_matrix=penny_comp, n_rounds=n_rounds, save_history=True, silent=True
+            p_matrix=penny_comp, n_rounds=n_rounds, save_history=True, verbose=False
         )
         results["n_sim"] = sim
     else:
         # Run the tournament again
         result_onesim = group.compete(
-            p_matrix=penny_comp, n_rounds=n_rounds, save_history=True, silent=True
+            p_matrix=penny_comp, n_rounds=n_rounds, save_history=True, verbose=False
         )
         # Add column with simulation number
         result_onesim["n_sim"] = sim
