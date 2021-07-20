@@ -1,7 +1,7 @@
 """
 docstring
 """
-from typing import Optional
+from typing import Callable, List, Optional, Tuple, Union
 from warnings import warn
 from itertools import combinations
 import random
@@ -30,34 +30,22 @@ from tomsup.plot import (
 ###################
 # ___ AGENT ___
 ###################
+
+
 class Agent:
     """
-    Examples:
-    >>> sirRB = Agent("RB", bias = 0.7)
-    >>> isinstance(sirRB, RB)
-    True
-    >>> sirRB.bias
-    0.7
+    Agent is super (parent) class for creating agents in tomsup.
     """
 
     def __init__(
         self, strategy: Optional[str] = None, save_history: bool = False, **kwargs
     ):
         """
-        Valid strategies include:
-            'WSLS': Win-stay, lose-switch
-            'RB': Random bias
-
-        kwargs is specifications passed to the strategy, see examples in class
-        docstring
-
-        TODO:
-        - add warning for invalid kwargs
-        - make agent callable with strategy
-        - add self the ability to add class
-        - add remaining strategies:
-            - WSLS
-            - ToM
+        Args:
+            strategy (Optional[str], optional): The strategy of the agent you wish to create. Defaults to None. 
+                It is recommended to use create_agents() to create instead of the Agent class
+            save_history (bool, optional): Should the history of the agent be saved. Defaults to False.
+            kwargs (dict) The specifications passed to the strategy
         """
         self.choice = None  # the last choice of the agent
         if save_history:
@@ -73,7 +61,12 @@ class Agent:
             self.__class__ = eval(strategy)
             self.__init__(**kwargs)
 
-    def reset(self, save_history=None):
+    def reset(self, save_history: Optional[bool]=None):
+        """resets the agent to its starting parameters
+
+        Args:
+            save_history (Optional[bool], optional): Should the agent history be saved? Defaults to None, which keeps the previous state.
+        """
         if self._start_params:
             if save_history is not None:
                 self._start_params["save_history"] = save_history
@@ -92,33 +85,40 @@ class Agent:
             self.history = self.history.append(kwargs, ignore_index=True)
 
     # Getters
-    def get_start_params(self):
+    def get_start_params(self) -> dict:
+        """
+        Returns:
+            dict: The starting parameters of the agent.
+        """
         return self._start_params
 
-    def get_strategy(self):
+    def get_strategy(self) -> str:
+        """
+        Returns:
+            str: The strategy of the agent
+        """
         return self.strategy
 
-    def get_choice(self):
+    def get_choice(self) -> int:
+        """
+        Returns:
+            int: the agents choice in the previous round
+        """
         return self.choice
 
-    def get_history(self, key=None, format="df"):
-        """
-        Return the agents history. This include only information relevant to
-        the agent
-        e.g. for a Random bias (RB) agent only its choice is saved, while
-        opponent choice is not.
-        Possible keys (dependent on agent):
-            'choices'
-            'op_choices'
-            ...
+    def get_history(self, key: Optional[str]=None, format: str="df") -> Union[dict, pd.DataFrame, list]:
+        """Return the agents history. This include only information relevant to
+        the agent. E.g. for a Random bias (RB) agent only its choice is saved, while
+        opponent choice is not as it used by the agent.
 
-        Key (list | str): The desired history to be returned
-        format (str): The desired fomat the history is return in possible
-        option include;
-            'dict': for dictionary
-            'df': for pandas dataframe
-            'list': for a list. Only valid if key is a str
+        Args:
+            key (Optional[str], optional): The item of interest in the history. Defaults to None, which returns all the entire history.
+            format (str, optional): Format of the return, options include "list", "dict" and "df", which is a pandas dataframe. Defaults to "df".
+
+        Returns:
+            Union[dict, pd.DataFrame, list]: The history in the specified format
         """
+
         if self.history is None:
             raise Exception(
                 "save_history is unspecified or set to False. \
@@ -147,70 +147,84 @@ class Agent:
             )
 
     # plotters
-    def plot_choice(self):
+    def plot_choice(self, show: bool=True) -> None:
+        """Plot the choices of the agent
+        Args:
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
+        """
         df = self.get_history()
         plt.plot(df.index, df["choice"], color="lightblue", linewidth=4)
         plt.xlabel("Round")
         plt.ylabel("Choice")
         plt.ylim(0, 1)
-        plt.show()
+        if show is True:
+            plt.show()
 
-    def plot_internal(self, fun):
+    def plot_internal(self, fun: Callable, show: bool=True) -> None:
         """
         Function for plotting internal states of agent
-        fun (func): a function which to use to extract from the internal states dict
 
-        Examples (not run):
-        >>> # plotting the p_op_mean of the agent over trials
-        >>> # tom1.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op_mean"])
-        >>> # plotting the agent belief about its opponents theory of mind level (p_k)
-        >>> # probability of sophistication level k=0
-        >>> # tom2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][0])
-        >>> # probability of sophistication level k=1
-        >>> # tom2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][1])
+        Args:
+            fun (Callable): a function which to use to extract from the internal states dict
+            show (bool): Should it run plt.show at the end of plotting? Default to True
+
+        Examples:
+            >>> # plotting the est. probability of opp. choosing one over trials
+            >>> tom1.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op"])
+            >>> # plotting the agent belief about its opponents theory of mind level (p_k)
+            >>> # probability of sophistication level k=0
+            >>> tom2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][0])
+            >>> # probability of sophistication level k=1
+            >>> tom2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][1])
         """
         df = self.get_history()
         df["extracted"] = df["internal_states"].apply(fun)
         plt.plot(df.index, df["extracted"], color="lightblue", linewidth=4)
-        plt.show()
+        if show is True:
+            plt.show()
 
 
 class RB(Agent):
     """
     'RB': Random bias agent
-    bias (0 <= float <= 1): Is the probability of the agent to choose 1
-    var: The sampling variance of the bias, default to 0. The variance is
-    measured in standard deviation of logit(bias) (logodds).
-
-    Given a non-zero variance, the bias sampled from a normal distribution
-    with a mean of the bias in logodds and a SD of the var. It is then
-    transformed into a 0-1 scale using the inverse logit function.
 
     Examples:
-    >>> sirRB = RB(bias = 1, save_history = True)
-    >>> sirRB.compete()
-    1
-    >>> sirRB.get_start_params()
-    {'bias': 1, 'save_history': True}
-    >>> sirRB.compete()
-    1
-    >>> sirRB.get_history(key='choice', format="list")
-    [1, 1]
+        >>> rb = ts.agent.RB(bias = 1, save_history = True)
+        >>> rb.compete()
+        1
+        >>> rb.get_start_params()
+        {'bias': 1, 'save_history': True}
+        >>> rb.compete()
+        1
+        >>> rb.get_history(key='choice', format="list")
+        [1, 1]
     """
 
-    def __init__(self, bias: float = 0.5, **kwargs):
+    def __init__(self, bias: float = 0.5, **kwargs) -> Agent:
+        """
+        Args:
+            bias (float, optional): The probability of the agent to choose 1. Defaults to 0.5.
+        """
         self._start_params = {"bias": bias, **kwargs}
         self.bias = bias
         self.strategy = "RB"
         super().__init__(**kwargs)
 
-    def compete(self, **kwargs):
+    def compete(self, **kwargs) -> int:
+        """
+        Returns:
+            int: The choice of the agent
+        """
         self.choice = np.random.binomial(1, self.bias)
         self._add_to_history(choice=self.choice)
 
         return self.choice
 
-    def get_bias(self):
+    def get_bias(self) -> float:
+        """
+        Returns:
+            float: The bias of the agent
+        """
         return self.bias
 
 
@@ -220,21 +234,26 @@ class WSLS(Agent):
     It simply takes the same choice if it wins and switches when it looses.
 
     Examples:
-    >>> sigmund = WSLS()
-    >>> sigmund.choice = 0  # Manually setting choice
-    >>> penny = PayoffMatrix(name="penny_competitive")
-    >>> sigmund.compete(op_choice=1, p_matrix=penny)
-    0
-    >>> sigmund.choice = 1  # Manually setting choice
-    >>> sigmund.compete(payoff=-1)
-    0
+        >>> sigmund = WSLS()
+        >>> sigmund.choice = 0  # Manually setting choice
+        >>> penny = PayoffMatrix(name="penny_competitive")
+        >>> sigmund.compete(op_choice=1, p_matrix=penny)
+        0
+        >>> sigmund.choice = 1  # Manually setting choice
+        >>> sigmund.compete(op_choice=0)
+        0
     """
 
-    def __init__(self, prob_stay: float = 1, prob_switch: float = 1, **kwargs):
+    def __init__(self, prob_stay: float = 1, prob_switch: float = 1, **kwargs) -> Agent:
         """
-        prob_stay (float): The probability to stay if the agent wins
-        prob_switch (float): The probabilit to switch if the agent looses
+        Args:
+            prob_stay (float, optional): he probability to stay if the agent wins. Defaults to 1.
+            prob_switch (float, optional): The probability to switch if the agent loose. Defaults to 1.
+
+        Returns:
+            Agent: The WSLS agent
         """
+
         self.strategy = "WSLS"
         self.prob_switch = prob_switch
         self.prob_stay = prob_stay
@@ -245,7 +264,16 @@ class WSLS(Agent):
             **kwargs,
         }
 
-    def compete(self, op_choice, p_matrix, agent, **kwargs):
+    def compete(self, op_choice: Optional[int], p_matrix: PayoffMatrix, agent: int, **kwargs) -> int:
+        """
+        Args:
+            op_choice (Optional[int]): The choice of the opponent, should be None in the first round.
+            p_matrix (PayoffMatrix): The payoff matrix which the agent plays in
+            agent (int): The agent role (either 0, 1) in which the agent have in the payoff matrix.
+
+        Returns:
+            int: The choice of the agent
+        """
         # if a choice haven't been made: Choose randomly (0 or 1)
         if self.choice is None:
             self.choice = np.random.binomial(1, 0.5)
@@ -278,15 +306,23 @@ class TFT(Agent):
     If the opponent previously was cooperative, the TFT agent is cooperative.
 
     Examples:
-    >>> shelling = TFT(copy_prob = 1)
-    >>> shelling.choice = 1  # manually setting the first choice
-    >>>
+        >>> shelling = ts.agent.TFT()
+        >>> p_dilemma = ts.PayoffMatrix(name="prisoners_dilemma")
+        >>> shelling.compete(op_choice=1, p_matrix=p_dilemma)
+        1
+        >>> shelling.compete(op_choice=0, p_matrix=p_dilemma)
+        0
     """
 
-    def __init__(self, copy_prob: float = 1, **kwargs):
+    def __init__(self, copy_prob: float = 1, **kwargs) -> Agent:
         """
-        copy_prob (float): the probability that the TFT copies the behaviour
-        of the opponent
+        Args:
+            copy_prob (float, optional): the probability that the TFT copies the behaviour
+                of the opponent, hereby introducing noise to the original TFT strategy by
+                Shelling (1981). Defaults to 1.
+
+        Returns:
+            Agent: The TFT agent
         """
         self.strategy = "TFT"
         self.copy_prob = copy_prob
@@ -296,18 +332,20 @@ class TFT(Agent):
     def compete(
         self,
         op_choice: Optional[int] = None,
-        p_matrix="prisoners_dilemma",
+        p_matrix: PayoffMatrix = PayoffMatrix("prisoners_dilemma"),
         verbose: bool = True,
         **kwargs,
-    ):
+    ) -> int:
         """
-        choice_op (0 <= int <= 1): The choice of the oppenent given af a 1 or
-        a 0
-        copy_prop (0 <= float <= 1): The probability of the TFT agent to copy
-        the action of its opponent, hereby introducing noise to
-        the original TFT strategy by Shelling (1981).
+        Args:
+            op_choice (Optional[int]): The choice of the opponent, should be None in the first round.
+            p_matrix (PayoffMatrix): The payoff matrix which the agent plays in. Defualt to the prisoners dilemma.
+            agent (int): The agent role (either 0, 1) in which the agent have in the payoff matrix.
+
+        Returns:
+            int: The choice of the agent
         """
-        if p_matrix != "prisoners_dilemma" and verbose:
+        if p_matrix.name != "prisoners_dilemma" and verbose:
             warn(
                 "Tit-for-Tat is designed for the prisoners dilemma and might \
                   not perform well with other payoff matrices.",
@@ -342,29 +380,38 @@ class QL(Agent):
         self,
         learning_rate: float = 0.5,
         b_temp: float = 0.01,
-        expec_val: list = [0.5, 0.5],
+        expec_val: Tuple[float, float] = (0.5, 0.5),
         **kwargs,
     ):
         """
-        learning_rate (float): the degree to which the agent learns.
-        is the learning rate 0 the agent will not learn.
-        b_temp (float): The behavioural temperature of the Q Learning agent
-        expec_val (list): the preference for choice 0 and 1
-
+        Args:
+            learning_rate (float, optional): The degree to which the agent learns. If the learning rate 0 the agent will not learn. 
+                Defaults to 0.5.
+            b_temp (float, optional): The behavioural temperature of the Q-Learning agent. Defaults to 0.01.
+            expec_val (Tuple[float, float], optional): The preference for choice 0 and 1. Defaults to (0.5, 0.5).
         """
         self.strategy = "QL"
         self.learning_rate = learning_rate
-        self.expec_val = expec_val
+        self.expec_val = list(expec_val)
         self.b_temp = b_temp
         super().__init__(**kwargs)
         self._start_params = {
             "learning_rate": learning_rate,
             "b_temp": b_temp,
-            "expec_val": expec_val,
+            "expec_val": list(expec_val),
             **kwargs,
         }
 
-    def compete(self, p_matrix, agent, op_choice=None, **kwargs):
+    def compete(self, op_choice: Optional[int], p_matrix: PayoffMatrix, agent=int, **kwargs) -> int:
+        """
+        Args:
+            op_choice (Optional[int]): The choice of the opponent, should be None in the first round.
+            p_matrix (PayoffMatrix): The payoff matrix which the agent plays in
+            agent (int): The agent role (either 0, 1) in which the agent have in the payoff matrix.
+
+        Returns:
+            int: The choice of the agent
+        """
         if self.choice and op_choice:  # if not first round
             # Calculate whether or not last round was a victory
             payoff = p_matrix.payoff(self.choice, op_choice, agent)
@@ -400,10 +447,18 @@ class QL(Agent):
         return self.choice
 
     # Define getters
-    def get_expected_values(self):
-        return self.expec_val
+    def get_expected_values(self) -> Tuple[float, float]:
+        """
+        Returns:
+            Tuple[float, float]: The preference for choice 0 and 1.
+        """
+        return tuple(self.expec_val)
 
-    def get_learning_rate(self):
+    def get_learning_rate(self) -> float:
+        """
+        Returns:
+            float: The learning rate of the agent
+        """
         return self.learning_rate
 
 
@@ -413,7 +468,7 @@ class TOM(Agent):
     recursive ToM agent initially proposed by Devaine (2014), but have
     been further developed since.
 
-    It recursively estiamtes its opponent and estimate their beliefs
+    It recursively estimates its opponent and estimate their beliefs
     about itself.
     """
 
@@ -424,44 +479,46 @@ class TOM(Agent):
         b_temp: float = -1,
         bias: Optional[float] = 0,
         dilution: Optional[float] = None,
-        init_states="default",
+        init_states: Union[dict, str]="default",
         **kwargs,
-    ):
-        """
-        level (int): Sophistication level of the agent.
-        volatility (float): Volatility (σ) indicate how much the agent
-        thinks the opponent might shift their parameters over time. 
-        Volatility is a number in the range (0,∞), but for for
-        computational reasons is inputted on a log scale. I.e. if you want
-        to have a volatility of 0.13 you should input ts.log(0.13) ≈ -2.
-        default is -2 as this was used in the initial implementation of
-        the model.
-        b_temp (float): The behavioural temperature (also called the
-        exploration temperature) indicates how noisy the k-ToM decision
-        process is. Behavioural temperature Is a number in the range (0,∞),
-        but for for computational reasons is inputted on a log odds scale.
-        I.e. to have a temperature of 0.37 you should input ts.log(0.37)
-        ≈ -1. Default is -2 as this was used in the initial implementation of
-        the model.
-        bias (float|None): The Bias indicates the preference k-ToM decision
-        to choose 1. It is added to the expected payoff. I.e. if the expected
-        payoff of choosing 1 is -1 and bias is +2 the updated 'expected payoff'
-        would be +1.
-        dilution (float|None): The dilution indicates the degree to which
-        beliefs about the opponent’s sophistication level are forgotten over
-        time. dilution is a number in the range (0, 1),
-        but for for computational reasons is inputted on a log odds scale.
-        I.e. to have a dilution of 0.62 you should input ts.inv_logit(0.62)
-        ≈ 0.5. Default is None as this was used in the initial implementation
-        of the model and this there is no dilution of its beliefs about its
-        oppoenent's sophistication level.
+    ) -> Agent:
+        """[summary]
 
-        Examples:
-        >>> t0 = TOM(level=0, volatility=-2, b_temp=-1)
-        >>> t2 = TOM(level=2, volatility=-2, b_temp=-1)
-        >>> t2 = TOM(level=2, volatility=-2, b_temp=-1, dilution=0.5, \
-            bias=0.3)
+        Args:
+            level (int): Sophistication level of the agent.
+            volatility (float, optional): Volatility (σ) indicate how much the agent
+                thinks the opponent might shift their parameters over time. 
+                Volatility is a number in the range (0,∞), but for for
+                computational reasons is inputted on a log scale. I.e. if you want
+                to have a volatility of 0.13 you should input ts.log(0.13) ≈ -2.
+                default is -2 as this was used in the initial implementation of
+                the model.
+            b_temp (float, optional): The behavioural temperature (also called the
+                exploration temperature) indicates how noisy the k-ToM decision
+                process is. Behavioural temperature Is a number in the range (0,∞),
+                but for for computational reasons is inputted on a log odds scale.
+                I.e. to have a temperature of 0.37 you should input ts.log(0.37)
+                ≈ -1. Default is -1 as this was used in the initial implementation of
+                the model.
+            bias (Optional[float], optional): The Bias indicates the preference k-ToM decision
+                to choose 1. It is added to the expected payoff. I.e. if the expected
+                payoff of choosing 1 is -1 and bias is +2 the updated 'expected payoff'
+                would be +1. Defaults to 0.
+            dilution (Optional[float], optional): The dilution indicates the degree to which
+                beliefs about the opponent’s sophistication level are forgotten over
+                time. dilution is a number in the range (0, 1),
+                but for for computational reasons is inputted on a log odds scale.
+                I.e. to have a dilution of 0.62 you should input ts.inv_logit(0.62)
+                ≈ 0.5. Default is None as this was used in the initial implementation
+                of the model and this there is no dilution of its beliefs about its
+                oppoenent's sophistication level.. Defaults to None.
+            init_states (Union[dict, str], optional): The initialization states of the agent.
+                Defaults to "default". See tutorial on setting initialization states for more info.
+
+        Returns:
+            Agent: The k-ToM agent
         """
+
         if level > 5:
             warn(
                 "It is quite computationally expensive to run a TOM with a \
@@ -497,8 +554,16 @@ class TOM(Agent):
             **kwargs,
         }
 
-    def compete(self, p_matrix, agent, op_choice=None):
-        """"""
+    def compete(self, p_matrix: PayoffMatrix, agent: int, op_choice: Optional[int]=None) -> int:
+        """
+        Args:
+            op_choice (Optional[int]): The choice of the opponent, should be None in the first round.
+            p_matrix (PayoffMatrix): The payoff matrix which the agent plays in
+            agent (int): The agent role (either 0, 1) in which the agent have in the payoff matrix.
+
+        Returns:
+            int: The choice of the agent
+        """
         self.op_choice = op_choice
         self.choice, self.internal = k_tom(
             self.internal,
@@ -514,37 +579,68 @@ class TOM(Agent):
         return self.choice
 
     # Define getters
-    def get_volatility(self):
+    def get_volatility(self) -> float:
+        """
+        Returns:
+            float: The volatility of the agent
+        """
         return self.volatility
 
-    def get_behav_temperature(self):
+    def get_behav_temperature(self) -> float:
+        """
+        Returns:
+            float: The behavioural temperature of the agent
+        """
         return self.b_temp
 
-    def get_bias(self):
+    def get_bias(self) -> Optional[float]:
+        """
+        Returns:
+            Optional[float]: The bias of the agent
+        """
         if self.bias is None:
             print("TOM does not have a bias.")
         return self.bias
 
-    def get_dilution(self):
+    def get_dilution(self) -> Optional[float]:
+        """
+        Returns:
+            Optional[float]: The dilution of the agent
+        """
         if self.get_dilution is None:
             print("TOM does not have a dilution parameter.")
         return self.dilution
 
-    def get_level(self):
+    def get_level(self) -> float:
+        """
+        Returns:
+            float: The sophistication level of the agent
+        """
         return self.level
 
-    def get_internal_states(self):
+    def get_internal_states(self) -> dict:
+        """
+        Returns:
+            dict: The current internal states of the agent
+        """
         return self.internal
 
-    def set_internal_states(self, internal_states):
+    def set_internal_states(self, internal_states : dict) -> None:
+        """
+        Args:
+            internal_states (dict): The desired internal states of the agent.
+        """
         self.internal = internal_states
 
-    def get_parameters(self):
+    def get_parameters(self) -> dict:
+        """
+        Returns:
+            dict: The agents parameters
+        """
         return self.params
 
-    def __print(self, d, n=0, keys=None, readability_transform={}, print_level=None):
-        """
-        A helper function for printing dictionaries
+    def __print(self, d, n=0, keys=None, readability_transform={}, print_level=None) ->None:
+        """A helper function for printing dictionaries
         """
         for key in d:
             if (
@@ -573,9 +669,11 @@ class TOM(Agent):
         self,
         keys: Optional[list] = None,
     ):
-        """
-        keys (list | None): is the keys which you desire to print.
-        """
+        """ 
+
+        Args:
+            keys (Optional[list], optional): The key which you wish to print. Defaults to None, indicating all.
+        """         
 
         readability_transform = {
             "volatility": "volatility (log scale)",
@@ -597,9 +695,7 @@ class TOM(Agent):
         level: Optional[list] = None,
     ):
         """
-        keys (list | None): is the keys which you desire to print.
-        level (list | None):  list of integers containing levels to print
-        None indicate all levels will be printed.
+        prints the internal states of the agent.
 
         Explanation of internal states:
         opponent_states: indicate that the following states belong to the
@@ -617,6 +713,11 @@ class TOM(Agent):
         in param_mean)
         p_self: the probability of the agent itself choosing 1
         p_op: the aggregate probability of the opponent choosing 1
+
+        Args:
+            keys (Optional[list], optional): The keys which you desire to print. Defaults to None.
+            level (Optional[list], optional): List of integers containing levels to print
+                None indicate all levels will be printed. Defaults to None.
         """
 
         readability_transform = {
@@ -654,40 +755,46 @@ class AgentGroup:
     easily setting up tournaments.
 
     Examples:
-    >>> round_table = AgentGroup(agents=['RB']*2, \
-        start_params=[{'bias': 1}]*2)
-    >>> round_table.agent_names
-    ['RB_0', 'RB_1']
-    >>> RB_0 = round_table.get_agent('RB_0') # extract an agent
-    >>> RB_0.bias == 1 # should naturally be 1, as we specified it
-    True
-    >>> round_table.set_env('round_robin')
-    >>> result = round_table.compete(p_matrix="penny_competitive", \
-        n_rounds=100, n_sim=10)
-    Currently the pair, ('RB_0', 'RB_1'), is competing for 10 simulations, \
-        each containg 100 rounds.
-        Running simulation 1 out of 10
-        Running simulation 2 out of 10
-        Running simulation 3 out of 10
-        Running simulation 4 out of 10
-        Running simulation 5 out of 10
-        Running simulation 6 out of 10
-        Running simulation 7 out of 10
-        Running simulation 8 out of 10
-        Running simulation 9 out of 10
-        Running simulation 10 out of 10
-    Simulation complete
-    >>> result.shape[0] == 10*100 # As there is 10 simulations each containing\
-                                    100 round
-    True
-    >>> result['payoff_agent0'].mean() == 1  # Given that both agents have \
-        always choose 1, it is clear that agent0 always win, when playing the \
-        competitive pennygame
-    True
+        >>> round_table = AgentGroup(agents=['RB']*2, \
+            start_params=[{'bias': 1}]*2)
+        >>> round_table.agent_names
+        ['RB_0', 'RB_1']
+        >>> RB_0 = round_table.get_agent('RB_0') # extract an agent
+        >>> RB_0.bias == 1 # should naturally be 1, as we specified it
+        True
+        >>> round_table.set_env('round_robin')
+        >>> result = round_table.compete(p_matrix="penny_competitive", \
+            n_rounds=100, n_sim=10)
+        Currently the pair, ('RB_0', 'RB_1'), is competing for 10 simulations, \
+            each containg 100 rounds.
+            Running simulation 1 out of 10
+            Running simulation 2 out of 10
+            Running simulation 3 out of 10
+            Running simulation 4 out of 10
+            Running simulation 5 out of 10
+            Running simulation 6 out of 10
+            Running simulation 7 out of 10
+            Running simulation 8 out of 10
+            Running simulation 9 out of 10
+            Running simulation 10 out of 10
+        Simulation complete
+        >>> result.shape[0] == 10*100 # As there is 10 simulations each containing\
+                                        100 round
+        True
+        >>> result['payoff_agent0'].mean() == 1  # Given that both agents have \
+            always choose 1, it is clear that agent0 always win, when playing the \
+            competitive pennygame
+        True
     """
 
-    def __init__(self, agents, start_params=None):
-        # TODO: add option to set payoff matrix and env here
+    def __init__(self, agents: List[str], start_params: Optional[List[dict]]=None):
+        """
+        Args:
+            agents (List[str]): A list of agents
+            start_params (Optional[List[dict]], optional): The starting parameters of the agents specified 
+                as a dictionary pr. agent. Defaults to None, indicating default for all agent. Use empty to
+                use default of an agent.
+        """
         self.agents = agents
         if start_params:
             if len(agents) != len(start_params):
@@ -711,7 +818,11 @@ class AgentGroup:
             for name, param in zip(self.agent_names, start_params)
         }
 
-    def get_environment_name(self):
+    def get_environment_name(self) -> str:
+        """
+        Returns:
+            str: The name of the set environment
+        """
         if self.environment:
             return self.environment
         else:
@@ -721,6 +832,10 @@ class AgentGroup:
             )
 
     def get_environment(self):
+        """
+        Returns:
+            the pairing resulted from the set environment
+        """
         if self.pairing:
             return self.pairing
         else:
@@ -729,10 +844,14 @@ class AgentGroup:
                              environment"
             )
 
-    def get_names(self):
+    def get_names(self) -> List[str]:
+        """
+        Returns:
+            List[str]: the names of the agents
+        """
         return self.agent_names
 
-    def get_agent(self, agent):
+    def get_agent(self, agent: str) -> Agent:
         if agent in self.agent_names:
             return self._agents[agent]
         else:
@@ -741,15 +860,15 @@ class AgentGroup:
                              agent names, use get_names()"
             )
 
-    def set_env(self, env):
-        """
-        set environment of agent group.
+    def set_env(self, env: str) -> None:
+        """Set environment of the agent group.
 
-        env (str): The string for the environment you wish to set.
-        Valid environment strings include:
-            'round_robin': Matches all participant against all others
-            'rondom_pairs': Combines the agent in random pairs (the number of
-            agent must be even)
+        Args:
+            env (str): The string for the environment you wish to set.
+                Valid environment strings include:
+                'round_robin': Matches all participant against all others
+                'random_pairs': Combines the agent in random pairs (the number of
+                agent must be even)
         """
         self.environment = env.lower()
         if self.environment == "round_robin":
@@ -773,16 +892,34 @@ class AgentGroup:
 
     def compete(
         self,
-        p_matrix,
+        p_matrix: PayoffMatrix,
         n_rounds: int = 10,
         n_sim: int = 1,
         reset_agent: bool = True,
-        env=None,
+        env: Optional[str]=None,
         save_history: bool = False,
         verbose: bool = True,
         n_jobs: Optional[int] = None,
-    ):
-        """"""
+    ) -> pd.DataFrame:
+        """for each pair competes using the specified parameters
+
+        Args:
+            p_matrix (PayoffMatrix): The payoffmatrix in which the agents compete
+            n_rounds (int, optional): Number of rounds the agent should play in each simulation. 
+                Defaults to 10.
+            n_sim (int, optional): The number of simulations. Defaults to 1.
+            reset_agent (bool, optional): Should the agent be reset ? Defaults to True.
+            env (Optional[str], optional): The environment in which the agent should compete. 
+                Defaults to None, indicating the already set environment.
+            save_history (bool, optional): Should the history of agent be saved.
+                Defaults to False, as this is memory intensive.
+            verbose (bool, optional): Toggles the verbosity of the function. Defaults to True.
+            n_jobs (Optional[int], optional): Number of parallel jobs. Defaults to None, indicating no parallelization.
+                -1 indicate as many jobs as there is cores on your unit.
+
+        Returns:
+            pd.DataFrame: A pandas dataframe of the results.
+        """
         if self.environment is None and env is None:
             raise TypeError(
                 "No env was specified, either specify environment \
@@ -822,22 +959,38 @@ class AgentGroup:
 
         return self.__df
 
-    def get_results(self):
+    def get_results(self) -> pd.DataFrame:
+        """
+        Returns:
+            pd.DataFrame: The results
+        """
         return self.__df
-
-    def head(self, n):
-        return self.__df.head(n)
 
     def plot_heatmap(
         self,
-        aggregate_col="payoff_agent",
-        aggregate_fun=np.mean,
-        certainty_fun="mean_ci_95",
-        cmap="Blues",
-        na_color="xkcd:white",
-        x_axis="Agent",
-        y_axis="Opponent",
-    ):
+        aggregate_col: str="payoff_agent",
+        aggregate_fun: Callable=np.mean,
+        certainty_fun: Union[Callable, str]="mean_ci_95",
+        cmap: str="Blues",
+        na_color: str="xkcd:white",
+        xlab : str="Agent",
+        ylab: str="Opponent",
+        show: bool=True
+    ) -> None:
+        """plot a heatmap of the results.
+
+        Args:
+            aggregate_col (str, optional): The column to aggregate on. Defaults to "payoff_agent".
+            aggregate_fun (Callable, optional): The function to aggregate by. Defaults to np.mean.
+            certainty_fun (Union[Callable, str], optional): The certainty function specified as a string on
+                the form "mean_ci_X" where X denote the confidence interval, or a function.
+                Defaults to "mean_ci_95".
+            cmap (str, optional): The color map. Defaults to "Blues".
+            na_color (str, optional): The color of NAs. Defaults to "xkcd:white", e.g. white.
+            xlab (str, optional): The name on the x-axis. Defaults to "Agent".
+            ylab (str, optional): The name of the y-axis. Defaults to "Opponent".
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
+        """
         plot_heatmap(
             self.__df,
             aggregate_col,
@@ -845,71 +998,122 @@ class AgentGroup:
             certainty_fun,
             cmap,
             na_color,
-            x_axis,
-            y_axis,
+            xlab,
+            ylab,
+            show=show
         )
 
     def plot_choice(
         self,
-        agent0: int,
-        agent1: int,
+        agent0: str,
+        agent1: str,
         agent: int = 0,
         plot_individual_sim: bool = False,
-    ):
+        show: bool = True,
+    ) -> None:
+        """plots the choice of an agent in a defined agent pair
+
+        Args:
+            agent0 (str): The name of agent0
+            agent1 (str): The name of agent1
+            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            plot_individual_sim (bool, optional): Should you plot each individual simulation. Defaults to False.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
+        """
         choice(
             self.__df,
             agent0=agent0,
             agent1=agent1,
             agent=agent,
             plot_individual_sim=plot_individual_sim,
+            show=show
         )
 
-    def plot_score(self, agent0, agent1, agent=0):
-        score(self.__df, agent0, agent1, agent=agent)
+    def plot_score(self, agent0: str, agent1: str, agent:int=0, show:bool=True) -> None:
+        """plots the score of an agent in a defined agent pair
+
+        Args:
+            agent0 (str): The name of agent0
+            agent1 (str): The name of agent1
+            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
+        """
+        score(self.__df, agent0, agent1, agent=agent, show=show)
 
     def plot_history(
         self,
-        agent0,
-        agent1,
-        state,
-        agent=0,
-        fun=lambda x: x[state],
-        ylab="",
-        xlab="Round",
-    ):
+        agent0: int,
+        agent1: int,
+        state: str,
+        agent: int=0,
+        fun: Callable=lambda x: x[state],
+        ylab: str="",
+        xlab: str="Round",
+        show: bool = True
+    ) -> None:
+        """pPlots the history of an agent in a defined agent pair
+
+        Args:
+            agent0 (str): The name of agent0
+            agent1 (str): The name of agent1
+            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            state (str):  The state of the agent you wish to plot.
+            fun (Callable, optional): A function for extracting the state. Defaults to lambdax:x[state].
+            xlab (str, optional): The name on the x-axis. Defaults to "Agent".
+            ylab (str, optional): The name of the y-axis. Defaults to "Opponent".
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
-        agent0 (str): an agent name in the agent0 column in the df
-        agent1 (str): an agent name in the agent1 column in the df
-        agent (0|1): An indicate of which agent of agent 0 and 1 you wish to
-        plot
-        state (str): a state of the agent you wish to plot.
-        """
-        plot_history(self.__df, agent0, agent1, state, agent, fun, ylab, xlab)
+        plot_history(self.__df, agent0, agent1, state, agent, fun, ylab=ylab, xlab=xlab, show=show)
 
-    def plot_p_op_1(self, agent0, agent1, agent=0):
-        self.__tom_in_group(agent0, agent1, agent)
-        plot_p_op_1(self.__df, agent0, agent1, agent)
+    def plot_p_op_1(self, agent0: str, agent1: str, agent: int=0, show: bool=True) -> None:
+        """plots the p_op_1 of a k-ToM agent in a defined agent pair
 
-    def plot_p_k(self, agent0, agent1, level, agent=0):
-        self.__tom_in_group(agent0, agent1, agent)
-        plot_p_k(self.__df, agent0, agent1, agent=agent, level=level)
-
-    def plot_p_self(self, agent0, agent1, agent=0):
-        self.__tom_in_group(agent0, agent1, agent)
-        plot_p_self(self.__df, agent0, agent1, agent)
-
-    def plot_op_states(self, agent0, agent1, state, level=0, agent=0):
-        """
-        agent0 (str): an agent name in the agent0 column in the df
-        agent1 (str): an agent name in the agent1 column in the df
-        agent (0|1): An indicate of which agent of agent 0 and 1 you wish to
-        plot
-        the indicated agent must be a theory of mind agent (ToM)
-        state (str): a state of the simulated opponent you wish to plot.
-        level (str): level of the similated opponent you wish to plot.
+        Args:
+            agent0 (str): The name of agent0
+            agent1 (str): The name of agent1
+            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         self.__tom_in_group(agent0, agent1, agent)
-        plot_op_states(self.__df, agent0, agent1, state, level=0, agent=0)
+        plot_p_op_1(self.__df, agent0, agent1, agent, show=show)
+
+    def plot_p_k(self, agent0: str, agent1: str, level: int, agent: int=0, show: bool=True) -> None:
+        """plots the p_k of a k-ToM agent in a defined agent pair
+
+        Args:
+            agent0 (str): The name of agent0
+            agent1 (str): The name of agent1
+            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
+        """
+        self.__tom_in_group(agent0, agent1, agent)
+        plot_p_k(self.__df, agent0, agent1, agent=agent, level=level, show=show)
+
+    def plot_p_self(self, agent0: str, agent1: str, agent: int=0, show: bool=True) -> None:
+        """plots the p_self of a k-ToM agent in a defined agent pair
+
+        Args:
+            agent0 (str): The name of agent0
+            agent1 (str): The name of agent1
+            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
+        """
+        self.__tom_in_group(agent0, agent1, agent)
+        plot_p_self(self.__df, agent0, agent1, agent, show=show)
+
+    def plot_op_states(self, agent0: str, agent1: str, state: str, level: int=0, agent: int=0, show: bool=True) -> None:
+        """plots the p_self of a k-ToM agent in a defined agent pair
+
+        Args:
+            agent0 (str): The name of agent0
+            agent1 (str): The name of agent1
+            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            state (str): a state of the simulated opponent you wish to plot.
+            level (str): level of the similated opponent you wish to plot.
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
+        """
+        self.__tom_in_group(agent0, agent1, agent)
+        plot_op_states(self.__df, agent0, agent1, state, level=0, agent=0, show=show)
 
     def plot_tom_op_estimate(
         self,
@@ -917,30 +1121,25 @@ class AgentGroup:
         agent1: int,
         level: int,
         estimate: str,
-        agent=0,
-        plot="mean",
-        transformation=None,
+        agent: int=0,
+        plot: str="mean",
+        transformation: Optional[bool]=None,
+        show: bool=True
     ):
-        """
-        plot estimaated volatility of the opponent
+        """plot a k-ToM's estimates the opponent in a given pair
 
-        agent0, agent1 (str): the desired agent pair
-        agent (0 | 1): which of the desired agents
-        level (int): the sophistication level of the opponent the agent is
-        estimating. For instance a 2-ToM have two simulated opponents 0-ToM
-        and 1-ToM, where 0 and 1 indicate their respective sophistication level
-        estimate (str): the desired estimate to plot options include:
-               "volatility"
-               "behav_temp" (Behavoural Temperature)
-               "bias"
-               "dilution"
-        plot ("mean" | "var"): Toggle between plotting mean or variance
-        transformation (bool | fun): Should the estimate be transformed. if
-        True, applies the following transformations to the variables:
-            exponentiation (volatility)
-            inverse_logit(behavial temperature)
-            none (bias, dilution)
-        Can also be a user specified function
+        Args:
+            agent0 (str): The name of agent0
+            agent1 (str): The name of agent1
+            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.
+            estimate (str): The desired estimate to plot options include:
+               "volatility",
+               "behav_temp" (Behavoural Temperature),
+               "bias",
+               "dilution".
+            level (str): Sophistication level of the similated opponent you wish to plot.
+            plot (str, optional): Toggle between plotting mean ("mean") or variance ("var"). Default to "mean".
+            show (bool, optional): Should plt.show be run at the end. Defaults to True.
         """
         a = self.__tom_in_group(agent0, agent1, agent)
 
@@ -1007,9 +1206,10 @@ class AgentGroup:
                 x["internal_states"]["opponent_states"][level]["own_states"][p_key][loc]
             ),
             ylab=ylab,
+            show=show
         )
 
-    def __tom_in_group(self, agent0, agent1, agent):
+    def __tom_in_group(self, agent0: str, agent1: str, agent: int) -> TOM:
         a = agent0 if agent == 0 else agent1
         agent = self._agents[a]
         if isinstance(agent, TOM):
@@ -1019,7 +1219,7 @@ class AgentGroup:
             but the specified agent ({a}) is a agent of type {type(agent)}"
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         header = f"<Class AgentGroup, envinment = {self.environment}> \n\n"
         info = "\n".join(
             ("\t | \t".join(str(ii) for ii in i))
@@ -1034,9 +1234,9 @@ class AgentGroup:
 
 
 def compete(
-    agent_0: int,
-    agent_1: int,
-    p_matrix,
+    agent_0: Agent,
+    agent_1: Agent,
+    p_matrix : PayoffMatrix,
     n_rounds: int = 1,
     n_sim: Optional[int] = None,
     reset_agent: bool = True,
@@ -1046,44 +1246,44 @@ def compete(
     n_jobs: Optional[int] = None,
 ):
     """
-    agent_0 and agent_1 (Agent): objects of class Agent which should compete
-    p_matrix (PayoffMatrix | str): The PayoffMatrix in which the agents
-    compete or the name of the payoff matrix
-    n_rounds (int): Number of rounds the agents should compete
-    return_val ('df' | 'list')
-    n_sim (int): number of simulations
-    reset_agent (bool): Should the agent be reset prior to running the
-    competition.
-    return_val (str): Should the returned value be returned as a dataframe
-    ("df") or a list ("list")
-    save_history (bool): should the history of the agent be saved. The history
-    typically include internal states, estimates etc.
-    verbose (bool): toggles the verbosity of function (whether it prints or not)
-    n_jobs (int): Number of parallel jobs to run. -1 uses os.cpu_count()
+    Args:
+        agent_0 (Agent): objects of class Agent which should compete
+        agent_1 (Agent): objects of class Agent which should compete
+        p_matrix (PayoffMatrix): The payoffmatrix in which the agents compete
+        n_rounds (int, optional): Number of rounds the agent should play in each simulation. 
+            Defaults to 10.
+        n_sim (int, optional): The number of simulations. Defaults to 1.
+        reset_agent (bool, optional): Should the agent be reset ? Defaults to True.
+        save_history (bool, optional): Should the history of agent be saved.
+            Defaults to False, as this is memory intensive.
+        return_val (str): Should values be returns as a pandas dataframe ("df"), or a "list".
+        verbose (bool, optional): Toggles the verbosity of the function. Defaults to True.
+        n_jobs (Optional[int], optional): Number of parallel jobs. Defaults to None, indicating no parallelization.
+            -1 indicate as many jobs as there is cores on your unit, i.e. os.cpu_count().
 
     Examples:
-    >>> sirRB = RB(bias = 0.7)
-    >>> sirWSLS = WSLS()
-    >>> result = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", \
-        n_rounds = 10)
-    >>> type(result)
-    pandas.core.frame.DataFrame
-    >>> result.columns
-    Index(['round', 'action_agent0', 'action_agent1', 'payoff_agent0',
-       'payoff_agent1'],
-      dtype='object')
-    >>> result = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", \
-        n_rounds = 10, n_sim = 3, return_val = 'list')
-    >>> len(result) == 3*10
-    True
-    >>> result = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", \
-        n_rounds = 100, n_sim = 3, return_val = 'df', verbose = True)
-        Running simulation 1 out of 3
-        Running simulation 2 out of 3
-        Running simulation 3 out of 3
-    >>> result['payoff_agent1'].mean() > 0  # We see that the WSLS() on \
-        average win more than it lose vs. the biased agent (RB)
-    True
+        >>> sirRB = RB(bias = 0.7)
+        >>> sirWSLS = WSLS()
+        >>> result = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", \
+            n_rounds = 10)
+        >>> type(result)
+        pandas.core.frame.DataFrame
+        >>> result.columns
+        Index(['round', 'action_agent0', 'action_agent1', 'payoff_agent0',
+        'payoff_agent1'],
+        dtype='object')
+        >>> result = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", \
+            n_rounds = 10, n_sim = 3, return_val = 'list')
+        >>> len(result) == 3*10
+        True
+        >>> result = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", \
+            n_rounds = 100, n_sim = 3, return_val = 'df', verbose = True)
+            Running simulation 1 out of 3
+            Running simulation 2 out of 3
+            Running simulation 3 out of 3
+        >>> result['payoff_agent1'].mean() > 0  # We see that the WSLS() on \
+            average win more than it lose vs. the biased agent (RB)
+        True
     """
 
     if isinstance(p_matrix, str):
