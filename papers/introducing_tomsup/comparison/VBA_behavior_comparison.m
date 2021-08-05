@@ -43,7 +43,7 @@ for i=1:length(styles1)
         end
         [info2] = prepare_agent(styles2{j},info2.payoffTable,2);
         % simulate game
-        [rew,y1,y2] = TOM_behavior_test_runGame(info1,info2,nt,0);
+        [rew,y1,y2] = VBA_behavior_comparison_helper(info1,info2,nt,0);
     end
 end
 

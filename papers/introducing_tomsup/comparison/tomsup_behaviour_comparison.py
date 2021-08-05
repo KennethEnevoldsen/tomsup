@@ -8,7 +8,7 @@
 import sys
 
 sys.path.append("/Users/au568658/Desktop/Academ/Projects/tomsup")
-sys.path.append("/Users/ptwaade/Desktop/Uni/tomsup/tomsup_package")
+
 
 import tomsup as ts
 
