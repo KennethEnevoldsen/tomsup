@@ -38,16 +38,19 @@ def forced_choice_competition(
         agent0.choice, agent1.choice = c0, c1
         prev_c0, prev_c1 = c0, c1
 
-        if agent == 0:
+        if "TOM" in agent0.get_strategy():
             yield agent0.internal["own_states"]["p_self"]
+        else:
+            raise ValueError("forced_choice_competition does not deal with the specified agent.")
+    
 
 
 def func_to_minimize(
-    k: int = 1,
-    volatility: float = -2,
-    b_temp: float = -1,
-    bias: float = 0,
-    dilution: float = 0,
+    k: int = 1,                    # optimizable variable
+    volatility: float = -2,        # optimizable variable
+    b_temp: float = -1,            # optimizable variable
+    bias: float = 0,               # optimizable variable
+    dilution: float = 0,           # optimizable variable
     choices_agent=results.choice_agent0,    # known variables
     choices_opponent=results.choice_agent1, # known variables
     opponent = group.get_agent("2-ToM"),    # known variables
