@@ -2,7 +2,7 @@
 This script fits the k-ToM model to data using scipy.optimize()
 """
 import sys
-
+from functools import partial
 sys.path.append("..")
 
 import numpy as np
@@ -76,6 +76,20 @@ def func_to_minimize(
     return np.linalg.norm(np.array(choices_agent) - np.array(p_choices))
 
 
-minimize(func_to_minimize, 
-        starting_states, # how to figure these out
-         method="nelder-mead")
+def func_to_minimize_wrapper(params, k=1):
+    """a wrapper function to map between minimize"""
+    return func_to_minimize(k=k, 
+                            volatility = params[1],
+                            b_temp = params[2],
+                            bias= params[3],
+                            dilution=params[4],
+                            )
+
+solutions = []
+for i in range(0, 4):
+    f = partial(func_to_minimize_wrapper, k=i)
+    solution = minimize(f, 
+            [1, -2, -1, 0, 0], # need restrictions on these!
+            method="nelder-mead",
+            bounds = [(0.001, -3), (0.001, -3), (1, -1), (0, 1)])
+    solutions.append(solution)
