@@ -26,6 +26,8 @@ from tomsup.plot import (
     plot_heatmap,
 )
 
+from wasabi import msg
+
 
 ###################
 # ___ AGENT ___
@@ -606,7 +608,7 @@ class TOM(Agent):
             Optional[float]: The bias of the agent
         """
         if self.bias is None:
-            print("TOM does not have a bias.")
+            msg.warn("TOM does not have a bias.")
         return self.bias
 
     def get_dilution(self) -> Optional[float]:
@@ -614,8 +616,8 @@ class TOM(Agent):
         Returns:
             Optional[float]: The dilution of the agent
         """
-        if self.get_dilution is None:
-            print("TOM does not have a dilution parameter.")
+        if self.dilution is None:
+            msg.warn("TOM does not have a dilution parameter.")
         return self.dilution
 
     def get_level(self) -> float:
@@ -937,7 +939,7 @@ class AgentGroup:
         result = []
         for pair in self.pairing:
             if verbose:
-                print(
+                msg.info(
                     f"Currently the pair, {pair}, is competing for {n_sim} \
                         simulations, each containg {n_rounds} rounds."
                 )
@@ -958,7 +960,7 @@ class AgentGroup:
             result.append(res)
 
         if verbose:
-            print("Simulation complete")
+            msg.good("Simulation complete")
 
         self.__df = ResultsDf(pd.concat(result))  # concatenate into one df
 
@@ -1335,7 +1337,7 @@ def compete(
 
         def __compete(sim):
             if verbose:
-                print(f"\tRunning simulation {sim+1} out of {n_sim}")
+                msg.info(f"\tRunning simulation {sim+1} out of {n_sim}")
 
             res = compete(
                 agent_0,

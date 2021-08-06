@@ -29,7 +29,8 @@ setuptools.setup(
                       "scipy >= 1.6.3", 
                       "matplotlib >= 3.4.2", 
                       "seaborn >= 0.11.1",
-                      "joblib >= 1.0.1"
+                      "joblib >= 1.0.1",
+                      "wasabi >= 0.8.2,<0.9.0",
                       ],
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
