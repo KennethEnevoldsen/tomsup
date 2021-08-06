@@ -73,4 +73,6 @@ def func_to_minimize(
     return np.linalg.norm(np.array(choices_agent) - np.array(p_choices))
 
 
-minimize(f, start, method="nelder-mead")
+minimize(func_to_minimize, 
+        starting_states, # how to figure these out
+         method="nelder-mead")
