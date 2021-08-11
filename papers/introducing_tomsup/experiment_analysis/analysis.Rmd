@@ -6,14 +6,18 @@ output: html_document
 ---
 
 ```{r}
-library(tidyverse)
-library(kableExtra)
-library(Hmisc)
-library(lmerTest)
+
+pacman::p_load(
+  tidyverse,
+  kableExtra,
+  Hmisc,
+  lmerTest,
+  here,
+  brms)
 
 options(dplyr.summarise.inform = FALSE)
 
-df = read_csv("CogSci19_MatchingPennies_TOM_data_updated.csv")
+df = read_csv(here("papers", "introducing_tomsup","experiment_analysis","CogSci19_MatchingPennies_TOM_data_updated.csv"))
 df$tom_level = factor(df$tom_level, order = TRUE, levels = c(0,1,2))
 df$Framing = factor(df$Framing, levels = c("SlotMachine", "Human"))
 
@@ -231,19 +235,127 @@ df %>%
 
 ```
 
-
+# Models
 ```{r}
-#Payoff
-model = lmer(player_payoff ~ tom_level * Framing * trial + (1|participant.code), df)
-summary(model)
+df <- df %>% mutate(
+  hit = ifelse(player_payoff=="1", 1, 0)
+)
 
-sum_model = df %>% 
-  group_by(tom_level, Framing, participant.code) %>% 
-  summarise(player_payoff=sum(player_payoff)) %>% 
-  lm(formula = player_payoff ~ tom_level * Framing)
-summary(sum_model)
+# Analysis of performance
+
+Performance_f0 <- bf(
+  hit ~ 0 + Framing:tom_level + (0 + Framing:tom_level | participant.code)
+)
+
+get_prior(Performance_f0, df, famly=bernoulli)
+
+Performance_p0 <- c(
+  prior(normal(0, 1), class = b),
+  prior(normal(0, 1), class = sd),
+  prior(lkj(3), class = cor)
+)
+
+Performance_m0_prior <- brm(
+  Performance_f0,
+  df,
+  family=bernoulli,
+  prior=Performance_p0,
+  sample_prior = "only",
+  control = list(
+    adapt_delta=0.99,
+    max_treedepth=20
+  ),
+  chains=2,
+  cores=2,
+  backend = "cmdstanr",
+  threads = threading(2)
+)
+
+rethinking::dens(posterior_epred(Performance_m0_prior))
+
+Performance_m0 <- brm(
+  Performance_f0,
+  df,
+  family=bernoulli,
+  prior=Performance_p0,
+  sample_prior = T,
+  control = list(
+    adapt_delta=0.99,
+    max_treedepth=20
+  ),
+  chains=2,
+  cores=2,
+  backend = "cmdstanr",
+  threads = threading(2)
+)
+
+rethinking::dens(posterior_epred(Performance_m0))
+plot(conditional_effects(Performance_m0))[[1]] + theme_classic()
+
+hypothesis(Performance_m0, "(inv_logit_scaled(FramingSlotMachine:tom_level0) + inv_logit_scaled(FramingSlotMachine:tom_level1) + inv_logit_scaled(FramingSlotMachine:tom_level2))/3 > (inv_logit_scaled(FramingHuman:tom_level0) + inv_logit_scaled(FramingHuman:tom_level1) + inv_logit_scaled(FramingHuman:tom_level2))/3")
+
+hypothesis(Performance_m0, c(
+  "inv_logit_scaled(FramingSlotMachine:tom_level2) - inv_logit_scaled(FramingSlotMachine:tom_level0) < 0", 
+  "inv_logit_scaled(FramingHuman:tom_level2) - inv_logit_scaled(FramingHuman:tom_level0) > 0",
+  "inv_logit_scaled(FramingSlotMachine:tom_level2) - inv_logit_scaled(FramingSlotMachine:tom_level0) < inv_logit_scaled(FramingHuman:tom_level2) - inv_logit_scaled(FramingHuman:tom_level0)"))
+
+Performance_f1 <- bf(
+  hit ~ 0 + Framing:tom_level + Framing:tom_level:trial + (0 + Framing:tom_level+ Framing:tom_level:trial | participant.code)
+)
+
+get_prior(Performance_f1, df, famly=bernoulli)
+
+Performance_p1 <- c(
+  prior(normal(0, 1), class = b),
+  prior(normal(0, 1), class = sd),
+  prior(lkj(3), class = cor)
+)
+
+Performance_m1_prior <- brm(
+  Performance_f1,
+  df,
+  family=bernoulli,
+  prior=Performance_p1,
+  sample_prior = "only",
+  control = list(
+    adapt_delta=0.99,
+    max_treedepth=20
+  ),
+  chains=2,
+  cores=2,
+  backend = "cmdstanr",
+  threads = threading(2)
+)
+
+rethinking::dens(posterior_epred(Performance_m1_prior))
+
+Performance_m1 <- brm(
+  Performance_f1,
+  df,
+  family=bernoulli,
+  prior=Performance_p1,
+  sample_prior = T,
+  control = list(
+    adapt_delta=0.99,
+    max_treedepth=20
+  ),
+  chains=2,
+  cores=2,
+  backend = "cmdstanr",
+  threads = threading(2)
+)
 
 
+conditional_effects(Performance_m1)
+
+hypothesis(Performance_m1, c(
+  "inv_logit_scaled(FramingSlotMachine:tom_level0 + FramingSlotMachine:tom_level0:trial)*100 - inv_logit_scaled(FramingSlotMachine:tom_level0) > 0",
+  "inv_logit_scaled(FramingSlotMachine:tom_level1 + FramingSlotMachine:tom_level1:trial)*100 - inv_logit_scaled(FramingSlotMachine:tom_level1) > 0",
+  "inv_logit_scaled(FramingSlotMachine:tom_level2 + FramingSlotMachine:tom_level2:trial)*100 - inv_logit_scaled(FramingSlotMachine:tom_level2) > 0",
+  "inv_logit_scaled(FramingHuman:tom_level0 + FramingHuman:tom_level0:trial)*100 - inv_logit_scaled(FramingHuman:tom_level0) > 0",
+  "inv_logit_scaled(FramingHuman:tom_level1 + FramingHuman:tom_level1:trial)*100 - inv_logit_scaled(FramingHuman:tom_level1) > 0",
+  "inv_logit_scaled(FramingHuman:tom_level2 + FramingHuman:tom_level2:trial)*100 - inv_logit_scaled(FramingHuman:tom_level2) > 0"
+))
 #p_k
 model = lmer(p_k_1 ~ Framing * trial + (1|participant.code), df)
 summary(model)
