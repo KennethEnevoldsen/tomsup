@@ -4,12 +4,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-4.1.2, furo 2021.08.11.beta42"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-4.1.2, furo 2021.08.17.beta43"/>
         <title>tomsup.agent - tomsup 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=197f00461d56902ea7ca048ec6e6ba026f62c97b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=910ac4ccc9d7c023151c34010d7b500fb9777a51" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=93475b62d1c3bc01323a0eefdc14a62d77b12690" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
     
     
 
@@ -229,6 +229,8 @@
     <span class="n">plot_op_states</span><span class="p">,</span>
     <span class="n">plot_heatmap</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">wasabi</span> <span class="k">import</span> <span class="n">msg</span>
 
 
 <span class="c1">###################</span>
@@ -749,7 +751,10 @@
             <span class="n">params</span><span class="p">[</span><span class="s2">"bias"</span><span class="p">]</span> <span class="o">=</span> <span class="n">bias</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">internal</span> <span class="o">=</span> <span class="n">init_k_tom</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">init_states</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">init_states</span> <span class="o">==</span> <span class="s2">"default"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">internal</span> <span class="o">=</span> <span class="n">init_k_tom</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">init_states</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">internal</span> <span class="o">=</span> <span class="n">init_states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -760,6 +765,7 @@
             <span class="s2">"b_temp"</span><span class="p">:</span> <span class="n">b_temp</span><span class="p">,</span>
             <span class="s2">"bias"</span><span class="p">:</span> <span class="n">bias</span><span class="p">,</span>
             <span class="s2">"dilution"</span><span class="p">:</span> <span class="n">dilution</span><span class="p">,</span>
+            <span class="s2">"init_states"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">}</span></div>
 
@@ -810,7 +816,7 @@
 <span class="sd">            Optional[float]: The bias of the agent</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"TOM does not have a bias."</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"TOM does not have a bias."</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span></div>
 
 <div class="viewcode-block" id="TOM.get_dilution"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.get_dilution">[docs]</a>    <span class="k">def</span> <span class="nf">get_dilution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
@@ -818,8 +824,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Optional[float]: The dilution of the agent</span>
 <span class="sd">        """</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dilution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"TOM does not have a dilution parameter."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dilution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"TOM does not have a dilution parameter."</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dilution</span></div>
 
 <div class="viewcode-block" id="TOM.get_level"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.get_level">[docs]</a>    <span class="k">def</span> <span class="nf">get_level</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -841,7 +847,8 @@
 <span class="sd">        Args:</span>
 <span class="sd">            internal_states (dict): The desired internal states of the agent.</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">internal</span> <span class="o">=</span> <span class="n">internal_states</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">internal</span> <span class="o">=</span> <span class="n">internal_states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span><span class="p">[</span><span class="s2">"init_states"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal</span></div>
 
 <div class="viewcode-block" id="TOM.get_parameters"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.get_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">"""</span>
@@ -1141,7 +1148,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairing</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="n">f</span><span class="s2">"Currently the pair, </span><span class="si">{pair}</span><span class="s2">, is competing for </span><span class="si">{n_sim}</span><span class="s2"> </span><span class="se">\</span>
 <span class="s2">                        simulations, each containg </span><span class="si">{n_rounds}</span><span class="s2"> rounds."</span>
                 <span class="p">)</span>
@@ -1162,7 +1169,7 @@
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"Simulation complete"</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">good</span><span class="p">(</span><span class="s2">"Simulation complete"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__df</span> <span class="o">=</span> <span class="n">ResultsDf</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>  <span class="c1"># concatenate into one df</span>
 
@@ -1539,7 +1546,7 @@
 
         <span class="k">def</span> <span class="nf">__compete</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">Running simulation {sim+1} out of </span><span class="si">{n_sim}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">Running simulation {sim+1} out of </span><span class="si">{n_sim}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="n">res</span> <span class="o">=</span> <span class="n">compete</span><span class="p">(</span>
                 <span class="n">agent_0</span><span class="p">,</span>
