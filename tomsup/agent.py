@@ -547,7 +547,10 @@ class TOM(Agent):
             params["bias"] = bias
 
         self.params = params
-        self.internal = init_k_tom(params, level, priors=init_states)
+        if init_states == "default":
+            self.internal = init_k_tom(params, level, priors=init_states)
+        else:
+            self.internal = init_states
         self.__kwargs = kwargs
 
         super().__init__(**kwargs)
@@ -558,6 +561,7 @@ class TOM(Agent):
             "b_temp": b_temp,
             "bias": bias,
             "dilution": dilution,
+            "init_states": self.internal,
             **kwargs,
         }
 
@@ -640,6 +644,7 @@ class TOM(Agent):
             internal_states (dict): The desired internal states of the agent.
         """
         self.internal = internal_states
+        self._start_params["init_states"] = self.internal
 
     def get_parameters(self) -> dict:
         """
