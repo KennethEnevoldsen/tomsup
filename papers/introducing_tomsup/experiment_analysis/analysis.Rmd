@@ -1,0 +1,376 @@
+---
+title: "analysis.R"
+author: "K. Enevoldsen"
+date: "5/3/2021"
+output: html_document
+---
+
+```{r}
+
+pacman::p_load(
+  tidyverse,
+  kableExtra,
+  Hmisc,
+  lmerTest,
+  here,
+  brms)
+
+options(dplyr.summarise.inform = FALSE)
+
+df = read_csv(here("papers", "introducing_tomsup","experiment_analysis","CogSci19_MatchingPennies_TOM_data_updated.csv"))
+df$tom_level = factor(df$tom_level, order = TRUE, levels = c(0,1,2))
+df$Framing = factor(df$Framing, levels = c("SlotMachine", "Human"))
+
+```
+
+```{r}
+#Make functions for getting out information from the tom_state
+
+get_pk_0 <- function(tom_state){
+  #Parse string
+  out = str_match_all(tom_state, "'p_k': array\\(\\[(.*?)\\]")
+  #Check if PK applicable
+  if (dim(out[[1]])[1] == 2){
+    #Extract information  
+    info <- as.numeric(str_split(out[[1]][dim(out[[1]])[1],dim(out[[1]])[2]], ", ", simplify = TRUE))
+    return(info[1])
+  } else {
+    return(NA)
+  }
+}
+
+get_pk_1 <- function(tom_state){
+  #Parse string
+  out = str_match_all(tom_state, "'p_k': array\\(\\[(.*?)\\]")
+  #Check if PK applicable
+  if (dim(out[[1]])[1] == 2){
+    #Extract information  
+    info <- as.numeric(str_split(out[[1]][dim(out[[1]])[1],dim(out[[1]])[2]], ", ", simplify = TRUE))
+    return(info[2])
+  } else {
+    return(NA)
+  }
+}
+
+
+get_observer_pk <- function(tom_state){
+  #Parse string
+  out = str_match_all(tom_state, "'p_k': array\\(\\[(.*?)\\]")
+  #Extract information  
+  info <- as.numeric(str_split(out[[1]][dim(out[[1]])[1],dim(out[[1]])[2]], ", ", simplify = TRUE))
+  
+  return(info)
+}
+
+get_observer_pk0 <- function(tom_state){
+  return(get_observer_pk(tom_state)[1])
+}
+get_observer_pk1 <- function(tom_state){
+  return(get_observer_pk(tom_state)[2])
+}
+get_observer_pk2 <- function(tom_state){
+  return(get_observer_pk(tom_state)[3])
+}
+get_observer_pk3 <- function(tom_state){
+  return(get_observer_pk(tom_state)[4])
+}
+get_observer_pk4 <- function(tom_state){
+  return(get_observer_pk(tom_state)[5])
+}
+
+#Apply the functions on every row
+df = df %>% mutate(p_k_1 = purrr::pmap_dbl(list(tom_state), get_pk_1), 
+                   observer_pk0 = purrr::pmap_dbl(list(observer_tom_state), get_observer_pk0),
+                   observer_pk1 = purrr::pmap_dbl(list(observer_tom_state), get_observer_pk1),
+                   observer_pk2 = purrr::pmap_dbl(list(observer_tom_state), get_observer_pk2),
+                   observer_pk3 = purrr::pmap_dbl(list(observer_tom_state), get_observer_pk3),
+                   observer_pk4 = purrr::pmap_dbl(list(observer_tom_state), get_observer_pk4))
+
+```
+
+
+```{r}
+
+#Make labels for use in the plotting
+labs <- c('Opponent level 0', 'Opponent level 1', 'Opponent level 2')
+names(labs) <- c(0,1,2)
+
+labs_framing <- c('Slot machine', 'Human')
+names(labs_framing) <- c("SlotMachine","Human")
+
+#Barplot: payoff
+df %>%
+  group_by(Framing, tom_level) %>%
+  summarise(mean.player_payoff = mean(player_payoff, na.rm = TRUE),
+            sd.player_payoff = sd(player_payoff, na.rm = TRUE),
+            n.player_payoff = n()) %>%
+  mutate(se.player_payoff = sd.player_payoff / sqrt(n.player_payoff),
+         lower.ci.player_payoff = mean.player_payoff - qt(1 - (0.05 / 2), n.player_payoff - 1) * se.player_payoff,
+         upper.ci.player_payoff = mean.player_payoff + qt(1 - (0.05 / 2), n.player_payoff - 1) * se.player_payoff) %>% 
+  ggplot(aes(y=mean.player_payoff, x=Framing, fill=Framing)) + 
+        geom_bar(position="dodge", stat = "identity") + 
+        #Change this to make different errorbars
+        geom_errorbar(aes(ymin = lower.ci.player_payoff, ymax = upper.ci.player_payoff),
+                      position='dodge', width = 0.5) + 
+        labs(y = 'Player payoff', x = 'Framing') +
+        facet_wrap(~tom_level, labeller = labeller(tom_level = labs)) + 
+        scale_fill_manual(values=c("red", "blue"), labels = c('Slot machine', 'Human'), guide='none') +
+        scale_x_discrete(breaks=c('SlotMachine', 'Human'), labels=c("Slot machine", "Human")) + 
+        theme_minimal() +
+        theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Lineplot: payoff over trials
+df %>% 
+  group_by(Framing, tom_level, participant.code) %>% 
+  arrange(trial) %>% 
+  mutate(cs_player_payoff = cumsum(player_payoff), trial=trial-min(trial) + 1) %>%
+  group_by(Framing, tom_level, trial) %>%
+  summarise(mean.player_payoff = mean(cs_player_payoff, na.rm = TRUE),
+            sd.player_payoff = sd(cs_player_payoff, na.rm = TRUE),
+            n.player_payoff = n()) %>%
+  mutate(se.player_payoff = sd.player_payoff / sqrt(n.player_payoff),
+         lower.ci.player_payoff = mean.player_payoff - qt(1 - (0.05 / 2), n.player_payoff - 1) * se.player_payoff,
+         upper.ci.player_payoff = mean.player_payoff + qt(1 - (0.05 / 2), n.player_payoff - 1) * se.player_payoff) %>% 
+  ggplot(aes(x=trial, y =mean.player_payoff, fill= Framing, color = Framing)) +
+        geom_hline(yintercept=0, linetype = 'dashed') +
+        geom_line(stat = 'identity') + 
+        #Change this to make different uncertainty shading
+        geom_ribbon(aes(ymin = lower.ci.player_payoff, ymax = upper.ci.player_payoff), alpha = 0.15, color = NA) +
+        facet_wrap(~tom_level, labeller = labeller(tom_level = labs)) +
+        scale_fill_manual(values=c("red", "blue"), labels = c('Slot machine', 'Human')) +
+        scale_color_hue(labels = c('Slot machine', 'Human')) +
+        labs(y = 'Cumulative player payoff', x = 'Trial') +
+        theme_minimal() + 
+        theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#Lineplot: p_k
+df %>% 
+  group_by(Framing, tom_level, participant.code) %>% 
+  arrange(trial) %>% 
+  mutate(trial=trial-min(trial) + 1) %>%
+  group_by(Framing, trial) %>%
+  summarise(mean.p_k_1 = mean(p_k_1, na.rm = TRUE),
+            sd.p_k_1 = sd(p_k_1, na.rm = TRUE),
+            n.p_k_1 = n()) %>%
+  mutate(se.p_k_1 = sd.p_k_1 / sqrt(n.p_k_1),
+         lower.ci.p_k_1 = mean.p_k_1 - qt(1 - (0.05 / 2), n.p_k_1 - 1) * se.p_k_1,
+         upper.ci.p_k_1 = mean.p_k_1 + qt(1 - (0.05 / 2), n.p_k_1 - 1) * se.p_k_1) %>% 
+  ggplot(aes(x=trial, y =mean.p_k_1, fill= Framing, color = Framing)) +
+        geom_hline(yintercept=0.5, linetype = 'dashed') +
+        geom_line(stat = 'identity') + 
+        #Change this to make different uncertainty shading
+        geom_ribbon(aes(ymin = lower.ci.p_k_1, ymax = upper.ci.p_k_1), alpha = 0.15, color = NA) +
+        scale_fill_manual(values=c("red", "blue"), labels = c('Slot machine', 'Human')) +
+        scale_color_hue(labels = c('Slot machine', 'Human')) +
+        labs(y = 'Probability of human player being level 1', x = 'Trial') +
+        theme_minimal() + 
+        theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+
+df %>% 
+  group_by(Framing, tom_level, participant.code) %>% 
+  arrange(trial) %>% 
+  mutate(trial=trial-min(trial) + 1) %>%
+  group_by(Framing, tom_level, trial) %>%
+  summarise(mean.observer_pk0 = mean(observer_pk0, na.rm = TRUE),
+            sd.observer_pk0 = sd(observer_pk0, na.rm = TRUE),
+            n.observer_pk0 = n(),
+            mean.observer_pk1 = mean(observer_pk1, na.rm = TRUE),
+            sd.observer_pk1 = sd(observer_pk1, na.rm = TRUE),
+            n.observer_pk1 = n(),
+            mean.observer_pk2 = mean(observer_pk2, na.rm = TRUE),
+            sd.observer_pk2 = sd(observer_pk2, na.rm = TRUE),
+            n.observer_pk2 = n(),
+            mean.observer_pk3 = mean(observer_pk3, na.rm = TRUE),
+            sd.observer_pk3 = sd(observer_pk3, na.rm = TRUE),
+            n.observer_pk3 = n(),
+            mean.observer_pk4 = mean(observer_pk4, na.rm = TRUE),
+            sd.observer_pk4 = sd(observer_pk4, na.rm = TRUE),
+            n.observer_pk4 = n()) %>%
+  mutate(se.observer_pk0 = sd.observer_pk0 / sqrt(n.observer_pk0),
+         lower.ci.observer_pk0 = mean.observer_pk0 - qt(1 - (0.05 / 2), n.observer_pk0 - 1) * se.observer_pk0,
+         upper.ci.observer_pk0 = mean.observer_pk0 + qt(1 - (0.05 / 2), n.observer_pk0 - 1) * se.observer_pk0,
+         se.observer_pk1 = sd.observer_pk1 / sqrt(n.observer_pk1),
+         lower.ci.observer_pk1 = mean.observer_pk1 - qt(1 - (0.05 / 2), n.observer_pk1 - 1) * se.observer_pk1,
+         upper.ci.observer_pk1 = mean.observer_pk1 + qt(1 - (0.05 / 2), n.observer_pk1 - 1) * se.observer_pk1,
+         se.observer_pk2 = sd.observer_pk2 / sqrt(n.observer_pk2),
+         lower.ci.observer_pk2 = mean.observer_pk2 - qt(1 - (0.05 / 2), n.observer_pk2 - 1) * se.observer_pk2,
+         upper.ci.observer_pk2 = mean.observer_pk2 + qt(1 - (0.05 / 2), n.observer_pk2 - 1) * se.observer_pk2,
+         se.observer_pk3 = sd.observer_pk3 / sqrt(n.observer_pk3),
+         lower.ci.observer_pk3 = mean.observer_pk3 - qt(1 - (0.05 / 2), n.observer_pk3 - 1) * se.observer_pk3,
+         upper.ci.observer_pk3 = mean.observer_pk3 + qt(1 - (0.05 / 2), n.observer_pk3 - 1) * se.observer_pk3,
+         se.observer_pk4 = sd.observer_pk4 / sqrt(n.observer_pk4),
+         lower.ci.observer_pk4 = mean.observer_pk4 - qt(1 - (0.05 / 2), n.observer_pk4 - 1) * se.observer_pk4,
+         upper.ci.observer_pk4 = mean.observer_pk4 + qt(1 - (0.05 / 2), n.observer_pk4 - 1) * se.observer_pk4) %>% 
+  ggplot(aes(x=trial)) +
+        geom_hline(yintercept=0.33, linetype = 'dashed') +
+        
+        geom_line(aes(y = mean.observer_pk0, color = 'pk0'), stat = 'identity') + 
+        geom_line(aes(y = mean.observer_pk1, color = 'pk1'), stat = 'identity') + 
+        geom_line(aes(y = mean.observer_pk2, color = 'pk2'), stat = 'identity') + 
+        #geom_line(aes(y = mean.observer_pk3, color = 'pk3'), stat = 'identity') + 
+        #geom_line(aes(y = mean.observer_pk4, color = 'pk4'), stat = 'identity') + 
+        
+        #Change this to make different uncertainty shading
+        geom_ribbon(aes(ymin = lower.ci.observer_pk0, ymax = upper.ci.observer_pk0, fill = 'pk0'),
+                    alpha = 0.15, color = NA) +
+        geom_ribbon(aes(ymin = lower.ci.observer_pk1, ymax = upper.ci.observer_pk1, fill = 'pk1'),
+                    alpha = 0.15, color = NA) +
+        geom_ribbon(aes(ymin = lower.ci.observer_pk2, ymax = upper.ci.observer_pk2, fill = 'pk2'),
+                    alpha = 0.15, color = NA) +
+        #geom_ribbon(aes(ymin = lower.ci.observer_pk3, ymax = upper.ci.observer_pk3, fill = 'pk3'),
+        #            alpha = 0.15, color = NA) +
+        #geom_ribbon(aes(ymin = lower.ci.observer_pk4, ymax = upper.ci.observer_pk4, fill = 'pk4'),
+        #            alpha = 0.15, color = NA) +
+  
+        facet_grid(vars(Framing), vars(tom_level), labeller = labeller(tom_level = labs, Framing = labs_framing)) +
+        scale_fill_manual(values=c('purple', 'orange', 'green', 'red', 'blue'),
+                          labels = c('Level 0', 'Level 1', 'Level 2', 'Level 3', 'Level 4'), guide = 'none') +
+        scale_colour_manual(values=c('purple', 'orange', 'green', 'red', 'blue'),
+                          labels = c('Level 0', 'Level 1', 'Level 2', 'Level 3', 'Level 4'), name = "Estimated level") +
+        labs(y = 'Probability of opponent level', x = 'Trial') +
+        theme_minimal() + 
+        theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
+
+
+```
+
+# Models
+```{r}
+df <- df %>% mutate(
+  hit = ifelse(player_payoff=="1", 1, 0)
+)
+
+# Analysis of performance
+
+Performance_f0 <- bf(
+  hit ~ 0 + Framing:tom_level + (0 + Framing:tom_level | participant.code)
+)
+
+get_prior(Performance_f0, df, famly=bernoulli)
+
+Performance_p0 <- c(
+  prior(normal(0, 1), class = b),
+  prior(normal(0, 1), class = sd),
+  prior(lkj(3), class = cor)
+)
+
+Performance_m0_prior <- brm(
+  Performance_f0,
+  df,
+  family=bernoulli,
+  prior=Performance_p0,
+  sample_prior = "only",
+  control = list(
+    adapt_delta=0.99,
+    max_treedepth=20
+  ),
+  chains=2,
+  cores=2,
+  backend = "cmdstanr",
+  threads = threading(2)
+)
+
+rethinking::dens(posterior_epred(Performance_m0_prior))
+
+Performance_m0 <- brm(
+  Performance_f0,
+  df,
+  family=bernoulli,
+  prior=Performance_p0,
+  sample_prior = T,
+  control = list(
+    adapt_delta=0.99,
+    max_treedepth=20
+  ),
+  chains=2,
+  cores=2,
+  backend = "cmdstanr",
+  threads = threading(2)
+)
+
+rethinking::dens(posterior_epred(Performance_m0))
+plot(conditional_effects(Performance_m0))[[1]] + theme_classic()
+
+hypothesis(Performance_m0, "(inv_logit_scaled(FramingSlotMachine:tom_level0) + inv_logit_scaled(FramingSlotMachine:tom_level1) + inv_logit_scaled(FramingSlotMachine:tom_level2))/3 > (inv_logit_scaled(FramingHuman:tom_level0) + inv_logit_scaled(FramingHuman:tom_level1) + inv_logit_scaled(FramingHuman:tom_level2))/3")
+
+hypothesis(Performance_m0, c(
+  "inv_logit_scaled(FramingSlotMachine:tom_level2) - inv_logit_scaled(FramingSlotMachine:tom_level0) < 0", 
+  "inv_logit_scaled(FramingHuman:tom_level2) - inv_logit_scaled(FramingHuman:tom_level0) > 0",
+  "inv_logit_scaled(FramingSlotMachine:tom_level2) - inv_logit_scaled(FramingSlotMachine:tom_level0) < inv_logit_scaled(FramingHuman:tom_level2) - inv_logit_scaled(FramingHuman:tom_level0)"))
+
+Performance_f1 <- bf(
+  hit ~ 0 + Framing:tom_level + Framing:tom_level:trial + (0 + Framing:tom_level+ Framing:tom_level:trial | participant.code)
+)
+
+get_prior(Performance_f1, df, famly=bernoulli)
+
+Performance_p1 <- c(
+  prior(normal(0, 1), class = b),
+  prior(normal(0, 1), class = sd),
+  prior(lkj(3), class = cor)
+)
+
+Performance_m1_prior <- brm(
+  Performance_f1,
+  df,
+  family=bernoulli,
+  prior=Performance_p1,
+  sample_prior = "only",
+  control = list(
+    adapt_delta=0.99,
+    max_treedepth=20
+  ),
+  chains=2,
+  cores=2,
+  backend = "cmdstanr",
+  threads = threading(2)
+)
+
+rethinking::dens(posterior_epred(Performance_m1_prior))
+
+Performance_m1 <- brm(
+  Performance_f1,
+  df,
+  family=bernoulli,
+  prior=Performance_p1,
+  sample_prior = T,
+  control = list(
+    adapt_delta=0.99,
+    max_treedepth=20
+  ),
+  chains=2,
+  cores=2,
+  backend = "cmdstanr",
+  threads = threading(2)
+)
+
+
+conditional_effects(Performance_m1)
+
+hypothesis(Performance_m1, c(
+  "inv_logit_scaled(FramingSlotMachine:tom_level0 + FramingSlotMachine:tom_level0:trial)*100 - inv_logit_scaled(FramingSlotMachine:tom_level0) > 0",
+  "inv_logit_scaled(FramingSlotMachine:tom_level1 + FramingSlotMachine:tom_level1:trial)*100 - inv_logit_scaled(FramingSlotMachine:tom_level1) > 0",
+  "inv_logit_scaled(FramingSlotMachine:tom_level2 + FramingSlotMachine:tom_level2:trial)*100 - inv_logit_scaled(FramingSlotMachine:tom_level2) > 0",
+  "inv_logit_scaled(FramingHuman:tom_level0 + FramingHuman:tom_level0:trial)*100 - inv_logit_scaled(FramingHuman:tom_level0) > 0",
+  "inv_logit_scaled(FramingHuman:tom_level1 + FramingHuman:tom_level1:trial)*100 - inv_logit_scaled(FramingHuman:tom_level1) > 0",
+  "inv_logit_scaled(FramingHuman:tom_level2 + FramingHuman:tom_level2:trial)*100 - inv_logit_scaled(FramingHuman:tom_level2) > 0"
+))
+#p_k
+model = lmer(p_k_1 ~ Framing * trial + (1|participant.code), df)
+summary(model)
+
+sum_model = df %>% 
+  group_by(Framing, participant.code) %>% 
+  summarise(p_k_1=sum(p_k_1, na.rm = TRUE)) %>% 
+  lm(formula = p_k_1 ~ Framing)
+summary(sum_model)
+
+```
+
+
+
+
+
+
+
