@@ -14,7 +14,7 @@ import tomsup as ts
 ### Run the tournament
 n_rounds = 100
 
-k = [0, 1]
+k = [0, 1, 2]
 vol_r = np.arange(-3, -1, 0.2)
 bias_r = np.arange(-1, 1, 0.2)
 b_temp_r = np.arange(-1.5, -0.5, 0.2)
@@ -33,106 +33,48 @@ def make_grid(k, vol, bias, b_temp):
 
 agents, args = make_grid(k, vol_r, bias_r, b_temp_r)
 
-init_states = ts.TOM(level=2).get_internal_states()
-
-agents.append("2-tom")
-args.append({"init_states": init_states})
-
-
+a = "3-tom"
+agents.append(a)
+args.append({})
 
 # generating some sample data
 group = ts.create_agents(agents, args)
 penny = ts.PayoffMatrix("penny_competitive")
 group.set_env("round_robin")
 
-
-
 # remove non-2tom pairs
-group.pairing = [pair for pair in group.pairing if "2-tom" in pair[0] or "2-tom" in pair[1]]
-
+group.pairing = [pair for pair in group.pairing if a in pair[0] or a in pair[1]]
 
 results = group.compete(
     p_matrix=penny, n_rounds=n_rounds, save_history=True, n_jobs=-1
 )
 
-### Check how well k-ToM recovers
+### Extract 3-toms recoved parameters
+assert results.agent1.unique()[0] == "3-tom"
 
-last = results
-assert last.agent1.unique()[0] 
-
-last["estimated_prob_k"] = None
-last["estimated_volatility"] = None
-last["estimated_b_temp"] = None
-last["estimated_bias"] = None
-last["k"] = None
-last["volatility"] = None
-last["bias"] = None
-last["b_temp"] = None
+results["estimated_prob_k"] = None
+results["estimated_volatility"] = None
+results["estimated_b_temp"] = None
+results["estimated_bias"] = None
+results["k"] = None
+results["volatility"] = None
+results["bias"] = None
+results["b_temp"] = None
 
 
-assert last.agent1.unique()[0] == "2-tom"
+assert results.agent1.unique()[0] == a
 
-for i, row in enumerate(last.iterrows()):
+for i, row in enumerate(results.iterrows()):
     agent = group.get_agent(row[1].agent0)
-    last["k"].iloc[i] = agent.level
-    last["volatility"].iloc[i] = agent.volatility
-    last["bias"].iloc[i] = agent.bias
-    last["b_temp"].iloc[i] = agent.b_temp
+    results["k"].iloc[i] = agent.level
+    results["volatility"].iloc[i] = agent.volatility
+    results["bias"].iloc[i] = agent.bias
+    results["b_temp"].iloc[i] = agent.b_temp
     
-    last["estimated_prob_k"].iloc[i] = last.history_agent1.tolist()[i]["internal_states"]["own_states"]["p_k"][agent.level]
-    last["estimated_volatility"].iloc[i] = last.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][0]
-    last["estimated_b_temp"].iloc[i] = last.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][1]
-    last["estimated_bias"].iloc[i] = last.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][-1]
+    results["estimated_prob_k"].iloc[i] = results.history_agent1.tolist()[i]["internal_states"]["own_states"]["p_k"][agent.level]
+    results["estimated_volatility"].iloc[i] = results.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][0]
+    results["estimated_b_temp"].iloc[i] = results.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][1]
+    results["estimated_bias"].iloc[i] = results.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][-1]
    
-last = last.drop(["history_agent0", "history_agent1"], axis=1)
-last.to_csv("parameters_estimation_100.csv")
-
-
-### Estimation og p_k using a 3-ToM
-
-"""
-This script seeks to estimate the quality of parameter estimation of the recursive ToM
-"""
-
-# generating some sample data
-group = ts.create_agents(["0-ToM", "1-ToM", "2-ToM", "3-tom"])
-penny = ts.PayoffMatrix("penny_competitive")
-group.set_env("round_robin")
-
-# remove non-2tom pairs
-group.pairing = [pair for pair in group.pairing if "3-tom" in pair[0] or "3-tom" in pair[1]]
-
-results = group.compete(
-    p_matrix=penny, n_rounds=n_rounds, save_history=True, n_jobs=-1, n_sim=12
-)
-
-### Check how well k-ToM recovers
-
-last = results
-assert last.agent1.unique()[0] 
-
-last["estimated_prob_k"] = None
-last["estimated_volatility"] = None
-last["estimated_b_temp"] = None
-last["estimated_bias"] = None
-last["k"] = None
-last["volatility"] = None
-last["bias"] = None
-last["b_temp"] = None
-
-assert last.agent1.unique()[0] == "3-tom"
-
-for i, row in enumerate(last.iterrows()):
-    agent = group.get_agent(row[1].agent0)
-    last["k"].iloc[i] = agent.level
-    last["volatility"].iloc[i] = agent.volatility
-    last["bias"].iloc[i] = agent.bias
-    last["b_temp"].iloc[i] = agent.b_temp
-    
-    last["estimated_prob_k"].iloc[i] = last.history_agent1.tolist()[i]["internal_states"]["own_states"]["p_k"][agent.level]
-    last["estimated_volatility"].iloc[i] = last.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][0]
-    last["estimated_b_temp"].iloc[i] = last.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][1]
-    last["estimated_bias"].iloc[i] = last.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][-1]
-   
-last = last.drop(["history_agent0", "history_agent1"], axis=1)
-last.to_csv("parameters_estimation_pk.csv")
+results = results.drop(["history_agent0", "history_agent1"], axis=1)
+results.to_csv("parameters_estimation_3-tom.csv")
