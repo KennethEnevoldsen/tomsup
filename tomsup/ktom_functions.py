@@ -134,7 +134,7 @@ def p_k_udpate(
 
     # Force probability sum to 1
     if len(new_p_k) > 1:
-        new_p_k[0] = 1 - sum(new_p_k[1 : len(new_p_k)])
+        new_p_k[-1] = 1 - sum(new_p_k[:-1])
 
     return new_p_k
 
