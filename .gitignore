@@ -119,3 +119,4 @@ simulations/results/*
 .Rhistory
 *.Rproj
 
+parameters_estimation_3-tom.csv
