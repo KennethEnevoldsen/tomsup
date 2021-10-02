@@ -121,3 +121,4 @@ simulations/results/*
 
 parameters_estimation_3-tom.csv
 *.icloud
+*.dcf
