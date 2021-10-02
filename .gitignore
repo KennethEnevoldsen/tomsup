@@ -120,3 +120,4 @@ simulations/results/*
 *.Rproj
 
 parameters_estimation_3-tom.csv
+*.icloud
