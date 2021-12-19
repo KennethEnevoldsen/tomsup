@@ -4,12 +4,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-4.2.0, furo 2021.09.22"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-4.3.2, furo 2021.11.23"/>
         <title>tomsup.agent - tomsup 1.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=150e365fa939648e89c22f6d7d13c72a1657915a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=7f0192ddeb2adecfbaa87ffbcf67d16358b30bc1" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=0af69da206d614734f649b27d4cdc2dd6c31f41d" />
     
     
 
@@ -208,20 +208,20 @@
 <span></span><span class="sd">"""</span>
 <span class="sd">docstring</span>
 <span class="sd">"""</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
 <span class="kn">import</span> <span class="nn">random</span>
 
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">tomsup.ktom_functions</span> <span class="k">import</span> <span class="n">k_tom</span><span class="p">,</span> <span class="n">init_k_tom</span><span class="p">,</span> <span class="n">inv_logit</span>
-<span class="kn">from</span> <span class="nn">tomsup.payoffmatrix</span> <span class="k">import</span> <span class="n">PayoffMatrix</span>
-<span class="kn">from</span> <span class="nn">tomsup.plot</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">tomsup.ktom_functions</span> <span class="kn">import</span> <span class="n">k_tom</span><span class="p">,</span> <span class="n">init_k_tom</span><span class="p">,</span> <span class="n">inv_logit</span>
+<span class="kn">from</span> <span class="nn">tomsup.payoffmatrix</span> <span class="kn">import</span> <span class="n">PayoffMatrix</span>
+<span class="kn">from</span> <span class="nn">tomsup.plot</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">choice</span><span class="p">,</span>
     <span class="n">score</span><span class="p">,</span>
     <span class="n">ResultsDf</span><span class="p">,</span>
@@ -233,7 +233,7 @@
     <span class="n">plot_heatmap</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">wasabi</span> <span class="k">import</span> <span class="n">msg</span>
+<span class="kn">from</span> <span class="nn">wasabi</span> <span class="kn">import</span> <span class="n">msg</span>
 
 
 <span class="c1">###################</span>
@@ -246,7 +246,7 @@
 <span class="sd">    Agent is super (parent) class for creating agents in tomsup.</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="Agent.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="Agent.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_history</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
         <span class="sd">"""</span>
@@ -410,7 +410,7 @@
 <span class="sd">        [1, 1]</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="RB.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.RB.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
+<div class="viewcode-block" id="RB.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.RB.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            bias (float, optional): The probability of the agent to choose 1. Defaults to 0.5.</span>
@@ -454,7 +454,7 @@
 <span class="sd">        0</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="WSLS.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.WSLS.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prob_stay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">prob_switch</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
+<div class="viewcode-block" id="WSLS.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.WSLS.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prob_stay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">prob_switch</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            prob_stay (float, optional): he probability to stay if the agent wins. Defaults to 1.</span>
@@ -526,7 +526,7 @@
 <span class="sd">        0</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="TFT.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TFT.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
+<div class="viewcode-block" id="TFT.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TFT.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            copy_prob (float, optional): the probability that the TFT copies the behaviour</span>
@@ -588,7 +588,7 @@
 <span class="sd">    'QL': The Q-learning model by Watkinns (1992)</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="QL.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.QL.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="QL.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.QL.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
         <span class="n">b_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
@@ -686,7 +686,7 @@
 <span class="sd">    about itself.</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="TOM.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="TOM.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">volatility</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>
@@ -1009,7 +1009,7 @@
 <span class="sd">        True</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="AgentGroup.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">start_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AgentGroup.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">start_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            agents (List[str]): A list of agents</span>
@@ -1105,7 +1105,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">pairing</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">L</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">],</span> <span class="n">L</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="p">:]))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="n">f</span><span class="s2">"</span><span class="si">{env}</span><span class="s2"> is not a valid environment. Use help() to </span><span class="se">\</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">env</span><span class="si">}</span><span class="s2"> is not a valid environment. Use help() to </span><span class="se">\</span>
 <span class="s2">                             see valid environments"</span>
             <span class="p">)</span></div>
 
@@ -1152,8 +1152,8 @@
         <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairing</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="n">f</span><span class="s2">"Currently the pair, </span><span class="si">{pair}</span><span class="s2">, is competing for </span><span class="si">{n_sim}</span><span class="s2"> </span><span class="se">\</span>
-<span class="s2">                        simulations, each containg </span><span class="si">{n_rounds}</span><span class="s2"> rounds."</span>
+                    <span class="sa">f</span><span class="s2">"Currently the pair, </span><span class="si">{</span><span class="n">pair</span><span class="si">}</span><span class="s2">, is competing for </span><span class="si">{</span><span class="n">n_sim</span><span class="si">}</span><span class="s2"> </span><span class="se">\</span>
+<span class="s2">                        simulations, each containg </span><span class="si">{</span><span class="n">n_rounds</span><span class="si">}</span><span class="s2"> rounds."</span>
                 <span class="p">)</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">compete</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_agents</span><span class="p">[</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
@@ -1395,7 +1395,7 @@
             <span class="s2">"dilution"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Dilution"</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">estimate</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d_e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">"Invalid estimate: </span><span class="si">{estimate}</span><span class="s2">."</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid estimate: </span><span class="si">{</span><span class="n">estimate</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
         <span class="n">ylab</span><span class="p">,</span> <span class="n">loc</span> <span class="o">=</span> <span class="n">d_e</span><span class="p">[</span><span class="n">estimate</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">plot</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"mean"</span><span class="p">,</span> <span class="s2">"var"</span><span class="p">}:</span>
@@ -1437,9 +1437,9 @@
                 <span class="k">return</span> <span class="n">x</span>
 
         <span class="k">if</span> <span class="n">transformation</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="n">ylab</span> <span class="o">=</span> <span class="n">f</span><span class="s2">"</span><span class="si">{ylab}</span><span class="s2"> (</span><span class="si">{p_str}</span><span class="s2">)"</span>
+            <span class="n">ylab</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ylab</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">p_str</span><span class="si">}</span><span class="s2">)"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ylab</span> <span class="o">=</span> <span class="n">f</span><span class="s2">"</span><span class="si">{t_str}</span><span class="s2">(</span><span class="si">{p_str}</span><span class="s2"> - </span><span class="si">{ylab}</span><span class="s2">)"</span>
+            <span class="n">ylab</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">t_str</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">p_str</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">ylab</span><span class="si">}</span><span class="s2">)"</span>
 
         <span class="n">plot_history</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__df</span><span class="p">,</span>
@@ -1460,12 +1460,12 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">TOM</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">agent</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="n">f</span><span class="s2">"The function called requires desired agent to be a ToM agent</span><span class="se">\</span>
-<span class="s2">            but the specified agent (</span><span class="si">{a}</span><span class="s2">) is a agent of type {type(agent)}"</span>
+            <span class="sa">f</span><span class="s2">"The function called requires desired agent to be a ToM agent</span><span class="se">\</span>
+<span class="s2">            but the specified agent (</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">) is a agent of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">header</span> <span class="o">=</span> <span class="n">f</span><span class="s2">"&lt;Class AgentGroup, envinment = </span><span class="si">{self.environment}</span><span class="s2">&gt; </span><span class="se">\n\n</span><span class="s2">"</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"&lt;Class AgentGroup, envinment = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2">&gt; </span><span class="se">\n\n</span><span class="s2">"</span>
         <span class="n">info</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="p">(</span><span class="s2">"</span><span class="se">\t</span><span class="s2"> | </span><span class="se">\t</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">i</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_params</span><span class="p">))</span>
@@ -1549,7 +1549,7 @@
 
         <span class="k">def</span> <span class="nf">__compete</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">Running simulation {sim+1} out of </span><span class="si">{n_sim}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">Running simulation </span><span class="si">{</span><span class="n">sim</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">n_sim</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="n">res</span> <span class="o">=</span> <span class="n">compete</span><span class="p">(</span>
                 <span class="n">agent_0</span><span class="p">,</span>
@@ -1666,10 +1666,8 @@
 
         <div class="related-information">
               Copyright &#169;  |
-            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
-              and
-              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
         </div>
         
       </footer>
@@ -1684,7 +1682,7 @@
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/scripts/main.js"></script>
+    <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
     </body>
