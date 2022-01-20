@@ -987,6 +987,7 @@ class AgentGroup:
         na_color: str = "xkcd:white",
         xlab: str = "Agent",
         ylab: str = "Opponent",
+        cbarlabel: str = "Average score of the agent",
         show: bool = True,
     ) -> None:
         """plot a heatmap of the results.
@@ -1012,6 +1013,7 @@ class AgentGroup:
             na_color,
             xlab,
             ylab,
+            cbarlabel=cbarlabel,
             show=show,
         )
 

@@ -29,6 +29,7 @@ def plot_heatmap(
     na_color: str = "xkcd:white",
     xlab: str = "",
     ylab: str = "",
+    cbarlabel: str = "Average score of the agent", 
     show: bool = True,
 ) -> None:
     """plot a heatmap of the agents payoffs
@@ -43,6 +44,7 @@ def plot_heatmap(
         na_color (str, optional): The nan color. Defaults to "xkcd:white", e.g. white.
         xlab (str, optional): The name on the x axis. Defaults to "".
         ylab (str, optional): The name on the y axis. Defaults to "".
+        charlabel (str, optional): The label on the color bar, defaults to "Average score of the Agent."
         show (bool, optional): Should plt.show be run at the end. Defaults to True.
     """
     check_plot_input(df, None, None)
@@ -96,7 +98,7 @@ def plot_heatmap(
         annot_df[annot_df.isna()] = ""
 
         fig, ax = plt.subplots(1, 1)
-        p1 = sns.heatmap(heat_df, cmap=cmap, annot=annot_df.to_numpy(), fmt="")
+        p1 = sns.heatmap(heat_df, cmap=cmap, annot=annot_df.to_numpy(), fmt="", cbar_kws={'label': cbarlabel})
         p1.set_facecolor(na_color)
         ax.set_xlabel(xlab)
         ax.set_ylabel(ylab)
