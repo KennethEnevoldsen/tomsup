@@ -13,11 +13,12 @@ pacman::p_load(
   Hmisc,
   lmerTest,
   here,
-  brms)
+  brms,
+  rethinking)
 
 options(dplyr.summarise.inform = FALSE)
 
-df = read_csv(here("papers", "introducing_tomsup","experiment_analysis","CogSci19_MatchingPennies_TOM_data_updated.csv"))
+df = read_csv(here("CogSci19_MatchingPennies_TOM_data_updated.csv"))
 df$tom_level = factor(df$tom_level, order = TRUE, levels = c(0,1,2))
 df$Framing = factor(df$Framing, levels = c("SlotMachine", "Human"))
 
@@ -267,11 +268,11 @@ Performance_m0_prior <- brm(
   ),
   chains=2,
   cores=2,
-  backend = "cmdstanr",
-  threads = threading(2)
+#  backend = "cmdstanr",
+#  threads = threading(2)
 )
 
-rethinking::dens(posterior_epred(Performance_m0_prior))
+#rethinking::dens(posterior_epred(Performance_m0_prior))
 
 Performance_m0 <- brm(
   Performance_f0,
@@ -285,11 +286,11 @@ Performance_m0 <- brm(
   ),
   chains=2,
   cores=2,
-  backend = "cmdstanr",
-  threads = threading(2)
+#  backend = "cmdstanr",
+#  threads = threading(2)
 )
 
-rethinking::dens(posterior_epred(Performance_m0))
+#rethinking::dens(posterior_epred(Performance_m0))
 plot(conditional_effects(Performance_m0))[[1]] + theme_classic()
 
 hypothesis(Performance_m0, "(inv_logit_scaled(FramingSlotMachine:tom_level0) + inv_logit_scaled(FramingSlotMachine:tom_level1) + inv_logit_scaled(FramingSlotMachine:tom_level2))/3 > (inv_logit_scaled(FramingHuman:tom_level0) + inv_logit_scaled(FramingHuman:tom_level1) + inv_logit_scaled(FramingHuman:tom_level2))/3")
@@ -323,11 +324,11 @@ Performance_m1_prior <- brm(
   ),
   chains=2,
   cores=2,
-  backend = "cmdstanr",
-  threads = threading(2)
+#  backend = "cmdstanr",
+#  threads = threading(2)
 )
 
-rethinking::dens(posterior_epred(Performance_m1_prior))
+#rethinking::dens(posterior_epred(Performance_m1_prior))
 
 Performance_m1 <- brm(
   Performance_f1,
@@ -341,8 +342,8 @@ Performance_m1 <- brm(
   ),
   chains=2,
   cores=2,
-  backend = "cmdstanr",
-  threads = threading(2)
+#  backend = "cmdstanr",
+#  threads = threading(2)
 )
 
 
