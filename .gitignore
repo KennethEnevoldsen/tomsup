@@ -103,22 +103,33 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Python
+__pycache__/*
+
+# Mac OS
 .DS_Store
+
+# Temporary files
 FistPunch_OpenFistPunch_Slap-art.jpg
 old/
-tomsup/__pycache__/*
+
+# Python
 .vscode/
 .vscode/settings.json
 tomsup/plot_results.py
 .vscode/settings.json
+
+# Data files
 simulations/results/*
+parameters_estimation_3-tom.csv
+
+# R prog
 .Rproj.user/*
 .Rproj.user
 *.RData
-.gitignore
 .Rhistory
 *.Rproj
+papers/introducing_tomsup/experiment_analysis/renv/*
 
-parameters_estimation_3-tom.csv
-*.icloud
 *.dcf
