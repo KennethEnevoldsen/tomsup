@@ -3,6 +3,7 @@ This script seeks to estimate the quality of parameter estimation of the recursi
 """
 
 import sys
+
 sys.path.append(".")
 sys.path.append("../..")
 
@@ -18,6 +19,7 @@ k = [0, 1, 2]
 vol_r = np.arange(-3, -1, 0.2)
 bias_r = np.arange(-1, 1, 0.2)
 b_temp_r = np.arange(-1.5, -0.5, 0.2)
+
 
 def make_grid(k, vol, bias, b_temp):
     agents = []
@@ -45,9 +47,7 @@ group.set_env("round_robin")
 # remove non-2tom pairs
 group.pairing = [pair for pair in group.pairing if a in pair[0] or a in pair[1]]
 
-results = group.compete(
-    p_matrix=penny, n_rounds=n_rounds, save_history=True, n_jobs=-1
-)
+results = group.compete(p_matrix=penny, n_rounds=n_rounds, save_history=True, n_jobs=-1)
 
 ### Extract 3-toms recoved parameters
 assert results.agent1.unique()[0] == "3-tom"
@@ -70,11 +70,19 @@ for i, row in enumerate(results.iterrows()):
     results["volatility"].iloc[i] = agent.volatility
     results["bias"].iloc[i] = agent.bias
     results["b_temp"].iloc[i] = agent.b_temp
-    
-    results["estimated_prob_k"].iloc[i] = results.history_agent1.tolist()[i]["internal_states"]["own_states"]["p_k"][agent.level]
-    results["estimated_volatility"].iloc[i] = results.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][0]
-    results["estimated_b_temp"].iloc[i] = results.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][1]
-    results["estimated_bias"].iloc[i] = results.history_agent1.tolist()[i]["internal_states"]["own_states"]["param_mean"][agent.level][-1]
-   
+
+    results["estimated_prob_k"].iloc[i] = results.history_agent1.tolist()[i][
+        "internal_states"
+    ]["own_states"]["p_k"][agent.level]
+    results["estimated_volatility"].iloc[i] = results.history_agent1.tolist()[i][
+        "internal_states"
+    ]["own_states"]["param_mean"][agent.level][0]
+    results["estimated_b_temp"].iloc[i] = results.history_agent1.tolist()[i][
+        "internal_states"
+    ]["own_states"]["param_mean"][agent.level][1]
+    results["estimated_bias"].iloc[i] = results.history_agent1.tolist()[i][
+        "internal_states"
+    ]["own_states"]["param_mean"][agent.level][-1]
+
 results = results.drop(["history_agent0", "history_agent1"], axis=1)
 results.to_csv("parameters_estimation_3-tom.csv")

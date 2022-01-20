@@ -8,15 +8,17 @@ k-ToM agent.
 # [3] Dilution
 # [4] Bias
 
-from typing import Tuple, Union
-import numpy as np
-from tomsup.payoffmatrix import PayoffMatrix
 import copy
+from typing import Tuple, Union
+
+import numpy as np
 from scipy.special import expit as inv_logit
 from scipy.special import logit
 
+from tomsup.payoffmatrix import PayoffMatrix
 
 # Learning subfunctions
+
 
 def p_op_var0_update(prev_p_op_mean0: float, prev_p_op_var0: float, volatility: float):
     """Variance update of the 0-ToM
@@ -49,8 +51,7 @@ def p_op_var0_update(prev_p_op_mean0: float, prev_p_op_var0: float, volatility: 
 
 
 def p_op_mean0_update(prev_p_op_mean0: float, p_op_var0: float, op_choice: int):
-    """0-ToM updates mean choice probability estimate
-    """
+    """0-ToM updates mean choice probability estimate"""
     # Input variable transforms
     p_op_var0 = np.exp(p_op_var0)
 
@@ -228,8 +229,7 @@ def gradient_update(
     p_matrix,
     **kwargs
 ):
-    """The gradient update of the k-ToM agent
-    """
+    """The gradient update of the k-ToM agent"""
     # Make empty list for fillin in gradients
     gradient = np.zeros(len(param_mean))
 
@@ -672,7 +672,7 @@ def init_k_tom(params: dict, level: int, priors: Union[dict, str] = "default"):
     Args:
         params (dict): The starting parameters
         level (int): The sophistication level of the agent
-        priors (Union[dict, str], optional): The priors of the k-ToM. Default to "default". 
+        priors (Union[dict, str], optional): The priors of the k-ToM. Default to "default".
             See tutorial on how to set internal states of the k-ToM agent.
     Examples:
         >>> init_k_tom(params = {'volatility': -2, 'b_temp': -1, 'bias':0 }, level=1, priors='default')
