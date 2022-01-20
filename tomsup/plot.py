@@ -95,15 +95,15 @@ def plot_heatmap(
         annot_df = pd.pivot(df_ci, values="ci", index="agent1", columns="agent0")
         annot_df[annot_df.isna()] = ""
 
-        fig, ax = plt.subplots(1, 1)
-        p1 = sns.heatmap(heat_df, cmap=cmap, annot=annot_df.to_numpy(), fmt="")
-        p1.set_facecolor(na_color)
+        #fig, ax = plt.subplots(1, 1)
+        ax = sns.heatmap(heat_df, cmap=cmap, annot=annot_df.to_numpy(), fmt="")
+        ax.set_facecolor(na_color)
         ax.set_xlabel(xlab)
         ax.set_ylabel(ylab)
     else:
-        fig, ax = plt.subplots(1, 1)
-        p1 = sns.heatmap(heat_df, cmap=cmap, fmt="")
-        p1.set_facecolor(na_color)
+        #fig, ax = plt.subplots(1, 1)
+        ax = sns.heatmap(heat_df, cmap=cmap, fmt="")
+        ax.set_facecolor(na_color)
         ax.set_xlabel(xlab)
         ax.set_ylabel(ylab)
     if show is True:
@@ -207,7 +207,7 @@ def choice(
         agent0 (str): agent0 in the agent pair which you seek to plot, by default
             it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
         agent1 (str): agent1 in the agent pair which you seek to plot
-        agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+        agent (int, optional): Indicate whether you should plot the choice of agent 0 or 1. Defaults to 0.
         plot_individual_sim (bool, optional): Should individual simulations be plotted. Defaults to false.
         show (bool, optional): Should plt.show be run at the end. Defaults to True.
     """
@@ -225,7 +225,7 @@ def choice(
             tmp = df[["round", action]].loc[df["n_sim"] == sim]
             plt.plot(tmp["round"], tmp[action], color="grey", linewidth=1, alpha=0.2)
 
-    label_text = "mean score across simulations" if "n_sim" in df else "score"
+    label_text = "mean choice across simulations" if "n_sim" in df else "choice"
 
     # plot mean
     tmp = df.groupby(by=["round"])[action].mean()
