@@ -3,6 +3,8 @@ title: "analysis.R"
 author: "K. Enevoldsen"
 date: "5/3/2021"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -118,7 +120,14 @@ df %>%
         scale_fill_manual(values=c("red", "blue"), labels = c('Slot machine', 'Human'), guide='none') +
         scale_x_discrete(breaks=c('SlotMachine', 'Human'), labels=c("Slot machine", "Human")) + 
         theme_minimal() +
-        theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+        theme(axis.line = element_line(colour = "grey", size = 0.5),
+              axis.ticks =element_line(colour = "grey", size = 0.5),
+              axis.title = element_text(color="black", size=10, face="bold"),
+              axis.text = element_text(color="black", size=10),
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              panel.background = element_blank(),
+              strip.text.x = element_text(color="black", size=10, face="bold")) 
 
 #Lineplot: payoff over trials
 df %>% 
@@ -141,8 +150,15 @@ df %>%
         scale_fill_manual(values=c("red", "blue"), labels = c('Slot machine', 'Human')) +
         scale_color_hue(labels = c('Slot machine', 'Human')) +
         labs(y = 'Cumulative player payoff', x = 'Trial') +
-        theme_minimal() + 
-        theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+        theme_minimal() +
+        theme(axis.line = element_line(colour = "grey", size = 0.5),
+              axis.ticks =element_line(colour = "grey", size = 0.5),
+              axis.title = element_text(color="black", size=10, face="bold"),
+              axis.text = element_text(color="black", size=10),
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              panel.background = element_blank(),
+              strip.text.x = element_text(color="black", size=10, face="bold")) 
 
 #Lineplot: p_k
 df %>% 
@@ -165,7 +181,14 @@ df %>%
         scale_color_hue(labels = c('Slot machine', 'Human')) +
         labs(y = 'Probability of human player being level 1', x = 'Trial') +
         theme_minimal() + 
-        theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+        theme(axis.line = element_line(colour = "grey", size = 0.5),
+              axis.ticks =element_line(colour = "grey", size = 0.5),
+              axis.title = element_text(color="black", size=10, face="bold"),
+              axis.text = element_text(color="black", size=10),
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              panel.background = element_blank(),
+              strip.text.x = element_text(color="black", size=10, face="bold")) 
 
 
 df %>% 
@@ -228,10 +251,17 @@ df %>%
         scale_fill_manual(values=c('purple', 'orange', 'green', 'red', 'blue'),
                           labels = c('Level 0', 'Level 1', 'Level 2', 'Level 3', 'Level 4'), guide = 'none') +
         scale_colour_manual(values=c('purple', 'orange', 'green', 'red', 'blue'),
-                          labels = c('Level 0', 'Level 1', 'Level 2', 'Level 3', 'Level 4'), name = "Estimated level") +
-        labs(y = 'Probability of opponent level', x = 'Trial') +
+                          labels = c('Level 0', 'Level 1', 'Level 2', 'Level 3', 'Level 4'), name = "Estimated player level") +
+        labs(y = 'Probability of player level', x = 'Trial') +
         theme_minimal() + 
-        theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
+        theme(axis.line = element_line(colour = "grey", size = 0.5),
+              axis.ticks =element_line(colour = "grey", size = 0.5),
+              axis.title = element_text(color="black", size=10, face="bold"),
+              axis.text = element_text(color="black", size=10),
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              panel.background = element_blank(),
+              strip.text.x = element_text(color="black", size=10, face="bold")) 
 
 
 ```
