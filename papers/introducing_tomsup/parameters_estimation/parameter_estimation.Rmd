@@ -22,13 +22,32 @@ pk$round = as.integer(pk$round) + 1
 
 ```{r}
 
+quantile(c(1,1,1,2,2,2,3,3,3))[[2]]
+
+mean_quan <- function(x) {  
+  y25 = quantile(x)[[2]]
+  y50 = quantile(x)[[3]]
+  y75= quantile(x)[[4]]
+  data.frame(y = y50, ymin = y25, ymax = y75)
+}
+
+mean_sd <- function(x, mult = 1) {  
+  sd <- mult * sd(x)
+  mean <- mean(x)
+  data.frame(y = mean, ymin = mean - sd, ymax = mean + sd)
+}
+
+
 # p(k)
 est %>% 
   ggplot(aes(round, estimated_prob_k)) +
-  geom_smooth(level=0.95, aplha=0.5, color = "black") +
-  # geom_boxplot(width = 0.8,fill="steelblue", outlier.shape = NA, color="steelblue") +
+  stat_summary(fun=median, geom="line") + 
+  stat_summary(fun.data=mean_quan, geom="ribbon", alpha=0.25) + 
   facet_wrap(~k,  labeller = as_labeller(c("0" = "k=0",  "1"= "k=1", "2"= "k=2"))) + 
   labs(x="Trial", y="Estimated probability of correct k") + 
+  coord_cartesian(
+  ylim = c(0, 1),
+) + 
   theme_bw() + 
   theme(axis.line = element_line(colour = "grey"),
         axis.ticks =element_line(colour = "grey"),
@@ -36,12 +55,13 @@ est %>%
         panel.grid.minor = element_blank(),
         panel.background = element_blank())
 
+
   # bias
 est %>% 
   filter(round %in% c(5, 10, 30, 60, 100)) %>% 
   ggplot(aes(bias, estimated_bias)) +
   geom_boxplot(aes(group=bias), width = 0.1, fill = "lightsteelblue", outlier.shape = NA, alpha= 0.5) +
-  geom_smooth(method = "lm", formula = "y~x", color ="black") +
+  geom_smooth(method = "lm", formula = "y~x", color ="black", se = FALSE) +
   facet_wrap(~round, nrow=1, labeller = as_labeller(c("5" = "Trial 5",
                                                       "10" = "Trial 10",
                                                       "30" = "Trial 30",
@@ -61,7 +81,7 @@ est %>%
   filter(round %in% c(5, 30, 60, 100)) %>% 
   ggplot(aes(b_temp, estimated_b_temp)) +
   geom_boxplot(aes(group=b_temp), width = 0.1, fill = "lightsteelblue", outlier.shape = NA, alpha= 0.5) +
-  geom_smooth(method = "lm", formula = "y~x", color="black") +
+  geom_smooth(method = "lm", formula = "y~x", color="black", se=FALSE) +
   labs(x="Behavioural temperature", y="Estimated behavioural temperature") + 
   facet_wrap(~round, nrow=1, labeller = as_labeller(c("5" = "Trial 5",
                                                       "10" = "Trial 10",

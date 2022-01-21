@@ -989,7 +989,7 @@ class AgentGroup:
         ylab: str = "Opponent",
         cbarlabel: str = "Average score of the agent",
         show: bool = True,
-    ) -> None:
+    ):
         """plot a heatmap of the results.
 
         Args:
@@ -1022,9 +1022,10 @@ class AgentGroup:
         agent0: str,
         agent1: str,
         agent: int = 0,
+        sim: Optional[int] = None,
         plot_individual_sim: bool = False,
         show: bool = True,
-    ) -> None:
+    ):
         """plots the choice of an agent in a defined agent pair
 
         Args:
@@ -1040,12 +1041,13 @@ class AgentGroup:
             agent1=agent1,
             agent=agent,
             plot_individual_sim=plot_individual_sim,
+            sim=sim,
             show=show,
         )
 
     def plot_score(
         self, agent0: str, agent1: str, agent: int = 0, show: bool = True
-    ) -> None:
+    ):
         """plots the score of an agent in a defined agent pair
 
         Args:
@@ -1066,8 +1068,8 @@ class AgentGroup:
         ylab: str = "",
         xlab: str = "Round",
         show: bool = True,
-    ) -> None:
-        """pPlots the history of an agent in a defined agent pair
+    ):
+        """Plots the history of an agent in a defined agent pair
 
         Args:
             agent0 (str): The name of agent0
@@ -1107,7 +1109,7 @@ class AgentGroup:
 
     def plot_p_k(
         self, agent0: str, agent1: str, level: int, agent: int = 0, show: bool = True
-    ) -> None:
+    ):
         """plots the p_k of a k-ToM agent in a defined agent pair
 
         Args:
@@ -1121,7 +1123,7 @@ class AgentGroup:
 
     def plot_p_self(
         self, agent0: str, agent1: str, agent: int = 0, show: bool = True
-    ) -> None:
+    ):
         """plots the p_self of a k-ToM agent in a defined agent pair
 
         Args:
@@ -1141,7 +1143,7 @@ class AgentGroup:
         level: int = 0,
         agent: int = 0,
         show: bool = True,
-    ) -> None:
+    ):
         """plots the p_self of a k-ToM agent in a defined agent pair
 
         Args:

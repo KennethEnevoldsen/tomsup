@@ -1,7 +1,7 @@
 """
 Utility plotting functiona for tomsup
 """
-from typing import Callable, Union
+from typing import Callable, Optional, Union
 import seaborn as sns
 import pandas as pd
 import numpy as np
@@ -29,7 +29,7 @@ def plot_heatmap(
     na_color: str = "xkcd:white",
     xlab: str = "",
     ylab: str = "",
-    cbarlabel: str = "Average score of the agent", 
+    cbarlabel: str = "Average score of the agent",
     show: bool = True,
 ) -> None:
     """plot a heatmap of the agents payoffs
@@ -97,15 +97,19 @@ def plot_heatmap(
         annot_df = pd.pivot(df_ci, values="ci", index="agent1", columns="agent0")
         annot_df[annot_df.isna()] = ""
 
-        fig, ax = plt.subplots(1, 1)
-        p1 = sns.heatmap(heat_df, cmap=cmap, annot=annot_df.to_numpy(), fmt="", cbar_kws={'label': cbarlabel})
-        p1.set_facecolor(na_color)
+        ax = sns.heatmap(
+            heat_df,
+            cmap=cmap,
+            annot=annot_df.to_numpy(),
+            fmt="",
+            cbar_kws={"label": cbarlabel},
+        )
+        ax.set_facecolor(na_color)
         ax.set_xlabel(xlab)
         ax.set_ylabel(ylab)
     else:
-        fig, ax = plt.subplots(1, 1)
-        p1 = sns.heatmap(heat_df, cmap=cmap, fmt="")
-        p1.set_facecolor(na_color)
+        ax = sns.heatmap(heat_df, cmap=cmap, fmt="")
+        ax.set_facecolor(na_color)
         ax.set_xlabel(xlab)
         ax.set_ylabel(ylab)
     if show is True:
@@ -167,28 +171,30 @@ def score(
     df = df.loc[(df["agent0"] == agent0) & (df["agent1"] == agent1)].copy()
 
     cum_payoff = "cum_payoff_a" + str(agent)
-    df[cum_payoff] = df.groupby(by=["n_sim"])["payoff_agent0"].cumsum()
+    df[cum_payoff] = df.groupby(by=["n_sim"])["payoff_agent" + str(agent)].cumsum()
 
-    plt.figure()
+    fig, ax = plt.subplots(1, 1)
+
     if "n_sim" in df:
         # plot each line for each sim
         for sim in range(df["n_sim"].max() + 1):
             tmp = df[["round", cum_payoff]].loc[df["n_sim"] == sim]
-            plt.plot(
-                tmp["round"], tmp[cum_payoff], color="grey", linewidth=1, alpha=0.2
-            )
+            ax.plot(tmp["round"], tmp[cum_payoff], color="grey", linewidth=1, alpha=0.2)
 
     # plot mean
     # set label text
     label_text = "mean score across simulations" if "n_sim" in df else "score"
 
     tmp = df.groupby(by=["round"])[cum_payoff].mean()
-    plt.plot(
+    ax.plot(
         range(len(tmp)), tmp.values, color="lightblue", linewidth=4, label=label_text
     )
-    plt.legend()
-    plt.xlabel("Round")
-    plt.ylabel("Score")
+    ax.legend()
+    ax.set_xlabel("Round")
+    ax.set_ylabel("Score")
+    a_name = agent1 if agent == 1 else agent0
+    op_name = agent1 if agent != 1 else agent0
+    ax.set_title(f"{a_name} playing against {op_name}")
     if show is True:
         plt.show()
 
@@ -198,9 +204,10 @@ def choice(
     agent0: str,
     agent1: str,
     agent: int = 0,
+    sim: Optional[int] = None,
     plot_individual_sim: bool = False,
     show: bool = True,
-) -> None:
+):
     """plot the score of the agent pair
 
     Args:
@@ -209,7 +216,9 @@ def choice(
         agent0 (str): agent0 in the agent pair which you seek to plot, by default
             it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
         agent1 (str): agent1 in the agent pair which you seek to plot
-        agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.
+        agent (int, optional): Indicate whether you should plot the choice of agent 0 or 1. Defaults to 0.
+        sim: (Optional[int], optional): A specific simulation you wish to plot. Defualts to None 
+            indicating it should plot all simulations.
         plot_individual_sim (bool, optional): Should individual simulations be plotted. Defaults to false.
         show (bool, optional): Should plt.show be run at the end. Defaults to True.
     """
@@ -217,27 +226,34 @@ def choice(
 
     plt.clf()
     df = df.loc[(df["agent0"] == agent0) & (df["agent1"] == agent1)].copy()
+    if sim is not None:
+        df = df.loc[df["n_sim"] == sim]
+        df = df.drop(columns=["n_sim"])
 
     action = "choice_agent" + str(agent)
 
-    plt.figure()
+    fig, ax = plt.subplots(1, 1)
     # plot each line
     if plot_individual_sim:
         for sim in range(df["n_sim"].max() + 1):
             tmp = df[["round", action]].loc[df["n_sim"] == sim]
-            plt.plot(tmp["round"], tmp[action], color="grey", linewidth=1, alpha=0.2)
+            ax.plot(tmp["round"], tmp[action], color="grey", linewidth=1, alpha=0.2)
 
-    label_text = "mean score across simulations" if "n_sim" in df else "score"
+    label_text = "mean choice across simulations" if "n_sim" in df else "choice"
 
     # plot mean
     tmp = df.groupby(by=["round"])[action].mean()
-    plt.plot(
+    ax.plot(
         range(len(tmp)), tmp.values, color="lightblue", linewidth=4, label=label_text
     )
-    plt.legend(loc="upper right")
-    plt.xlabel("Round")
-    plt.ylabel("Choice")
-    plt.ylim(0, 1)
+    ax.legend(loc="upper right")
+    ax.set_xlabel("Round")
+    ax.set_ylabel("Choice")
+    a_name = agent1 if agent == 1 else agent0
+    op_name = agent1 if agent != 1 else agent0
+    ax.set_title(f"{a_name} playing against {op_name}")
+
+    ax.set_ylim(0, 1)
     if show is True:
         plt.show()
 
@@ -295,6 +311,10 @@ def plot_history(
     )
     plt.xlabel(xlab)
     plt.ylabel(ylab)
+    a_name = agent1 if agent == 1 else agent0
+    op_name = agent1 if agent != 1 else agent0
+    plt.title(f"{a_name} playing against {op_name}")
+
     if show is True:
         plt.show()
 
