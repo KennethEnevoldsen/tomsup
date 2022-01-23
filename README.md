@@ -19,7 +19,7 @@ A Python Package for Agent-Based simulations. The package provides a computation
 
 # 📰 News
 
-- V. 1.1.3
+- v. 1.1.3
   - New plotting features were added
   - Speed and memory improvements as well as support for multicore simulations 🏎
   - Added workflows to ensure dependencies are being kept up to date
