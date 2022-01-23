@@ -21,12 +21,13 @@ A Python Package for Agent-Based simulations. The package provides a computation
 - V. 1.1.3
   - New plotting features were added
   - Speed and memory improvements as well as support for multicore simulations 🏎
+  - Added workflows to ensure dependencies are being kept up to date
 - v. 1.1.0
   - A [speed comparison](missing) between the matlab implementation was introduced, showing the the tomsup implementation to be notably faster.
   - An extensive testsuite was introduced, for how to run it see the FAQ.
   - Code coverage was upped to 86% and code quality was raised to A.
   - A [documentation](https://KennethEnevoldsen.github.io/tomsup/) site was introduced.
-  - Added continiuous integration to ensure that the package always work as intended, with support for mac, windows and linux tests.
+  - Added continiuous integration to ensure that the package always works as intended, with support for mac, windows and linux tests.
   - A new logo was introduced 🌟
 - v. 1.0.0
   - tomsup released its first version along with a [preprint](https://psyarxiv.com/zcgkv/) on psyarxiv
@@ -34,7 +35,7 @@ A Python Package for Agent-Based simulations. The package provides a computation
 
 # 🔧 Setup and installation
 
-tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [the official pip website](https://pip.pypa.io/en/stable/installing/), otherwise, simply run:
+tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [the official pip website](https://pip.pypa.io/en/stable/installing/), otherwise, run:
 
 ```bash
 pip install tomsup 
@@ -43,7 +44,7 @@ pip install tomsup
 <details>
   <summary>Detailed instructions</summary>
 
-  You can also install it directly from github by simply running:
+  You can also install it directly from GitHub by simply running:
   ```bash
   pip install git+https://github.com/KennethEnevoldsen/tomsup.git
   ```
