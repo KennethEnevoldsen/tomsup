@@ -22,6 +22,7 @@ setuptools.setup(
     author_email="kennethcenevoldsen@gmail.com",
     url="https://github.com/KennethEnevoldsen/tomsup",
     packages=setuptools.find_packages(),
+    include_package_data=True,
     # external packages as dependencies
     install_requires=[
         "numpy >= 1.2.4",
