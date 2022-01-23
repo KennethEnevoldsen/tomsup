@@ -2,9 +2,9 @@
 name: CI Pytest
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   pytest:
@@ -62,9 +62,9 @@ jobs:
     - name: Create the Badge
       uses: schneegans/dynamic-badges-action@v1.1.0
       with:
-        auth: ${{ secrets.PYTEST_COVERAGE }}
-        gistID: 95471fd640b6c1c09717c5f88e2e9fae
-        filename: badge-asent-pytest-coverage.json
+        auth: ${{ secrets.PYTEST_COVERAGE_COMMENT }}
+        gistID: ba4cb2310c5b370dc2c49d0be0a7e3ec
+        filename: badge-tomsup-pytest-coverage.json
         label: Coverage
         message: ${{ steps.coverage-comment.outputs.coverage }}
         color: ${{ steps.coverage-comment.outputs.color }}
