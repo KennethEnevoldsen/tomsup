@@ -19,10 +19,11 @@ A Python Package for Agent-Based simulations. The package provides a computation
 
 # 📰 News
 
-- v. 1.1.3
+- v. 1.1.5
   - New plotting features were added
   - Speed and memory improvements as well as support for multicore simulations 🏎
-  - Added workflows to ensure dependencies are being kept up to date
+  - Added workflows to ensure dependencies are being updated
+  - Minor bugfixes 
 - v. 1.1.0
   - A [speed comparison](missing) between the matlab implementation was introduced, showing the the tomsup implementation to be notably faster.
   - An extensive testsuite was introduced, for how to run it see the FAQ.

@@ -17,13 +17,15 @@ examples of how resulting data can be analyzed.
 📰 News
 ---------------------------------
 
-* Version 1.1.3
+* Version 1.1.5
   
   - New plotting features were added
   
   - Speed and memory improvements as well as support for multicore simulations 🏎
   
   - Added workflows to ensure dependencies are being kept up to date
+
+  - Minor bugfixes 
 
 * Version 1.1.0
 
