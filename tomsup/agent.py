@@ -1045,9 +1045,7 @@ class AgentGroup:
             show=show,
         )
 
-    def plot_score(
-        self, agent0: str, agent1: str, agent: int = 0, show: bool = True
-    ):
+    def plot_score(self, agent0: str, agent1: str, agent: int = 0, show: bool = True):
         """plots the score of an agent in a defined agent pair
 
         Args:
@@ -1121,9 +1119,7 @@ class AgentGroup:
         self.__tom_in_group(agent0, agent1, agent)
         plot_p_k(self.__df, agent0, agent1, agent=agent, level=level, show=show)
 
-    def plot_p_self(
-        self, agent0: str, agent1: str, agent: int = 0, show: bool = True
-    ):
+    def plot_p_self(self, agent0: str, agent1: str, agent: int = 0, show: bool = True):
         """plots the p_self of a k-ToM agent in a defined agent pair
 
         Args:

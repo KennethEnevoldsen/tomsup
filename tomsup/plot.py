@@ -217,7 +217,7 @@ def choice(
             it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.
         agent1 (str): agent1 in the agent pair which you seek to plot
         agent (int, optional): Indicate whether you should plot the choice of agent 0 or 1. Defaults to 0.
-        sim: (Optional[int], optional): A specific simulation you wish to plot. Defualts to None 
+        sim: (Optional[int], optional): A specific simulation you wish to plot. Defualts to None
             indicating it should plot all simulations.
         plot_individual_sim (bool, optional): Should individual simulations be plotted. Defaults to false.
         show (bool, optional): Should plt.show be run at the end. Defaults to True.
