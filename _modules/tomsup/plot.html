@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
-        <title>tomsup.plot - tomsup 1.1.2 documentation</title>
+        <title>tomsup.plot - tomsup 1.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -129,7 +129,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">tomsup 1.1.2 documentation</div></a>
+      <a href="../../index.html"><div class="brand">tomsup 1.1.3 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -208,7 +208,7 @@
 <span></span><span class="sd">"""</span>
 <span class="sd">Utility plotting functiona for tomsup</span>
 <span class="sd">"""</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -236,6 +236,7 @@
     <span class="n">na_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"xkcd:white"</span><span class="p">,</span>
     <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
     <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">cbarlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Average score of the agent"</span><span class="p">,</span>
     <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">"""plot a heatmap of the agents payoffs</span>
@@ -250,6 +251,7 @@
 <span class="sd">        na_color (str, optional): The nan color. Defaults to "xkcd:white", e.g. white.</span>
 <span class="sd">        xlab (str, optional): The name on the x axis. Defaults to "".</span>
 <span class="sd">        ylab (str, optional): The name on the y axis. Defaults to "".</span>
+<span class="sd">        charlabel (str, optional): The label on the color bar, defaults to "Average score of the Agent."</span>
 <span class="sd">        show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
 <span class="sd">    """</span>
     <span class="n">check_plot_input</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -302,15 +304,19 @@
         <span class="n">annot_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">df_ci</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"ci"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">"agent1"</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">"agent0"</span><span class="p">)</span>
         <span class="n">annot_df</span><span class="p">[</span><span class="n">annot_df</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span> <span class="o">=</span> <span class="s2">""</span>
 
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">p1</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">heat_df</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="n">annot_df</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
-        <span class="n">p1</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">na_color</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
+            <span class="n">heat_df</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+            <span class="n">annot</span><span class="o">=</span><span class="n">annot_df</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+            <span class="n">fmt</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
+            <span class="n">cbar_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="n">cbarlabel</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">na_color</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlab</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylab</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">p1</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">heat_df</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
-        <span class="n">p1</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">na_color</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">heat_df</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">na_color</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlab</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylab</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">show</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -372,28 +378,30 @@
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s2">"agent0"</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"agent1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent1</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="n">cum_payoff</span> <span class="o">=</span> <span class="s2">"cum_payoff_a"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
-    <span class="n">df</span><span class="p">[</span><span class="n">cum_payoff</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">"n_sim"</span><span class="p">])[</span><span class="s2">"payoff_agent0"</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">cum_payoff</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">"n_sim"</span><span class="p">])[</span><span class="s2">"payoff_agent"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">agent</span><span class="p">)]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="s2">"n_sim"</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
         <span class="c1"># plot each line for each sim</span>
         <span class="k">for</span> <span class="n">sim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"n_sim"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"round"</span><span class="p">,</span> <span class="n">cum_payoff</span><span class="p">]]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"n_sim"</span><span class="p">]</span> <span class="o">==</span> <span class="n">sim</span><span class="p">]</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">tmp</span><span class="p">[</span><span class="s2">"round"</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="n">cum_payoff</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"grey"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span>
-            <span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="s2">"round"</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="n">cum_payoff</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"grey"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 
     <span class="c1"># plot mean</span>
     <span class="c1"># set label text</span>
     <span class="n">label_text</span> <span class="o">=</span> <span class="s2">"mean score across simulations"</span> <span class="k">if</span> <span class="s2">"n_sim"</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">else</span> <span class="s2">"score"</span>
 
     <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">"round"</span><span class="p">])[</span><span class="n">cum_payoff</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)),</span> <span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"lightblue"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_text</span>
     <span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Round"</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Score"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Round"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Score"</span><span class="p">)</span>
+    <span class="n">a_name</span> <span class="o">=</span> <span class="n">agent1</span> <span class="k">if</span> <span class="n">agent</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">agent0</span>
+    <span class="n">op_name</span> <span class="o">=</span> <span class="n">agent1</span> <span class="k">if</span> <span class="n">agent</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">agent0</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">a_name</span><span class="si">}</span><span class="s2"> playing against </span><span class="si">{</span><span class="n">op_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">show</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
@@ -403,9 +411,10 @@
     <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">sim</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">plot_individual_sim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="p">):</span>
     <span class="sd">"""plot the score of the agent pair</span>
 
 <span class="sd">    Args:</span>
@@ -414,7 +423,9 @@
 <span class="sd">        agent0 (str): agent0 in the agent pair which you seek to plot, by default</span>
 <span class="sd">            it plot agent0 performance vs. agent1, to plot agent1 set agent = 1.</span>
 <span class="sd">        agent1 (str): agent1 in the agent pair which you seek to plot</span>
-<span class="sd">        agent (int, optional): Indicate whether you should plot the score of agent 0 or 1. Defaults to 0.</span>
+<span class="sd">        agent (int, optional): Indicate whether you should plot the choice of agent 0 or 1. Defaults to 0.</span>
+<span class="sd">        sim: (Optional[int], optional): A specific simulation you wish to plot. Defualts to None</span>
+<span class="sd">            indicating it should plot all simulations.</span>
 <span class="sd">        plot_individual_sim (bool, optional): Should individual simulations be plotted. Defaults to false.</span>
 <span class="sd">        show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
 <span class="sd">    """</span>
@@ -422,27 +433,34 @@
 
     <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s2">"agent0"</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"agent1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent1</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"n_sim"</span><span class="p">]</span> <span class="o">==</span> <span class="n">sim</span><span class="p">]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"n_sim"</span><span class="p">])</span>
 
     <span class="n">action</span> <span class="o">=</span> <span class="s2">"choice_agent"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="c1"># plot each line</span>
     <span class="k">if</span> <span class="n">plot_individual_sim</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">sim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"n_sim"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"round"</span><span class="p">,</span> <span class="n">action</span><span class="p">]]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"n_sim"</span><span class="p">]</span> <span class="o">==</span> <span class="n">sim</span><span class="p">]</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="s2">"round"</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="n">action</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"grey"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="s2">"round"</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="n">action</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"grey"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 
-    <span class="n">label_text</span> <span class="o">=</span> <span class="s2">"mean score across simulations"</span> <span class="k">if</span> <span class="s2">"n_sim"</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">else</span> <span class="s2">"score"</span>
+    <span class="n">label_text</span> <span class="o">=</span> <span class="s2">"mean choice across simulations"</span> <span class="k">if</span> <span class="s2">"n_sim"</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">else</span> <span class="s2">"choice"</span>
 
     <span class="c1"># plot mean</span>
     <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">"round"</span><span class="p">])[</span><span class="n">action</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)),</span> <span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"lightblue"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_text</span>
     <span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper right"</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Round"</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Choice"</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper right"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Round"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Choice"</span><span class="p">)</span>
+    <span class="n">a_name</span> <span class="o">=</span> <span class="n">agent1</span> <span class="k">if</span> <span class="n">agent</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">agent0</span>
+    <span class="n">op_name</span> <span class="o">=</span> <span class="n">agent1</span> <span class="k">if</span> <span class="n">agent</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">agent0</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">a_name</span><span class="si">}</span><span class="s2"> playing against </span><span class="si">{</span><span class="n">op_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">show</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
@@ -500,6 +518,10 @@
     <span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlab</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylab</span><span class="p">)</span>
+    <span class="n">a_name</span> <span class="o">=</span> <span class="n">agent1</span> <span class="k">if</span> <span class="n">agent</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">agent0</span>
+    <span class="n">op_name</span> <span class="o">=</span> <span class="n">agent1</span> <span class="k">if</span> <span class="n">agent</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">agent0</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">a_name</span><span class="si">}</span><span class="s2"> playing against </span><span class="si">{</span><span class="n">op_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">show</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
