@@ -16,7 +16,7 @@ est = read_csv("../../../parameters_estimation_3-tom.csv")
 est$round = as.integer(est$round) + 1
 pk = read_csv("../parameters_estimation_pk.csv")
 pk$round = as.integer(pk$round) + 1
-
+write_csv(est, "parameter_estimation_3-tom.csv")
 
 ```
 
@@ -48,12 +48,16 @@ est %>%
   coord_cartesian(
   ylim = c(0, 1),
 ) + 
-  theme_bw() + 
-  theme(axis.line = element_line(colour = "grey"),
-        axis.ticks =element_line(colour = "grey"),
+  theme_minimal() + 
+  theme(axis.line = element_line(colour = "black", size = 0.5),
+        axis.ticks =element_line(colour = "black", size = 0.5),
+        axis.title = element_text(color="black", size=10),
+        axis.text = element_text(color="black", size=7, face="bold"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.background = element_blank())
+        panel.background = element_blank(),
+        strip.text.x = element_text(color="black", size=10)) 
+ggsave("pk.png", dpi=500, width=4, height=4)
 
 
   # bias
@@ -69,12 +73,16 @@ est %>%
                                                       "100" = "Trial 100"))) +
   labs(x="Bias", y="Estimated bias") + 
   theme_minimal() + 
-  theme(axis.line = element_line(colour = "grey"),
-        axis.ticks =element_line(colour = "grey"),
+  theme_minimal() + 
+  theme(axis.line = element_line(colour = "black", size = 0.5),
+        axis.ticks =element_line(colour = "black", size = 0.5),
+        axis.title = element_text(color="black", size=10),
+        axis.text = element_text(color="black", size=7, face="bold"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.background = element_blank()) 
-
+        panel.background = element_blank(),
+        strip.text.x = element_text(color="black", size=10)) 
+ggsave("bias.png", dpi=500, width=4, height=4)
 
 #temp
 est %>% 
@@ -89,11 +97,15 @@ est %>%
                                                       "60" = "Trial 60",
                                                       "100" = "Trial 100"))) +
   theme_minimal() + 
-  theme(axis.line = element_line(colour = "grey"),
-        axis.ticks =element_line(colour = "grey"),
+  theme(axis.line = element_line(colour = "black", size = 0.5),
+        axis.ticks =element_line(colour = "black", size = 0.5),
+        axis.title = element_text(color="black", size=10),
+        axis.text = element_text(color="black", size=7, face="bold"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.background = element_blank())
+        panel.background = element_blank(),
+        strip.text.x = element_text(color="black", size=10)) 
+ggsave("temp.png", dpi=500, width=4, height=4)
 
 
 #volatility
@@ -109,11 +121,15 @@ est %>%
                                                       "30" = "Trial 30",
                                                       "60" = "Trial 60",
                                                       "100" = "Trial 100"))) +
-  theme(axis.line = element_line(colour = "grey"),
-        axis.ticks =element_line(colour = "grey"),
+  theme(axis.line = element_line(colour = "black", size = 0.5),
+        axis.ticks =element_line(colour = "black", size = 0.5),
+        axis.title = element_text(color="black", size=10),
+        axis.text = element_text(color="black", size=7, face="bold"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.background = element_blank())
+        panel.background = element_blank(),
+        strip.text.x = element_text(color="black", size=10)) 
+ggsave("volatility.png", dpi=500, width=4, height=4)
 
 
 

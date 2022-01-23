@@ -123,6 +123,7 @@ tomsup/plot_results.py
 # Data files
 simulations/results/*
 parameters_estimation_3-tom.csv
+papers/introducing_tomsup/parameters_estimation/parameter_estimation_3-tom.csv
 
 # R prog
 .Rproj.user/*
