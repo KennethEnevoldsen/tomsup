@@ -18,6 +18,9 @@ A Python Package for Agent-Based simulations. The package provides a computation
 
 # 📰 News
 
+- V. 1.1.3
+  - New plotting features were added
+  - Speed and memory improvements as well as support for multicore simulations 🏎
 - v. 1.1.0
   - A [speed comparison](missing) between the matlab implementation was introduced, showing the the tomsup implementation to be notably faster.
   - An extensive testsuite was introduced, for how to run it see the FAQ.
@@ -116,13 +119,7 @@ python -m pytest--cov=.
 <details>
   <summary>Does tomsup run on X?</summary>
 
-  DaCy is intended to run on all major OS, this includes Windows (latest version), MacOS (Catalina) and the latest version of Linux (Ubuntu). Below you can see if DaCy passes its test suite for the system of interest. The first one indicated Linux. Please note these are only the systems DaCy is being actively tested on, if you run on a similar system (e.g. an earlier version of Linux) DaCy will likely run there as well.
-
-| Operating System | Status                                                                                                                                                                                                                      |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ubuntu (Latest)  | [![github actions pytest ubuntu](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest-cov-comment.yml/badge.svg)](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest-cov-comment.yml)     |
-| MacOS (Catalina) | [![github actions pytest catalina](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest_mac_catalina.yml/badge.svg)](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest_mac_catalina.yml) |
-| Windows (Latest) | [![github actions pytest windows](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest_windows.yml/badge.svg)](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest_windows.yml)            |
+  tomssup is intended to run on all major OS, this includes Windows (latest version), MacOS (Catalina) and the latest version of Linux (Ubuntu). Please note these are only the systems tomsup is being actively tested on, if you run on a similar system (e.g. an earlier version of Linux) the package will likely run there as well.
 
   
 </details>
@@ -131,7 +128,7 @@ python -m pytest--cov=.
 <details>
   <summary>How is the documentation generated?</summary>
 
-  DaCy uses [sphinx](https://www.sphinx-doc.org/en/master/index.html) to generate documentation. It uses the [Furo](https://github.com/pradyunsg/furo) theme with a custom styling.
+  Tomsup uses [sphinx](https://www.sphinx-doc.org/en/master/index.html) to generate documentation. It uses the [Furo](https://github.com/pradyunsg/furo) theme with a custom styling.
 
   To make the documentation you can run:
   
