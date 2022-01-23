@@ -82,7 +82,8 @@ class Agent:
         elif self.history.empty:
             self.history = pd.DataFrame(data=kwargs, index=[0])
             if self.strategy.split("-")[-1] == "TOM":
-                self.history.loc[0, "internal_states"] = [kwargs["internal_states"]]
+                self.history = self.history.append(kwargs, ignore_index=True)
+                self.history = self.history.drop([0]).reset_index()
         else:
             self.history = self.history.append(kwargs, ignore_index=True)
 
@@ -489,7 +490,7 @@ class TOM(Agent):
         init_states: Union[dict, str] = "default",
         **kwargs,
     ) -> Agent:
-        """[summary]
+        """
 
         Args:
             level (int): Sophistication level of the agent.
