@@ -1,7 +1,7 @@
 # ------------- Setup -------------
 # import packages
 from psychopy import core, gui, event, visual
-import os, sys
+import os
 import pandas as pd
 import tomsup as ts
 
