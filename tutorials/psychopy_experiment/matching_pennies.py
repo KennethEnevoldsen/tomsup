@@ -17,16 +17,16 @@ os.chdir(dname)
 if not os.path.exists("data"):
     os.mkdir("data")
 
-#Get out names of data in the datafolder
+# Get out names of data in the datafolder
 l = os.listdir("data")
 
-#If there is data already present
+# If there is data already present
 if l:
-    #Find the max ID and set it 1 higher
+    # Find the max ID and set it 1 higher
     ID = max([int(i.split("_")[-1].split(".")[0]) for i in l])
     ID = ID + 1
 else:
-    #Otherwise start at 1
+    # Otherwise start at 1
     ID = 1
 
 
@@ -36,11 +36,13 @@ popup.addField("ID: ", ID)
 popup.addField("Age: ", 21)
 popup.addField("Gender", choices=["Male", "Female", "Other"])
 popup.addField("Number of trials", 2)
-popup.addField("Game type", choices=["penny_competitive","penny_cooperative"])
-popup.addField("Opponent Strategy", choices=["RB", "WSLS", "TFT", "QL",
-                                            "0-TOM", "1-TOM", "2-TOM", "3-TOM", "4-TOM"])
+popup.addField("Game type", choices=["penny_competitive", "penny_cooperative"])
+popup.addField(
+    "Opponent Strategy",
+    choices=["RB", "WSLS", "TFT", "QL", "0-TOM", "1-TOM", "2-TOM", "3-TOM", "4-TOM"],
+)
 popup.addField("Opponent parameters", "{}")
-popup.addField("Save opponent internal states", choices = ["False", "True"])
+popup.addField("Save opponent internal states", choices=["False", "True"])
 popup.show()
 
 if popup.OK:
@@ -64,8 +66,8 @@ else:
 exec(f"opponent_params = {opponent_params_str}")
 
 # ------------- create agent and payoff matrix -------------
-opponent_params['save_history'] = save_history
-tom = ts.create_agents(agents=opponent_strategy, start_params = opponent_params)
+opponent_params["save_history"] = save_history
+tom = ts.create_agents(agents=opponent_strategy, start_params=opponent_params)
 penny = ts.PayoffMatrix(name=game_type)
 
 # ------------- Defining Variables and function -------------
@@ -108,14 +110,14 @@ After guessing, press ENTER to continue.
 To quit the game, press ESCAPE.
 When you have read and understood the above, press ENTER to continue."""
 
-#Set rulestext to fit the specified game
+# Set rulestext to fit the specified game
 if game_type == "penny_competitive":
     rulestext = rulestext_pennycompetitive
 elif game_type == "penny_cooperative":
     rulestext = rulestext_pennycooperattive
 
 # Show_text for normal text
-def show_text(txt):  
+def show_text(txt):
     msg = visual.TextStim(win, text=txt, height=0.05)
     msg.draw()
     win.flip()
@@ -234,7 +236,8 @@ for trial in trial_list:
     trial["Response_tom"] = resp_tom
     trial["payoff_participant"] = payoff_part
     trial["payoff_tom"] = payoff_tom
-    if save_history: trial["tom_internal_states"] = tom.get_internal_states()
+    if save_history:
+        trial["tom_internal_states"] = tom.get_internal_states()
 
     # write data (writes at each trial, so that even if the program crashes there should be an issue)
     pd.DataFrame(trial_list).to_csv("data/ID_" + str(ID) + ".csv")
@@ -242,14 +245,16 @@ for trial in trial_list:
 # write data
 pd.DataFrame(trial_list).to_csv("data/ID_" + str(ID) + ".csv")
 
-show_text("""
+show_text(
+    """
 This concludes the game!
 Thank you playing!
 
 Press ENTER to quit.
-""")
+"""
+)
 
 event.waitKeys()
 
-#Close psychopy
+# Close psychopy
 core.quit()
