@@ -1,21 +1,33 @@
+# ------------- Setup -------------
 # import packages
 from psychopy import core, gui, event, visual
 import os
 import pandas as pd
-
-# add tomsup to path
-import sys
-
-sys.path.insert(1, "/Users/au561649/Desktop/Github/tomsup/python package")
 import tomsup as ts
 
-# ------------- Getting participant information ---------
+# Set path to location of the file
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 
-# check if ID exists:
-if os.path.exists("data"):
-    l = os.listdir("data")
+# ------------- Getting participant information -------------
+
+
+# Create data folder if it doesn't exist
+if not os.path.exists("data"):
+    os.mkdir("data")
+
+# Get out names of data in the datafolder
+l = os.listdir("data")
+
+# If there is data already present
+if l:
+    # Find the max ID and set it 1 higher
     ID = max([int(i.split("_")[-1].split(".")[0]) for i in l])
     ID = ID + 1
+else:
+    # Otherwise start at 1
+    ID = 1
 
 
 # Pop-up asking for participant info
@@ -23,47 +35,95 @@ popup = gui.Dlg(title="Matching Pennies")
 popup.addField("ID: ", ID)
 popup.addField("Age: ", 21)
 popup.addField("Gender", choices=["Male", "Female", "Other"])
-popup.addField("ToM level", choices=["0", "1", "2", "3", "4"])
 popup.addField("Number of trials", 2)
+popup.addField("Game type", choices=["penny_competitive", "penny_cooperative"])
+popup.addField(
+    "Opponent Strategy",
+    choices=["RB", "WSLS", "TFT", "QL", "0-TOM", "1-TOM", "2-TOM", "3-TOM", "4-TOM"],
+)
+popup.addField("Opponent parameters", "{}")
+popup.addField("Save opponent internal states", choices=["False", "True"])
 popup.show()
 
 if popup.OK:
     ID = popup.data[0]
     age = popup.data[1]
     gender = popup.data[2]
-    k = popup.data[3]
-    n_trials = popup.data[4]
+    n_trials = popup.data[3]
+    game_type = popup.data[4]
+    opponent_strategy = popup.data[5]
+    opponent_params_str = popup.data[6]
+    save_history_str = popup.data[7]
+
 elif popup.Cancel:
     core.quit()
 
-print(f"this is {k}")
+if save_history_str == "True":
+    save_history = True
+else:
+    save_history = False
 
-# ------------- create agent and payoff matrix ---------
-tom = ts.create_agents(agents="RB")  # this need to be changed
-penny = ts.PayoffMatrix(name="penny_competitive")
+exec(f"opponent_params = {opponent_params_str}")
 
-# ------------- Defining Variables and function ---------
-intro0 = f"""Dear participant
+# ------------- create agent and payoff matrix -------------
+opponent_params["save_history"] = save_history
+tom = ts.create_agents(agents=opponent_strategy, start_params=opponent_params)
+penny = ts.PayoffMatrix(name=game_type)
 
-In the following experiment you will compete against another person in the matching pennies game for {n_trials}.
+# ------------- Defining Variables and function -------------
+introtext = f"""Dear participant
 
-Before starting the experiment, we would like to inform you that no personal information is collected, and that beside the given information no personal information will be recorded. If at any time you should feel uncomfortable, you are free to stop the experiment and ask for any generated data to be deleted.
-If you have read the above and agree to proceed, press ENTER."""
+Thank you for playing against tomsup!
+Here we will make you play against simulated agents in simple decision-making games.
 
-intro1 = f"""We will now briefly explain the rules of the game.
+We ask you for some basic demographic information. Apart from that, only performance in the game is collected.
+If you at any time wish to do so, you are free to stop the experiment and ask for any generated data to be deleted.
+If you have read the above and wish to proceed, press ENTER."""
 
-You will see two closed hands. Your opponent will have hidden a penny in either one of them. Yours goal is to figure out which of the two hands contain the penny.
-If you guess right, you get a point, if not, your opponnent gains a point.
-If you have read the above and understand the rules, press ENTER."""
+rulestext_pennycompetitive = f"""
+You will now play a game of competitive matching pennies.
 
+You will see the two hands of your opponent, one on the left, the other on the right.
+One of the hands hides a penny. Your goal is to figure out which of the two hands contain the penny.
+If you guess the correct hand, you get a point and your opponent loses a point.
+If you guess incorrectly, you lose a point and your opponent gains a point.
+The game will last for {n_trials} trials.
 
-def show_text(txt):  # Show_text for normal text
+By pressing the "right arrow" on your keyboard, you guess "right".
+By pressing the "left arrow" on your keyboard, you guess "left".
+After guessing, press ENTER to continue.
+To quit the game, press ESCAPE.
+When you have read and understood the above, press ENTER to continue."""
+
+rulestext_pennycooperattive = f"""
+You will now play a game of cooperative matching pennies.
+
+You will see the two hands of your opponent, one on the left, the other on the right.
+One of the hands hides a penny. Your goal is to figure out which of the two hands contain the penny.
+If you guess the correct hand, you and your opponent both get get a point.
+If you guess incorrectly, you and your opponent both lose a point.
+The game will last for {n_trials} trials.
+
+By pressing the "right arrow" on your keyboard, you guess "right".
+By pressing the "left arrow" on your keyboard, you guess "left".
+After guessing, press ENTER to continue.
+To quit the game, press ESCAPE.
+When you have read and understood the above, press ENTER to continue."""
+
+# Set rulestext to fit the specified game
+if game_type == "penny_competitive":
+    rulestext = rulestext_pennycompetitive
+elif game_type == "penny_cooperative":
+    rulestext = rulestext_pennycooperattive
+
+# Show_text for normal text
+def show_text(txt):
     msg = visual.TextStim(win, text=txt, height=0.05)
     msg.draw()
     win.flip()
     k = event.waitKeys(
         keyList=["return", "escape"]
-    )  # press enter to move on or ecape to quit
+    )  # press enter to move on or escape to quit
     if k[0] in ["escape"]:
         core.quit()
 
@@ -78,7 +138,7 @@ RH_open = "images/RH_open.png"
 LH_coin = "images/LH_coin.png"
 RH_coin = "images/RH_coin.png"
 
-# ---------- Preparing dataframe for CSV ----------
+# ---------- Preparing dataframe for CSV -------------
 trial_list = []
 for trial in range(n_trials):
     trial_list += [
@@ -86,7 +146,7 @@ for trial in range(n_trials):
             "ID": ID,
             "age": age,
             "gender": gender,
-            "tom_level": k,
+            "opponent_strategy": opponent_strategy,
             "trialnr": trial,
             "Response_participant": "",
             "Response_tom": "",
@@ -96,12 +156,12 @@ for trial in range(n_trials):
         }
     ]
 
-# ------------- Running the experiment ---------
+# ------------- Running the experiment -------------
 
 # run intro
-show_text(intro0)
-show_text(intro1)
-op_choice = None  # setting opponenent choice to none for the first round
+show_text(introtext)
+show_text(rulestext)
+op_choice = None  # setting opponent choice to none for the first round
 current_score_part = 0
 current_score_tom = 0
 
@@ -138,7 +198,7 @@ for trial in trial_list:
         picture1.draw()
         picture2.draw()
         win.flip()
-        core.wait(wait_time)
+        event.waitKeys()
     elif k[0] == "right":
         resp_part = 1
         trial["RT"] = stopwatch.getTime()
@@ -151,24 +211,24 @@ for trial in trial_list:
         picture1.draw()
         picture2.draw()
         win.flip()
-        core.wait(wait_time)
+        event.waitKeys()
 
     # get ToM response
-    resp_tom = tom.compete(p_matrix=penny, op_choice=op_choice, agent=1)
+    resp_tom = tom.compete(p_matrix=penny, op_choice=resp_part, agent=1)
 
     # get payoff
     payoff_part = penny.payoff(
-        action_agent0=resp_part, action_agent1=resp_tom, agent=0
+        choice_agent0=resp_part, choice_agent1=resp_tom, agent=0
     )  # agent0 is seeker e.g. the participant
-    payoff_tom = penny.payoff(action_agent0=resp_part, action_agent1=resp_tom, agent=1)
+    payoff_tom = penny.payoff(choice_agent0=resp_part, choice_agent1=resp_tom, agent=1)
 
     # Give response text
     rl_tom = "left" if resp_tom == 0 else "right"
     current_score_part += payoff_part
     current_score_tom += payoff_tom
     show_text(
-        f"You choose {k[0]} and penny was in the {rl_tom} hand. This results in a payoff of {payoff_part}. This mean that \n\n your current score is: "
-        + f"{current_score_part} \n your opponents score is: {current_score_tom}. Press enter to continue."
+        f"You chose {k[0]} and the penny was in the {rl_tom} hand. This gives you {payoff_part} points while your opponent gets {payoff_part} points.\n\n"
+        + f"Your current score is: {current_score_part} \n Your opponent's current score is: {current_score_tom}. \nPress ENTER to continue."
     )
 
     # Save data
@@ -176,12 +236,25 @@ for trial in trial_list:
     trial["Response_tom"] = resp_tom
     trial["payoff_participant"] = payoff_part
     trial["payoff_tom"] = payoff_tom
+    if save_history:
+        trial["tom_internal_states"] = tom.get_internal_states()
 
     # write data (writes at each trial, so that even if the program crashes there should be an issue)
     pd.DataFrame(trial_list).to_csv("data/ID_" + str(ID) + ".csv")
 
-if not os.path.exists("data"):
-    os.makedirs("data")
-
 # write data
 pd.DataFrame(trial_list).to_csv("data/ID_" + str(ID) + ".csv")
+
+show_text(
+    """
+This concludes the game!
+Thank you playing!
+
+Press ENTER to quit.
+"""
+)
+
+event.waitKeys()
+
+# Close psychopy
+core.quit()
