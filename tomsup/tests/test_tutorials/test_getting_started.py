@@ -162,9 +162,11 @@ def test_tutorial():
     )
 
     df = group.get_results()
-    print(df.loc[(df["agent0"] == "1-TOM") & (df["agent1"] == "2-TOM")]["history_agent1"][1][
-        "internal_states"
-    ]["opponent_states"][1]["own_states"])
+    print(
+        df.loc[(df["agent0"] == "1-TOM") & (df["agent1"] == "2-TOM")]["history_agent1"][
+            1
+        ]["internal_states"]["opponent_states"][1]["own_states"]
+    )
 
     # volatility
     group.plot_history(

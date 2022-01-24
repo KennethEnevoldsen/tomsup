@@ -26,6 +26,8 @@ from tomsup.plot import (
     plot_heatmap,
 )
 
+from wasabi import msg
+
 
 ###################
 # ___ AGENT ___
@@ -80,7 +82,8 @@ class Agent:
         elif self.history.empty:
             self.history = pd.DataFrame(data=kwargs, index=[0])
             if self.strategy.split("-")[-1] == "TOM":
-                self.history.loc[0, "internal_states"] = [kwargs["internal_states"]]
+                self.history = self.history.append(kwargs, ignore_index=True)
+                self.history = self.history.drop([0]).reset_index()
         else:
             self.history = self.history.append(kwargs, ignore_index=True)
 
@@ -487,7 +490,7 @@ class TOM(Agent):
         init_states: Union[dict, str] = "default",
         **kwargs,
     ) -> Agent:
-        """[summary]
+        """
 
         Args:
             level (int): Sophistication level of the agent.
@@ -545,7 +548,10 @@ class TOM(Agent):
             params["bias"] = bias
 
         self.params = params
-        self.internal = init_k_tom(params, level, priors=init_states)
+        if init_states == "default":
+            self.internal = init_k_tom(params, level, priors=init_states)
+        else:
+            self.internal = init_states
         self.__kwargs = kwargs
 
         super().__init__(**kwargs)
@@ -556,6 +562,7 @@ class TOM(Agent):
             "b_temp": b_temp,
             "bias": bias,
             "dilution": dilution,
+            "init_states": self.internal,
             **kwargs,
         }
 
@@ -606,7 +613,7 @@ class TOM(Agent):
             Optional[float]: The bias of the agent
         """
         if self.bias is None:
-            print("TOM does not have a bias.")
+            msg.warn("TOM does not have a bias.")
         return self.bias
 
     def get_dilution(self) -> Optional[float]:
@@ -614,8 +621,8 @@ class TOM(Agent):
         Returns:
             Optional[float]: The dilution of the agent
         """
-        if self.get_dilution is None:
-            print("TOM does not have a dilution parameter.")
+        if self.dilution is None:
+            msg.warn("TOM does not have a dilution parameter.")
         return self.dilution
 
     def get_level(self) -> float:
@@ -638,6 +645,7 @@ class TOM(Agent):
             internal_states (dict): The desired internal states of the agent.
         """
         self.internal = internal_states
+        self._start_params["init_states"] = self.internal
 
     def get_parameters(self) -> dict:
         """
@@ -937,7 +945,7 @@ class AgentGroup:
         result = []
         for pair in self.pairing:
             if verbose:
-                print(
+                msg.info(
                     f"Currently the pair, {pair}, is competing for {n_sim} \
                         simulations, each containg {n_rounds} rounds."
                 )
@@ -958,7 +966,7 @@ class AgentGroup:
             result.append(res)
 
         if verbose:
-            print("Simulation complete")
+            msg.good("Simulation complete")
 
         self.__df = ResultsDf(pd.concat(result))  # concatenate into one df
 
@@ -980,8 +988,9 @@ class AgentGroup:
         na_color: str = "xkcd:white",
         xlab: str = "Agent",
         ylab: str = "Opponent",
+        cbarlabel: str = "Average score of the agent",
         show: bool = True,
-    ) -> None:
+    ):
         """plot a heatmap of the results.
 
         Args:
@@ -1005,6 +1014,7 @@ class AgentGroup:
             na_color,
             xlab,
             ylab,
+            cbarlabel=cbarlabel,
             show=show,
         )
 
@@ -1013,9 +1023,10 @@ class AgentGroup:
         agent0: str,
         agent1: str,
         agent: int = 0,
+        sim: Optional[int] = None,
         plot_individual_sim: bool = False,
         show: bool = True,
-    ) -> None:
+    ):
         """plots the choice of an agent in a defined agent pair
 
         Args:
@@ -1031,12 +1042,11 @@ class AgentGroup:
             agent1=agent1,
             agent=agent,
             plot_individual_sim=plot_individual_sim,
+            sim=sim,
             show=show,
         )
 
-    def plot_score(
-        self, agent0: str, agent1: str, agent: int = 0, show: bool = True
-    ) -> None:
+    def plot_score(self, agent0: str, agent1: str, agent: int = 0, show: bool = True):
         """plots the score of an agent in a defined agent pair
 
         Args:
@@ -1057,8 +1067,8 @@ class AgentGroup:
         ylab: str = "",
         xlab: str = "Round",
         show: bool = True,
-    ) -> None:
-        """pPlots the history of an agent in a defined agent pair
+    ):
+        """Plots the history of an agent in a defined agent pair
 
         Args:
             agent0 (str): The name of agent0
@@ -1098,7 +1108,7 @@ class AgentGroup:
 
     def plot_p_k(
         self, agent0: str, agent1: str, level: int, agent: int = 0, show: bool = True
-    ) -> None:
+    ):
         """plots the p_k of a k-ToM agent in a defined agent pair
 
         Args:
@@ -1110,9 +1120,7 @@ class AgentGroup:
         self.__tom_in_group(agent0, agent1, agent)
         plot_p_k(self.__df, agent0, agent1, agent=agent, level=level, show=show)
 
-    def plot_p_self(
-        self, agent0: str, agent1: str, agent: int = 0, show: bool = True
-    ) -> None:
+    def plot_p_self(self, agent0: str, agent1: str, agent: int = 0, show: bool = True):
         """plots the p_self of a k-ToM agent in a defined agent pair
 
         Args:
@@ -1132,7 +1140,7 @@ class AgentGroup:
         level: int = 0,
         agent: int = 0,
         show: bool = True,
-    ) -> None:
+    ):
         """plots the p_self of a k-ToM agent in a defined agent pair
 
         Args:
@@ -1335,7 +1343,7 @@ def compete(
 
         def __compete(sim):
             if verbose:
-                print(f"\tRunning simulation {sim+1} out of {n_sim}")
+                msg.info(f"\tRunning simulation {sim+1} out of {n_sim}")
 
             res = compete(
                 agent_0,

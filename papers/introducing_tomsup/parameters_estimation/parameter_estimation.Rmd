@@ -1,0 +1,180 @@
+---
+title: "parameter_estimation"
+author: "K. Enevoldsen"
+date: "8/17/2021"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(gganimate)
+```
+
+
+```{r}
+est = read_csv("../../../parameters_estimation_3-tom.csv")
+est$round = as.integer(est$round) + 1
+pk = read_csv("../parameters_estimation_pk.csv")
+pk$round = as.integer(pk$round) + 1
+write_csv(est, "parameter_estimation_3-tom.csv")
+
+```
+
+```{r}
+
+quantile(c(1,1,1,2,2,2,3,3,3))[[2]]
+
+mean_quan <- function(x) {  
+  y25 = quantile(x)[[2]]
+  y50 = quantile(x)[[3]]
+  y75= quantile(x)[[4]]
+  data.frame(y = y50, ymin = y25, ymax = y75)
+}
+
+mean_sd <- function(x, mult = 1) {  
+  sd <- mult * sd(x)
+  mean <- mean(x)
+  data.frame(y = mean, ymin = mean - sd, ymax = mean + sd)
+}
+
+
+# p(k)
+est %>% 
+  ggplot(aes(round, estimated_prob_k)) +
+  stat_summary(fun=median, geom="line") + 
+  stat_summary(fun.data=mean_quan, geom="ribbon", alpha=0.25) + 
+  facet_wrap(~k,  labeller = as_labeller(c("0" = "k=0",  "1"= "k=1", "2"= "k=2"))) + 
+  labs(x="Trial", y="Estimated probability of correct k") + 
+  coord_cartesian(
+  ylim = c(0, 1),
+) + 
+  theme_minimal() + 
+  theme(axis.line = element_line(colour = "black", size = 0.5),
+        axis.ticks =element_line(colour = "black", size = 0.5),
+        axis.title = element_text(color="black", size=10),
+        axis.text = element_text(color="black", size=7, face="bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        strip.text.x = element_text(color="black", size=10)) 
+ggsave("pk.png", dpi=500, width=4, height=4)
+
+
+  # bias
+est %>% 
+  filter(round %in% c(5, 10, 30, 60, 100)) %>% 
+  ggplot(aes(bias, estimated_bias)) +
+  geom_boxplot(aes(group=bias), width = 0.1, fill = "lightsteelblue", outlier.shape = NA, alpha= 0.5) +
+  geom_smooth(method = "lm", formula = "y~x", color ="black", se = FALSE) +
+  facet_wrap(~round, nrow=1, labeller = as_labeller(c("5" = "Trial 5",
+                                                      "10" = "Trial 10",
+                                                      "30" = "Trial 30",
+                                                      "60" = "Trial 60",
+                                                      "100" = "Trial 100"))) +
+  labs(x="Bias", y="Estimated bias") + 
+  theme_minimal() + 
+  theme_minimal() + 
+  theme(axis.line = element_line(colour = "black", size = 0.5),
+        axis.ticks =element_line(colour = "black", size = 0.5),
+        axis.title = element_text(color="black", size=10),
+        axis.text = element_text(color="black", size=7, face="bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        strip.text.x = element_text(color="black", size=10)) 
+ggsave("bias.png", dpi=500, width=4, height=4)
+
+#temp
+est %>% 
+  filter(round %in% c(5, 30, 60, 100)) %>% 
+  ggplot(aes(b_temp, estimated_b_temp)) +
+  geom_boxplot(aes(group=b_temp), width = 0.1, fill = "lightsteelblue", outlier.shape = NA, alpha= 0.5) +
+  geom_smooth(method = "lm", formula = "y~x", color="black", se=FALSE) +
+  labs(x="Behavioural temperature", y="Estimated behavioural temperature") + 
+  facet_wrap(~round, nrow=1, labeller = as_labeller(c("5" = "Trial 5",
+                                                      "10" = "Trial 10",
+                                                      "30" = "Trial 30",
+                                                      "60" = "Trial 60",
+                                                      "100" = "Trial 100"))) +
+  theme_minimal() + 
+  theme(axis.line = element_line(colour = "black", size = 0.5),
+        axis.ticks =element_line(colour = "black", size = 0.5),
+        axis.title = element_text(color="black", size=10),
+        axis.text = element_text(color="black", size=7, face="bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        strip.text.x = element_text(color="black", size=10)) 
+ggsave("temp.png", dpi=500, width=4, height=4)
+
+
+#volatility
+est %>% 
+  filter(round %in% c(5, 30, 60, 100)) %>% 
+  ggplot(aes(volatility, estimated_volatility)) +
+  geom_boxplot(aes(group=volatility), width = 0.1, fill = "lightsteelblue", outlier.shape = NA, alpha= 0.5) +
+  geom_smooth(method = "lm", formula = "y~x", color="black") +
+  labs(x="Volatility", y="Estimated volatility") + 
+  theme_minimal() + 
+  facet_wrap(~round, nrow=1, labeller = as_labeller(c("5" = "Trial 5",
+                                                      "10" = "Trial 10",
+                                                      "30" = "Trial 30",
+                                                      "60" = "Trial 60",
+                                                      "100" = "Trial 100"))) +
+  theme(axis.line = element_line(colour = "black", size = 0.5),
+        axis.ticks =element_line(colour = "black", size = 0.5),
+        axis.title = element_text(color="black", size=10),
+        axis.text = element_text(color="black", size=7, face="bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        strip.text.x = element_text(color="black", size=10)) 
+ggsave("volatility.png", dpi=500, width=4, height=4)
+
+
+
+# bias gif
+est %>% 
+  ggplot(aes(bias, estimated_bias, group = bias)) +
+  geom_abline(slope=1, intercept=0, color="red") + 
+  geom_boxplot(width = 0.1,fill="lightsteelblue", outlier.shape = NA) +
+  labs(x="Bias", y="Estimated bias", title = 'Bias estimation at round: {frame_time}') + 
+  transition_time(round) + 
+  theme_minimal() + 
+  ease_aes('linear') + 
+  theme(axis.line = element_line(colour = "grey"),
+        axis.ticks =element_line(colour = "grey"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+
+b_temp = est %>% 
+  ggplot(aes(b_temp, estimated_b_temp, group = b_temp)) +
+  geom_abline(slope=1, intercept=0, color="red") + 
+  geom_boxplot(width = 0.1,fill="lightsteelblue", outlier.shape = NA) +
+  labs(x="Behavioural temperature", y="Estimated behavioural temperature", title = 'Temperature estimated at round: {frame_time}') + 
+  transition_time(round) + 
+  theme_minimal() + 
+  ease_aes('linear') + 
+  theme(axis.line = element_line(colour = "grey"),
+        axis.ticks =element_line(colour = "grey"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+
+volatility = est %>% filter(k==0) %>% 
+  ggplot(aes(volatility, estimated_volatility, group = volatility)) +
+  geom_abline(slope=1, intercept=0, color="red") + 
+  geom_boxplot(width = 0.1,fill="lightsteelblue") +
+  labs(x="Volatility", y="Estimated volatility", title = 'Volatility estimatation at round: {frame_time}') + 
+  transition_time(round) + 
+  theme_minimal() + 
+  ease_aes('linear') + 
+  theme(axis.line = element_line(colour = "grey"),
+        axis.ticks =element_line(colour = "grey"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+```
+
+

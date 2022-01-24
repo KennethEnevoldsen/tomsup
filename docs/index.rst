@@ -17,6 +17,16 @@ examples of how resulting data can be analyzed.
 📰 News
 ---------------------------------
 
+* Version 1.1.5
+  
+  - New plotting features were added
+  
+  - Speed and memory improvements as well as support for multicore simulations 🏎
+  
+  - Added workflows to ensure dependencies are being kept up to date
+
+  - Minor bugfixes 
+
 * Version 1.1.0
 
   - A `speed comparison <missing>`__ between the matlab implementation was introduced, showing the the tomsup implementation to be notably faster.
@@ -25,7 +35,7 @@ examples of how resulting data can be analyzed.
 
   - A `documentation <https://KennethEnevoldsen.github.io/tomsup/>`__ site was introduced.
 
-  - Continiuous integration to ensure that the package always work as intended.
+  - Continiuous integration to ensure that the package always works as intended.
 
   - A new logo was introduced 🌟
 

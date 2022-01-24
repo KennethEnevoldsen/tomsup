@@ -1,4 +1,5 @@
-<a href="https://github.com/KennethEnevoldsen/tomsup"><img src="img/icon_black2.png" width="190" align="right" /></a>
+<a href="https://github.com/KennethEnevoldsen/tomsup"><img src="https://github.com/KennethEnevoldsen/tomsup/raw/master/img/icon_black2.png" width="190" align="right" /></a>
+
 
 # tomsup: Theory of Mind Simulation using Python 
 
@@ -15,14 +16,20 @@
 
 A Python Package for Agent-Based simulations. The package provides a computational eco-system for investigating and comparing computational models of hypothesized Theory of mind (ToM) mechanisms and for using them as experimental stimuli. The package notably includes an easy-to-use implementation of the variational Bayesian k-ToM model developed by [Devaine, et al. (2017)](http://dx.plos.org/10.1371/journal.pcbi.1005833). This model has been shown able to capture individual and group-level differences in social skills, including between clinical populations and across primate species. It has also been deemed among the best computational models of ToM in terms of interaction with others and recursive representation of mental states. We provide a series of tutorials on how to implement the k-ToM model and a score of simpler types of ToM mechanisms in game-theory based simulations and experimental stimuli, including how to specify custom ToM models, and show examples of how resulting data can be analyzed.
 
+
 # 📰 News
 
+- v. 1.1.5
+  - New plotting features were added
+  - Speed and memory improvements as well as support for multicore simulations 🏎
+  - Added workflows to ensure dependencies are being updated
+  - Minor bugfixes 
 - v. 1.1.0
   - A [speed comparison](missing) between the matlab implementation was introduced, showing the the tomsup implementation to be notably faster.
   - An extensive testsuite was introduced, for how to run it see the FAQ.
   - Code coverage was upped to 86% and code quality was raised to A.
   - A [documentation](https://KennethEnevoldsen.github.io/tomsup/) site was introduced.
-  - Added continiuous integration to ensure that the package always work as intended, with support for mac, windows and linux tests.
+  - Added continiuous integration to ensure that the package always works as intended, with support for mac, windows and linux tests.
   - A new logo was introduced 🌟
 - v. 1.0.0
   - tomsup released its first version along with a [preprint](https://psyarxiv.com/zcgkv/) on psyarxiv
@@ -30,7 +37,7 @@ A Python Package for Agent-Based simulations. The package provides a computation
 
 # 🔧 Setup and installation
 
-tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [the official pip website](https://pip.pypa.io/en/stable/installing/), otherwise, simply run:
+tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [the official pip website](https://pip.pypa.io/en/stable/installing/), otherwise, run:
 
 ```bash
 pip install tomsup 
@@ -39,7 +46,7 @@ pip install tomsup
 <details>
   <summary>Detailed instructions</summary>
 
-  You can also install it directly from github by simply running:
+  You can also install it directly from GitHub by simply running:
   ```bash
   pip install git+https://github.com/KennethEnevoldsen/tomsup.git
   ```
@@ -61,13 +68,13 @@ To get started with tomsup we recommend the tutorials in the tutorials [folder](
 The tutorials are provided as Jupyter Notebooks. If you do not have Jupyter Notebook installed, instructions for installing and running can be found [here]( http://jupyter.org/install). 
 
 
-| Tutorial                                                                                                                         | Content                                                                                        | file name                                         |       Open with                                                                                                                                                                                    |
+| Tutorial                                                                                                                         | Content                                                                                        | file name                                         | Open with                                                                                                                                                                                              |
 | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Documentation](https://kennethenevoldsen.github.io/tomsup/)                     | The documentations of tomsup |                        |  |
+| [Documentation](https://kennethenevoldsen.github.io/tomsup/)                                                                     | The documentations of tomsup                                                                   |                                                   |                                                                                                                                                                                                        |
 | [Introduction](https://github.com/KennethEnevoldsen/tomsup/blob/master/tutorials/paper_implementation.ipynb)                     | a general introduction to the features of tomsup which follows the implementation in the paper | paper_implementation.ipynb                        | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KennethEnevoldsen/tomsup/blob/master/tutorials/paper_implementation.ipynb)       |
 | [Creating an agent](https://github.com/KennethEnevoldsen/tomsup/blob/master/tutorials/Creating_an_agent.ipynb)                   | an example of how you would create new agent for the package.                                  | Creating_an_agent.ipynb                           | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KennethEnevoldsen/tomsup/blob/master/tutorials/Creating_an_agent.ipynb)          |
 | [Specifying internal states](https://github.com/KennethEnevoldsen/tomsup/blob/master/tutorials/specifying_internal_states.ipynb) | a short guide on how to specify internal states on a k-ToM agent                               | specifying_internal_states.ipynb                  | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KennethEnevoldsen/tomsup/blob/master/tutorials/specifying_internal_states.ipynb) |
-| [Pscyhopy experiment](https://github.com/KennethEnevoldsen/tomsup/tree/master/tutorials/psychopy_experiment)                     | An example of how one might implement tomsup in an experiment                                  | Not a notebook, but a folder, psychopy_experiment | [![Open in Github](https://img.shields.io/badge/%20-Open%20in%20GitHub-black?style=plastic&logo=github)](https://github.com/KennethEnevoldsen/tomsup/tree/master/tutorials/psychopy_experiment)        |
+| [Psychopy experiment](https://github.com/KennethEnevoldsen/tomsup/tree/master/tutorials/psychopy_experiment)                     | An example of how one might implement tomsup in an experiment                                  | Not a notebook, but a folder, psychopy_experiment | [![Open in Github](https://img.shields.io/badge/%20-Open%20in%20GitHub-black?style=plastic&logo=github)](https://github.com/KennethEnevoldsen/tomsup/tree/master/tutorials/psychopy_experiment)        |
 
 
 # 🤔 Issues and Usage Q&A
@@ -115,13 +122,7 @@ python -m pytest--cov=.
 <details>
   <summary>Does tomsup run on X?</summary>
 
-  DaCy is intended to run on all major OS, this includes Windows (latest version), MacOS (Catalina) and the latest version of Linux (Ubuntu). Below you can see if DaCy passes its test suite for the system of interest. The first one indicated Linux. Please note these are only the systems DaCy is being actively tested on, if you run on a similar system (e.g. an earlier version of Linux) DaCy will likely run there as well.
-
-| Operating System | Status                                                                                                                                                                                                                      |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ubuntu (Latest)  | [![github actions pytest ubuntu](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest-cov-comment.yml/badge.svg)](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest-cov-comment.yml)     |
-| MacOS (Catalina) | [![github actions pytest catalina](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest_mac_catalina.yml/badge.svg)](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest_mac_catalina.yml) |
-| Windows (Latest) | [![github actions pytest windows](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest_windows.yml/badge.svg)](https://github.com/kennethenevoldsen/tomsup/actions/workflows/pytest_windows.yml)            |
+  tomssup is intended to run on all major OS, this includes Windows (latest version), MacOS (Catalina) and the latest version of Linux (Ubuntu). Please note these are only the systems tomsup is being actively tested on, if you run on a similar system (e.g. an earlier version of Linux) the package will likely run there as well.
 
   
 </details>
@@ -130,7 +131,7 @@ python -m pytest--cov=.
 <details>
   <summary>How is the documentation generated?</summary>
 
-  DaCy uses [sphinx](https://www.sphinx-doc.org/en/master/index.html) to generate documentation. It uses the [Furo](https://github.com/pradyunsg/furo) theme with a custom styling.
+  Tomsup uses [sphinx](https://www.sphinx-doc.org/en/master/index.html) to generate documentation. It uses the [Furo](https://github.com/pradyunsg/furo) theme with a custom styling.
 
   To make the documentation you can run:
   
