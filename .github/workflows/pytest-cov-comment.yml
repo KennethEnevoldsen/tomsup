@@ -48,12 +48,13 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run and write pytest
       run: |
-        python ./dev/pytest-coverage/run_coverage.py
+        python -m  pytest --cov=tomsup --cov-report term-missing | tee pytest-coverage.txt
+
     - name: Pytest coverage comment
       id: coverage-comment
       uses: MishaKav/pytest-coverage-comment@v1.1.19
       with:
-        pytest-coverage-path: ./dev/pytest-coverage/pytest-coverage.txt
+        pytest-coverage-path: ./pytest-coverage.txt
 
     - name: Check the output coverage
       run: |
