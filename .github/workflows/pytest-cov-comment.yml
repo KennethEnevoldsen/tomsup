@@ -31,7 +31,7 @@ jobs:
         pip install -r requirements.txt
     - name: Run and write pytest
       run: |
-        python ./dev/pytest-coverage/run_coverage.py
+        python -m  pytest --cov=tomsup --cov-report term-missing | tee pytest-coverage.txt
 
   pytest-coverage:
     runs-on: ubuntu-latest
