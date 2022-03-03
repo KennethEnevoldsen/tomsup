@@ -98,8 +98,8 @@ def p_opk_approx_fun(
         )
 
     # Equation
-    p_opk_approx = (prev_p_op_mean + b * prev_var_prepped ** c) / np.sqrt(
-        1 + a * prev_var_prepped ** d
+    p_opk_approx = (prev_p_op_mean + b * prev_var_prepped**c) / np.sqrt(
+        1 + a * prev_var_prepped**d
     )
 
     # Output variable transform
@@ -177,7 +177,7 @@ def param_var_update(
         + p_k[:, np.newaxis]
         * prev_p_op_mean[:, np.newaxis]
         * (1 - prev_p_op_mean[:, np.newaxis])
-        * prev_gradient ** 2
+        * prev_gradient**2
     )
 
     # Output variable transform
@@ -315,7 +315,7 @@ def p_opk_fun(p_op_mean: np.array, param_var: np.array, gradient: np.array):
     param_var = np.exp(param_var)
 
     # Prepare variance by weighing with gradient
-    var_prepped = np.sum((param_var * gradient ** 2), axis=1)
+    var_prepped = np.sum((param_var * gradient**2), axis=1)
 
     # Calculate
     p_opk = p_op_mean / np.sqrt(1 + a * var_prepped)
