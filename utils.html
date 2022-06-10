@@ -1,8 +1,8 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
 <meta property="og:title" content="Utility Functions" />
   
@@ -13,10 +13,10 @@
 <meta property="og:description" content="These include convenience function for getting started using tomsup. tomsup.utils: This script contains utility functions used in the tomsup package" />
   <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="k-ToM Functions" href="ktom_functions.html" /><link rel="prev" title="Plot" href="plot.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>Utility Functions - tomsup 1.1.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -205,7 +205,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -220,46 +221,47 @@
         </div>
         <article role="main">
           <section id="utility-functions">
-<h1>Utility Functions<a class="headerlink" href="#utility-functions" title="Permalink to this headline">#</a></h1>
+<h1>Utility Functions<a class="headerlink" href="#utility-functions" title="Permalink to this heading">#</a></h1>
 <p>These include convenience function for getting started using tomsup.</p>
 <section id="module-tomsup.utils">
-<span id="tomsup-utils"></span><h2>tomsup.utils<a class="headerlink" href="#module-tomsup.utils" title="Permalink to this headline">#</a></h2>
+<span id="tomsup-utils"></span><h2>tomsup.utils<a class="headerlink" href="#module-tomsup.utils" title="Permalink to this heading">#</a></h2>
 <p>This script contains utility functions used in the tomsup package</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.utils.create_agents">
-<span class="sig-prename descclassname"><span class="pre">tomsup.utils.</span></span><span class="sig-name descname"><span class="pre">create_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="agent.html#tomsup.agent.AgentGroup" title="tomsup.agent.AgentGroup"><span class="pre">tomsup.agent.AgentGroup</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="agent.html#tomsup.agent.Agent" title="tomsup.agent.Agent"><span class="pre">tomsup.agent.Agent</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tomsup/utils.html#create_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.utils.create_agents" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">tomsup.utils.</span></span><span class="sig-name descname"><span class="pre">create_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="agent.html#tomsup.agent.AgentGroup" title="tomsup.agent.AgentGroup"><span class="pre">AgentGroup</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="agent.html#tomsup.agent.Agent" title="tomsup.agent.Agent"><span class="pre">Agent</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tomsup/utils.html#create_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.utils.create_agents" title="Permalink to this definition">#</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>agents</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>list</em><em>]</em>) – A str denoting an agent or a list of agents. To see option use <cite>valid_agents()</cite>.</p></li>
 <li><p><strong>start_params</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>dict</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The starting parameters of the agent.
 Defaults to None, indicating the default starting parameters.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>If only one agent is specified returns an Agent otherwise returns an AgentGroup.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Union[<a class="reference internal" href="agent.html#tomsup.agent.AgentGroup" title="tomsup.agent.AgentGroup">AgentGroup</a>, <a class="reference internal" href="agent.html#tomsup.agent.Agent" title="tomsup.agent.Agent">Agent</a>]</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">group</span> <span class="o">=</span> <span class="n">create_agents</span><span class="p">(</span><span class="n">agents</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'RB'</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">group</span> <span class="o">=</span> <span class="n">create_agents</span><span class="p">(</span><span class="n">agents</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RB&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">AgentGroup</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">group</span><span class="o">.</span><span class="n">get_names</span><span class="p">()</span>
-<span class="go">['RB_0', 'RB_1', 'RB_2']</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">RB_agent</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">get_agent</span><span class="p">(</span><span class="s1">'RB_0'</span><span class="p">)</span>
+<span class="go">[&#39;RB_0&#39;, &#39;RB_1&#39;, &#39;RB_2&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RB_agent</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">get_agent</span><span class="p">(</span><span class="s1">&#39;RB_0&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">RB_agent</span><span class="o">.</span><span class="n">get_strategy</span><span class="p">()</span>
-<span class="go">'RB'</span>
+<span class="go">&#39;RB&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="tomsup.utils.valid_agents">
-<span class="sig-prename descclassname"><span class="pre">tomsup.utils.</span></span><span class="sig-name descname"><span class="pre">valid_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/tomsup/utils.html#valid_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.utils.valid_agents" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">tomsup.utils.</span></span><span class="sig-name descname"><span class="pre">valid_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/tomsup/utils.html#valid_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tomsup.utils.valid_agents" title="Permalink to this definition">#</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><dl class="simple">
 <dt>A dictionary of valid agent, where each key is an valid agent shorthand.</dt><dd><p>Each dictionary key (e.g. shorthand) refers to a new dictionary containing,
 additional information, such as a short description of the strategy, and a reference.
@@ -268,7 +270,7 @@ See examples for more.</p>
 </dl>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
 </dd>
 </dl>
@@ -277,16 +279,17 @@ See examples for more.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">output</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="go">dict_keys(['RB', 'WSLS'])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">output</span><span class="p">[</span><span class="s1">'RB'</span><span class="p">]</span>
-<span class="go">{'name': 'Random Bias',</span>
-<span class="go">'shorthand': 'RB',</span>
-<span class="go">'example': 'RB(bias = 0.5)',</span>
-<span class="go">'reference': 'Devaine, et al. (2017)',</span>
-<span class="go">'strategy': 'Chooses 1 randomly based on a probability or bias'}</span>
+<span class="go">dict_keys([&#39;RB&#39;, &#39;WSLS&#39;])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;RB&#39;</span><span class="p">]</span>
+<span class="go">{&#39;name&#39;: &#39;Random Bias&#39;,</span>
+<span class="go">&#39;shorthand&#39;: &#39;RB&#39;,</span>
+<span class="go">&#39;example&#39;: &#39;RB(bias = 0.5)&#39;,</span>
+<span class="go">&#39;reference&#39;: &#39;Devaine, et al. (2017)&#39;,</span>
+<span class="go">&#39;strategy&#39;: &#39;Chooses 1 randomly based on a probability or bias&#39;}</span>
 </pre></div>
 </div>
 </dd></dl>
+
 </section>
 </section>
 
@@ -363,6 +366,7 @@ See examples for more.</p>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     <script src="_static/clipboard.min.js"></script>

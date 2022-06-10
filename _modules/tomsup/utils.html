@@ -1,13 +1,13 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>tomsup.utils - tomsup 1.1.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -196,7 +196,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -211,9 +212,9 @@
         </div>
         <article role="main">
           <h1>Source code for tomsup.utils</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This script contains utility functions used in the tomsup package</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
@@ -225,7 +226,7 @@
 
 
 <div class="viewcode-block" id="valid_agents"><a class="viewcode-back" href="../../utils.html#tomsup.utils.valid_agents">[docs]</a><span class="k">def</span> <span class="nf">valid_agents</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: A dictionary of valid agent, where each key is an valid agent shorthand.</span>
 <span class="sd">            Each dictionary key (e.g. shorthand) refers to a new dictionary containing,</span>
@@ -236,17 +237,17 @@
 <span class="sd">        &gt;&gt;&gt; isinstance(output, dict)</span>
 <span class="sd">        True</span>
 <span class="sd">        &gt;&gt;&gt; output.keys()</span>
-<span class="sd">        dict_keys(['RB', 'WSLS'])</span>
-<span class="sd">        &gt;&gt;&gt; output['RB']</span>
-<span class="sd">        {'name': 'Random Bias',</span>
-<span class="sd">        'shorthand': 'RB',</span>
-<span class="sd">        'example': 'RB(bias = 0.5)',</span>
-<span class="sd">        'reference': 'Devaine, et al. (2017)',</span>
-<span class="sd">        'strategy': 'Chooses 1 randomly based on a probability or bias'}</span>
-<span class="sd">    """</span>
+<span class="sd">        dict_keys([&#39;RB&#39;, &#39;WSLS&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; output[&#39;RB&#39;]</span>
+<span class="sd">        {&#39;name&#39;: &#39;Random Bias&#39;,</span>
+<span class="sd">        &#39;shorthand&#39;: &#39;RB&#39;,</span>
+<span class="sd">        &#39;example&#39;: &#39;RB(bias = 0.5)&#39;,</span>
+<span class="sd">        &#39;reference&#39;: &#39;Devaine, et al. (2017)&#39;,</span>
+<span class="sd">        &#39;strategy&#39;: &#39;Chooses 1 randomly based on a probability or bias&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">this_dir</span><span class="p">,</span> <span class="n">this_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">this_dir</span><span class="p">,</span> <span class="s2">"agent_info.json"</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">this_dir</span><span class="p">,</span> <span class="s2">&quot;agent_info.json&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
         <span class="n">agent_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">agent_dict</span></div>
 
@@ -254,7 +255,7 @@
 <div class="viewcode-block" id="create_agents"><a class="viewcode-back" href="../../utils.html#tomsup.utils.create_agents">[docs]</a><span class="k">def</span> <span class="nf">create_agents</span><span class="p">(</span>
     <span class="n">agents</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">],</span> <span class="n">start_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">AgentGroup</span><span class="p">,</span> <span class="n">Agent</span><span class="p">]:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        agents (Union[str, list]): A str denoting an agent or a list of agents. To see option use `valid_agents()`.</span>
 <span class="sd">        start_params (Optional[List[dict]], optional): The starting parameters of the agent.</span>
@@ -264,18 +265,18 @@
 <span class="sd">        Union[AgentGroup, Agent]: If only one agent is specified returns an Agent otherwise returns an AgentGroup.</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; group = create_agents(agents = ['RB']*3)</span>
+<span class="sd">        &gt;&gt;&gt; group = create_agents(agents = [&#39;RB&#39;]*3)</span>
 <span class="sd">        &gt;&gt;&gt; isinstance(group, AgentGroup)</span>
 <span class="sd">        True</span>
 <span class="sd">        &gt;&gt;&gt; group.get_names()</span>
-<span class="sd">        ['RB_0', 'RB_1', 'RB_2']</span>
-<span class="sd">        &gt;&gt;&gt; RB_agent = group.get_agent('RB_0')</span>
+<span class="sd">        [&#39;RB_0&#39;, &#39;RB_1&#39;, &#39;RB_2&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; RB_agent = group.get_agent(&#39;RB_0&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; RB_agent.get_strategy()</span>
-<span class="sd">        'RB'</span>
-<span class="sd">    """</span>
+<span class="sd">        &#39;RB&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">agents</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">start_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">"save_history"</span> <span class="ow">in</span> <span class="n">start_params</span><span class="p">):</span>
-            <span class="n">save_history</span> <span class="o">=</span> <span class="n">start_params</span><span class="p">[</span><span class="s2">"save_history"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">start_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;save_history&quot;</span> <span class="ow">in</span> <span class="n">start_params</span><span class="p">):</span>
+            <span class="n">save_history</span> <span class="o">=</span> <span class="n">start_params</span><span class="p">[</span><span class="s2">&quot;save_history&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">save_history</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">Agent</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="n">agents</span><span class="p">,</span> <span class="n">save_history</span><span class="o">=</span><span class="n">save_history</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -317,6 +318,7 @@
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/clipboard.min.js"></script>

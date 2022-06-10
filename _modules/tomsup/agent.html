@@ -1,13 +1,13 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>tomsup.agent - tomsup 1.1.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -196,7 +196,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -211,9 +212,9 @@
         </div>
         <article role="main">
           <h1>Source code for tomsup.agent</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">docstring</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
@@ -248,43 +249,43 @@
 
 
 <div class="viewcode-block" id="Agent"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent">[docs]</a><span class="k">class</span> <span class="nc">Agent</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Agent is super (parent) class for creating agents in tomsup.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Agent.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_history</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            strategy (Optional[str], optional): The strategy of the agent you wish to create. Defaults to None.</span>
 <span class="sd">                It is recommended to use create_agents() to create instead of the Agent class</span>
 <span class="sd">            save_history (bool, optional): Should the history of the agent be saved. Defaults to False.</span>
 <span class="sd">            kwargs (dict) The specifications passed to the strategy</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">choice</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the last choice of the agent</span>
         <span class="k">if</span> <span class="n">save_history</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>  <span class="c1"># history of choices</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">strategy</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">"TOM"</span> <span class="ow">in</span> <span class="n">strategy</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
-                <span class="n">k</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"-"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">kwargs</span><span class="p">[</span><span class="s2">"level"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
-                <span class="n">strategy</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"-"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s2">"save_history"</span><span class="p">]</span> <span class="o">=</span> <span class="n">save_history</span>
+            <span class="k">if</span> <span class="s2">&quot;TOM&quot;</span> <span class="ow">in</span> <span class="n">strategy</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="n">strategy</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;save_history&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">save_history</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">strategy</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Agent.reset"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_history</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">"""resets the agent to its starting parameters</span>
+        <span class="sd">&quot;&quot;&quot;resets the agent to its starting parameters</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            save_history (Optional[bool], optional): Should the agent history be saved? Defaults to None, which keeps the previous state.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">save_history</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span><span class="p">[</span><span class="s2">"save_history"</span><span class="p">]</span> <span class="o">=</span> <span class="n">save_history</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span><span class="p">[</span><span class="s2">&quot;save_history&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">save_history</span>
             <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
@@ -294,7 +295,7 @@
             <span class="k">pass</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"-"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"TOM"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TOM&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -302,46 +303,46 @@
 
     <span class="c1"># Getters</span>
 <div class="viewcode-block" id="Agent.get_start_params"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.get_start_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_start_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: The starting parameters of the agent.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span></div>
 
 <div class="viewcode-block" id="Agent.get_strategy"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.get_strategy">[docs]</a>    <span class="k">def</span> <span class="nf">get_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The strategy of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span></div>
 
 <div class="viewcode-block" id="Agent.get_choice"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.get_choice">[docs]</a>    <span class="k">def</span> <span class="nf">get_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            int: the agents choice in the previous round</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span></div>
 
 <div class="viewcode-block" id="Agent.get_history"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.get_history">[docs]</a>    <span class="k">def</span> <span class="nf">get_history</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"df"</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;df&quot;</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
-        <span class="sd">"""Return the agents history. This include only information relevant to</span>
+        <span class="sd">&quot;&quot;&quot;Return the agents history. This include only information relevant to</span>
 <span class="sd">        the agent. E.g. for a Random bias (RB) agent only its choice is saved, while</span>
 <span class="sd">        opponent choice is not as it used by the agent.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            key (Optional[str], optional): The item of interest in the history. Defaults to None, which returns all the entire history.</span>
-<span class="sd">            format (str, optional): Format of the return, options include "list", "dict" and "df", which is a pandas dataframe. Defaults to "df".</span>
+<span class="sd">            format (str, optional): Format of the return, options include &quot;list&quot;, &quot;dict&quot; and &quot;df&quot;, which is a pandas dataframe. Defaults to &quot;df&quot;.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Union[dict, pd.DataFrame, list]: The history in the specified format</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="s2">"save_history is unspecified or set to False. </span><span class="se">\</span>
-<span class="s2">                 Consequently you can't get history. </span><span class="se">\</span>
-<span class="s2">                 Set save_history=True if you want to save agent history"</span>
+                <span class="s2">&quot;save_history is unspecified or set to False. </span><span class="se">\</span>
+<span class="s2">                 Consequently you can&#39;t get history. </span><span class="se">\</span>
+<span class="s2">                 Set save_history=True if you want to save agent history&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">_return</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span>
@@ -349,36 +350,36 @@
             <span class="n">_return</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="s2">"Please input valid key. Key should be either a list or a string. </span><span class="se">\</span>
-<span class="s2">                            Alternatively, key can be left unspecified."</span>
+                <span class="s2">&quot;Please input valid key. Key should be either a list or a string. </span><span class="se">\</span>
+<span class="s2">                            Alternatively, key can be left unspecified.&quot;</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">"df"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;df&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_return</span>
-        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">"dict"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;dict&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">_return</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">"list"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;list&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_return</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-            <span class="s2">"Please input valid format e.g. 'df' or 'list' or </span><span class="se">\</span>
-<span class="s2">                leave format unspecified"</span>
+            <span class="s2">&quot;Please input valid format e.g. &#39;df&#39; or &#39;list&#39; or </span><span class="se">\</span>
+<span class="s2">                leave format unspecified&quot;</span>
         <span class="p">)</span></div>
 
     <span class="c1"># plotters</span>
 <div class="viewcode-block" id="Agent.plot_choice"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.plot_choice">[docs]</a>    <span class="k">def</span> <span class="nf">plot_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""Plot the choices of the agent</span>
+        <span class="sd">&quot;&quot;&quot;Plot the choices of the agent</span>
 <span class="sd">        Args:</span>
 <span class="sd">            show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_history</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">"choice"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"lightblue"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Round"</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Choice"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;choice&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightblue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Round&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Choice&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">show</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Agent.plot_internal"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.plot_internal">[docs]</a>    <span class="k">def</span> <span class="nf">plot_internal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function for plotting internal states of agent</span>
 
 <span class="sd">        Args:</span>
@@ -387,104 +388,104 @@
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; # plotting the est. probability of opp. choosing one over trials</span>
-<span class="sd">            &gt;&gt;&gt; tom1.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_op"])</span>
+<span class="sd">            &gt;&gt;&gt; tom1.plot_internal(fun=lambda internal_states: internal_states[&quot;own_states&quot;][&quot;p_op&quot;])</span>
 <span class="sd">            &gt;&gt;&gt; # plotting the agent belief about its opponents theory of mind level (p_k)</span>
 <span class="sd">            &gt;&gt;&gt; # probability of sophistication level k=0</span>
-<span class="sd">            &gt;&gt;&gt; tom2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][0])</span>
+<span class="sd">            &gt;&gt;&gt; tom2.plot_internal(fun=lambda internal_states: internal_states[&quot;own_states&quot;][&quot;p_k&quot;][0])</span>
 <span class="sd">            &gt;&gt;&gt; # probability of sophistication level k=1</span>
-<span class="sd">            &gt;&gt;&gt; tom2.plot_internal(fun=lambda internal_states: internal_states["own_states"]["p_k"][1])</span>
-<span class="sd">        """</span>
+<span class="sd">            &gt;&gt;&gt; tom2.plot_internal(fun=lambda internal_states: internal_states[&quot;own_states&quot;][&quot;p_k&quot;][1])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_history</span><span class="p">()</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">"extracted"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"internal_states"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">"extracted"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"lightblue"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;extracted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;internal_states&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;extracted&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightblue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">show</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="RB"><a class="viewcode-back" href="../../agent.html#tomsup.agent.RB">[docs]</a><span class="k">class</span> <span class="nc">RB</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    'RB': Random bias agent</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &#39;RB&#39;: Random bias agent</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; rb = ts.agent.RB(bias = 1, save_history = True)</span>
 <span class="sd">        &gt;&gt;&gt; rb.compete()</span>
 <span class="sd">        1</span>
 <span class="sd">        &gt;&gt;&gt; rb.get_start_params()</span>
-<span class="sd">        {'bias': 1, 'save_history': True}</span>
+<span class="sd">        {&#39;bias&#39;: 1, &#39;save_history&#39;: True}</span>
 <span class="sd">        &gt;&gt;&gt; rb.compete()</span>
 <span class="sd">        1</span>
-<span class="sd">        &gt;&gt;&gt; rb.get_history(key='choice', format="list")</span>
+<span class="sd">        &gt;&gt;&gt; rb.get_history(key=&#39;choice&#39;, format=&quot;list&quot;)</span>
 <span class="sd">        [1, 1]</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RB.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.RB.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            bias (float, optional): The probability of the agent to choose 1. Defaults to 0.5.</span>
-<span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"bias"</span><span class="p">:</span> <span class="n">bias</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;bias&quot;</span><span class="p">:</span> <span class="n">bias</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">bias</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="s2">"RB"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="s2">&quot;RB&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RB.compete"><a class="viewcode-back" href="../../agent.html#tomsup.agent.RB.compete">[docs]</a>    <span class="k">def</span> <span class="nf">compete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            int: The choice of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">choice</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_to_history</span><span class="p">(</span><span class="n">choice</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span></div>
 
 <div class="viewcode-block" id="RB.get_bias"><a class="viewcode-back" href="../../agent.html#tomsup.agent.RB.get_bias">[docs]</a>    <span class="k">def</span> <span class="nf">get_bias</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The bias of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span></div></div>
 
 
 <div class="viewcode-block" id="WSLS"><a class="viewcode-back" href="../../agent.html#tomsup.agent.WSLS">[docs]</a><span class="k">class</span> <span class="nc">WSLS</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    'WSLS': Win-stay, lose-switch is an agent which employ a simple heuristic.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &#39;WSLS&#39;: Win-stay, lose-switch is an agent which employ a simple heuristic.</span>
 <span class="sd">    It simply takes the same choice if it wins and switches when it looses.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; sigmund = WSLS()</span>
 <span class="sd">        &gt;&gt;&gt; sigmund.choice = 0  # Manually setting choice</span>
-<span class="sd">        &gt;&gt;&gt; penny = PayoffMatrix(name="penny_competitive")</span>
+<span class="sd">        &gt;&gt;&gt; penny = PayoffMatrix(name=&quot;penny_competitive&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; sigmund.compete(op_choice=1, p_matrix=penny)</span>
 <span class="sd">        0</span>
 <span class="sd">        &gt;&gt;&gt; sigmund.choice = 1  # Manually setting choice</span>
 <span class="sd">        &gt;&gt;&gt; sigmund.compete(op_choice=0)</span>
 <span class="sd">        0</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="WSLS.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.WSLS.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prob_stay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">prob_switch</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            prob_stay (float, optional): he probability to stay if the agent wins. Defaults to 1.</span>
 <span class="sd">            prob_switch (float, optional): The probability to switch if the agent loose. Defaults to 1.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Agent: The WSLS agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="s2">"WSLS"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="s2">&quot;WSLS&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prob_switch</span> <span class="o">=</span> <span class="n">prob_switch</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prob_stay</span> <span class="o">=</span> <span class="n">prob_stay</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"prob_stay"</span><span class="p">:</span> <span class="n">prob_stay</span><span class="p">,</span>
-            <span class="s2">"prob_switch"</span><span class="p">:</span> <span class="n">prob_switch</span><span class="p">,</span>
+            <span class="s2">&quot;prob_stay&quot;</span><span class="p">:</span> <span class="n">prob_stay</span><span class="p">,</span>
+            <span class="s2">&quot;prob_switch&quot;</span><span class="p">:</span> <span class="n">prob_switch</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="WSLS.compete"><a class="viewcode-back" href="../../agent.html#tomsup.agent.WSLS.compete">[docs]</a>    <span class="k">def</span> <span class="nf">compete</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            op_choice (Optional[int]): The choice of the opponent, should be None in the first round.</span>
 <span class="sd">            p_matrix (PayoffMatrix): The payoff matrix which the agent plays in</span>
@@ -492,16 +493,16 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            int: The choice of the agent</span>
-<span class="sd">        """</span>
-        <span class="c1"># if a choice haven't been made: Choose randomly (0 or 1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if a choice haven&#39;t been made: Choose randomly (0 or 1)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">choice</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># if a choice have been made:</span>
             <span class="k">if</span> <span class="n">op_choice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                    <span class="s2">"compete() missing 1 required positional </span><span class="se">\</span>
-<span class="s2">                                 argument: 'op_choice', which should be given </span><span class="se">\</span>
-<span class="s2">                                 for all round except the first."</span>
+                    <span class="s2">&quot;compete() missing 1 required positional </span><span class="se">\</span>
+<span class="s2">                                 argument: &#39;op_choice&#39;, which should be given </span><span class="se">\</span>
+<span class="s2">                                 for all round except the first.&quot;</span>
                 <span class="p">)</span>
             <span class="n">payoff</span> <span class="o">=</span> <span class="n">p_matrix</span><span class="o">.</span><span class="n">payoff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
             <span class="c1"># if you lost change action (e.g. if payoff is less the mean</span>
@@ -518,23 +519,23 @@
 
 
 <div class="viewcode-block" id="TFT"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TFT">[docs]</a><span class="k">class</span> <span class="nc">TFT</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    'TFT': Tit-for-Tat is a heuritstic theory of mind strategy. An agent using</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &#39;TFT&#39;: Tit-for-Tat is a heuritstic theory of mind strategy. An agent using</span>
 <span class="sd">    this strategy will initially cooperate, then subsequently replicate an</span>
-<span class="sd">    opponent's previous action.</span>
+<span class="sd">    opponent&#39;s previous action.</span>
 <span class="sd">    If the opponent previously was cooperative, the TFT agent is cooperative.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; shelling = ts.agent.TFT()</span>
-<span class="sd">        &gt;&gt;&gt; p_dilemma = ts.PayoffMatrix(name="prisoners_dilemma")</span>
+<span class="sd">        &gt;&gt;&gt; p_dilemma = ts.PayoffMatrix(name=&quot;prisoners_dilemma&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; shelling.compete(op_choice=1, p_matrix=p_dilemma)</span>
 <span class="sd">        1</span>
 <span class="sd">        &gt;&gt;&gt; shelling.compete(op_choice=0, p_matrix=p_dilemma)</span>
 <span class="sd">        0</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TFT.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TFT.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            copy_prob (float, optional): the probability that the TFT copies the behaviour</span>
 <span class="sd">                of the opponent, hereby introducing noise to the original TFT strategy by</span>
@@ -542,20 +543,20 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Agent: The TFT agent</span>
-<span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="s2">"TFT"</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="s2">&quot;TFT&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">copy_prob</span> <span class="o">=</span> <span class="n">copy_prob</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"copy_prob"</span><span class="p">:</span> <span class="n">copy_prob</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;copy_prob&quot;</span><span class="p">:</span> <span class="n">copy_prob</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span></div>
 
 <div class="viewcode-block" id="TFT.compete"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TFT.compete">[docs]</a>    <span class="k">def</span> <span class="nf">compete</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">op_choice</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span> <span class="o">=</span> <span class="n">PayoffMatrix</span><span class="p">(</span><span class="s2">"prisoners_dilemma"</span><span class="p">),</span>
+        <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span> <span class="o">=</span> <span class="n">PayoffMatrix</span><span class="p">(</span><span class="s2">&quot;prisoners_dilemma&quot;</span><span class="p">),</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            op_choice (Optional[int]): The choice of the opponent, should be None in the first round.</span>
 <span class="sd">            p_matrix (PayoffMatrix): The payoff matrix which the agent plays in. Defualt to the prisoners dilemma.</span>
@@ -563,23 +564,23 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            int: The choice of the agent</span>
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="n">p_matrix</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">"prisoners_dilemma"</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">p_matrix</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;prisoners_dilemma&quot;</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="n">warn</span><span class="p">(</span>
-                <span class="s2">"Tit-for-Tat is designed for the prisoners dilemma and might </span><span class="se">\</span>
-<span class="s2">                  not perform well with other payoff matrices."</span><span class="p">,</span>
+                <span class="s2">&quot;Tit-for-Tat is designed for the prisoners dilemma and might </span><span class="se">\</span>
+<span class="s2">                  not perform well with other payoff matrices.&quot;</span><span class="p">,</span>
                 <span class="ne">Warning</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="c1"># If a choice haven't been made: Cooperate</span>
+        <span class="c1"># If a choice haven&#39;t been made: Cooperate</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">choice</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># assumes 1 to be cooperate</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># if a choice have been made</span>
             <span class="k">if</span> <span class="n">op_choice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                    <span class="s2">"compete() missing 1 required positional </span><span class="se">\</span>
-<span class="s2">                                 argument: 'op_choice', which should be given </span><span class="se">\</span>
-<span class="s2">                                 for all round except the first."</span>
+                    <span class="s2">&quot;compete() missing 1 required positional </span><span class="se">\</span>
+<span class="s2">                                 argument: &#39;op_choice&#39;, which should be given </span><span class="se">\</span>
+<span class="s2">                                 for all round except the first.&quot;</span>
                 <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">op_choice</span> <span class="o">=</span> <span class="n">op_choice</span>
@@ -591,9 +592,9 @@
 
 
 <div class="viewcode-block" id="QL"><a class="viewcode-back" href="../../agent.html#tomsup.agent.QL">[docs]</a><span class="k">class</span> <span class="nc">QL</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    'QL': The Q-learning model by Watkinns (1992)</span>
-<span class="sd">    """</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &#39;QL&#39;: The Q-learning model by Watkinns (1992)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="QL.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.QL.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -602,29 +603,29 @@
         <span class="n">expec_val</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            learning_rate (float, optional): The degree to which the agent learns. If the learning rate 0 the agent will not learn.</span>
 <span class="sd">                Defaults to 0.5.</span>
 <span class="sd">            b_temp (float, optional): The behavioural temperature of the Q-Learning agent. Defaults to 0.01.</span>
 <span class="sd">            expec_val (Tuple[float, float], optional): The preference for choice 0 and 1. Defaults to (0.5, 0.5).</span>
-<span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="s2">"QL"</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="s2">&quot;QL&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">expec_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">expec_val</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b_temp</span> <span class="o">=</span> <span class="n">b_temp</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"learning_rate"</span><span class="p">:</span> <span class="n">learning_rate</span><span class="p">,</span>
-            <span class="s2">"b_temp"</span><span class="p">:</span> <span class="n">b_temp</span><span class="p">,</span>
-            <span class="s2">"expec_val"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">expec_val</span><span class="p">),</span>
+            <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="n">learning_rate</span><span class="p">,</span>
+            <span class="s2">&quot;b_temp&quot;</span><span class="p">:</span> <span class="n">b_temp</span><span class="p">,</span>
+            <span class="s2">&quot;expec_val&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">expec_val</span><span class="p">),</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="QL.compete"><a class="viewcode-back" href="../../agent.html#tomsup.agent.QL.compete">[docs]</a>    <span class="k">def</span> <span class="nf">compete</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            op_choice (Optional[int]): The choice of the opponent, should be None in the first round.</span>
 <span class="sd">            p_matrix (PayoffMatrix): The payoff matrix which the agent plays in</span>
@@ -632,7 +633,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            int: The choice of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span> <span class="ow">and</span> <span class="n">op_choice</span><span class="p">:</span>  <span class="c1"># if not first round</span>
             <span class="c1"># Calculate whether or not last round was a victory</span>
             <span class="n">payoff</span> <span class="o">=</span> <span class="n">p_matrix</span><span class="o">.</span><span class="n">payoff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
@@ -647,9 +648,9 @@
             <span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">expec_val</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">])</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span> <span class="ow">and</span> <span class="n">op_choice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">"compete() missing 1 required positional argument: </span><span class="se">\</span>
-<span class="s2">                            'op_choice', which should be given for all rounds </span><span class="se">\</span>
-<span class="s2">                            except the first."</span>
+                <span class="s2">&quot;compete() missing 1 required positional argument: </span><span class="se">\</span>
+<span class="s2">                            &#39;op_choice&#39;, which should be given for all rounds </span><span class="se">\</span>
+<span class="s2">                            except the first.&quot;</span>
             <span class="p">)</span>
 
         <span class="c1"># Softmax</span>
@@ -669,29 +670,29 @@
 
     <span class="c1"># Define getters</span>
 <div class="viewcode-block" id="QL.get_expected_values"><a class="viewcode-back" href="../../agent.html#tomsup.agent.QL.get_expected_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_expected_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Tuple[float, float]: The preference for choice 0 and 1.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expec_val</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="QL.get_learning_rate"><a class="viewcode-back" href="../../agent.html#tomsup.agent.QL.get_learning_rate">[docs]</a>    <span class="k">def</span> <span class="nf">get_learning_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The learning rate of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span></div></div>
 
 
 <div class="viewcode-block" id="TOM"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM">[docs]</a><span class="k">class</span> <span class="nc">TOM</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This Theory of Mind agent is the variational implementation of the</span>
 <span class="sd">    recursive ToM agent initially proposed by Devaine (2014), but have</span>
 <span class="sd">    been further developed since.</span>
 
 <span class="sd">    It recursively estimates its opponent and estimate their beliefs</span>
 <span class="sd">    about itself.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TOM.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -700,10 +701,10 @@
         <span class="n">b_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">bias</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">dilution</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">init_states</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"default"</span><span class="p">,</span>
+        <span class="n">init_states</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            level (int): Sophistication level of the agent.</span>
@@ -723,7 +724,7 @@
 <span class="sd">                the model.</span>
 <span class="sd">            bias (Optional[float], optional): The Bias indicates the preference k-ToM decision</span>
 <span class="sd">                to choose 1. It is added to the expected payoff. I.e. if the expected</span>
-<span class="sd">                payoff of choosing 1 is -1 and bias is +2 the updated 'expected payoff'</span>
+<span class="sd">                payoff of choosing 1 is -1 and bias is +2 the updated &#39;expected payoff&#39;</span>
 <span class="sd">                would be +1. Defaults to 0.</span>
 <span class="sd">            dilution (Optional[float], optional): The dilution indicates the degree to which</span>
 <span class="sd">                beliefs about the opponent’s sophistication level are forgotten over</span>
@@ -732,18 +733,18 @@
 <span class="sd">                I.e. to have a dilution of 0.62 you should input ts.inv_logit(0.62)</span>
 <span class="sd">                ≈ 0.5. Default is None as this was used in the initial implementation</span>
 <span class="sd">                of the model and this there is no dilution of its beliefs about its</span>
-<span class="sd">                oppoenent's sophistication level.. Defaults to None.</span>
+<span class="sd">                oppoenent&#39;s sophistication level.. Defaults to None.</span>
 <span class="sd">            init_states (Union[dict, str], optional): The initialization states of the agent.</span>
-<span class="sd">                Defaults to "default". See tutorial on setting initialization states for more info.</span>
+<span class="sd">                Defaults to &quot;default&quot;. See tutorial on setting initialization states for more info.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Agent: The k-ToM agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">level</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
             <span class="n">warn</span><span class="p">(</span>
-                <span class="s2">"It is quite computationally expensive to run a TOM with a </span><span class="se">\</span>
-<span class="s2">                  level &gt; 5. Make sure this is your intention."</span><span class="p">,</span>
+                <span class="s2">&quot;It is quite computationally expensive to run a TOM with a </span><span class="se">\</span>
+<span class="s2">                  level &gt; 5. Make sure this is your intention.&quot;</span><span class="p">,</span>
                 <span class="ne">Warning</span><span class="p">,</span>
             <span class="p">)</span>
 
@@ -752,16 +753,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">bias</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dilution</span> <span class="o">=</span> <span class="n">dilution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">level</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"-TOM"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-TOM&quot;</span>
 
-        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"volatility"</span><span class="p">:</span> <span class="n">volatility</span><span class="p">,</span> <span class="s2">"b_temp"</span><span class="p">:</span> <span class="n">b_temp</span><span class="p">}</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;volatility&quot;</span><span class="p">:</span> <span class="n">volatility</span><span class="p">,</span> <span class="s2">&quot;b_temp&quot;</span><span class="p">:</span> <span class="n">b_temp</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">dilution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">params</span><span class="p">[</span><span class="s2">"dilution"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dilution</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;dilution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dilution</span>
         <span class="k">if</span> <span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">params</span><span class="p">[</span><span class="s2">"bias"</span><span class="p">]</span> <span class="o">=</span> <span class="n">bias</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;bias&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bias</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
-        <span class="k">if</span> <span class="n">init_states</span> <span class="o">==</span> <span class="s2">"default"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">init_states</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">internal</span> <span class="o">=</span> <span class="n">init_k_tom</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">init_states</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">internal</span> <span class="o">=</span> <span class="n">init_states</span>
@@ -770,19 +771,19 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"volatility"</span><span class="p">:</span> <span class="n">volatility</span><span class="p">,</span>
-            <span class="s2">"level"</span><span class="p">:</span> <span class="n">level</span><span class="p">,</span>
-            <span class="s2">"b_temp"</span><span class="p">:</span> <span class="n">b_temp</span><span class="p">,</span>
-            <span class="s2">"bias"</span><span class="p">:</span> <span class="n">bias</span><span class="p">,</span>
-            <span class="s2">"dilution"</span><span class="p">:</span> <span class="n">dilution</span><span class="p">,</span>
-            <span class="s2">"init_states"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">,</span>
+            <span class="s2">&quot;volatility&quot;</span><span class="p">:</span> <span class="n">volatility</span><span class="p">,</span>
+            <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="n">level</span><span class="p">,</span>
+            <span class="s2">&quot;b_temp&quot;</span><span class="p">:</span> <span class="n">b_temp</span><span class="p">,</span>
+            <span class="s2">&quot;bias&quot;</span><span class="p">:</span> <span class="n">bias</span><span class="p">,</span>
+            <span class="s2">&quot;dilution&quot;</span><span class="p">:</span> <span class="n">dilution</span><span class="p">,</span>
+            <span class="s2">&quot;init_states&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="TOM.compete"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.compete">[docs]</a>    <span class="k">def</span> <span class="nf">compete</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            op_choice (Optional[int]): The choice of the opponent, should be None in the first round.</span>
 <span class="sd">            p_matrix (PayoffMatrix): The payoff matrix which the agent plays in</span>
@@ -790,7 +791,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            int: The choice of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">op_choice</span> <span class="o">=</span> <span class="n">op_choice</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal</span> <span class="o">=</span> <span class="n">k_tom</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">,</span>
@@ -807,70 +808,70 @@
 
     <span class="c1"># Define getters</span>
 <div class="viewcode-block" id="TOM.get_volatility"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.get_volatility">[docs]</a>    <span class="k">def</span> <span class="nf">get_volatility</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The volatility of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">volatility</span></div>
 
 <div class="viewcode-block" id="TOM.get_behav_temperature"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.get_behav_temperature">[docs]</a>    <span class="k">def</span> <span class="nf">get_behav_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The behavioural temperature of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_temp</span></div>
 
 <div class="viewcode-block" id="TOM.get_bias"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.get_bias">[docs]</a>    <span class="k">def</span> <span class="nf">get_bias</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Optional[float]: The bias of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">msg</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"TOM does not have a bias."</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;TOM does not have a bias.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span></div>
 
 <div class="viewcode-block" id="TOM.get_dilution"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.get_dilution">[docs]</a>    <span class="k">def</span> <span class="nf">get_dilution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Optional[float]: The dilution of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dilution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">msg</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"TOM does not have a dilution parameter."</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;TOM does not have a dilution parameter.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dilution</span></div>
 
 <div class="viewcode-block" id="TOM.get_level"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.get_level">[docs]</a>    <span class="k">def</span> <span class="nf">get_level</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The sophistication level of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span></div>
 
 <div class="viewcode-block" id="TOM.get_internal_states"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.get_internal_states">[docs]</a>    <span class="k">def</span> <span class="nf">get_internal_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: The current internal states of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal</span></div>
 
 <div class="viewcode-block" id="TOM.set_internal_states"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.set_internal_states">[docs]</a>    <span class="k">def</span> <span class="nf">set_internal_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">internal_states</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            internal_states (dict): The desired internal states of the agent.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">internal</span> <span class="o">=</span> <span class="n">internal_states</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span><span class="p">[</span><span class="s2">"init_states"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_params</span><span class="p">[</span><span class="s2">&quot;init_states&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal</span></div>
 
 <div class="viewcode-block" id="TOM.get_parameters"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TOM.get_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: The agents parameters</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span></div>
 
     <span class="k">def</span> <span class="nf">__print</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readability_transform</span><span class="o">=</span><span class="p">{},</span> <span class="n">print_level</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""A helper function for printing dictionaries"""</span>
+        <span class="sd">&quot;&quot;&quot;A helper function for printing dictionaries&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span>
                 <span class="p">(</span><span class="n">print_level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
@@ -879,15 +880,15 @@
             <span class="p">):</span>
                 <span class="k">continue</span>
 
-            <span class="n">p_key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"-ToM"</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="n">key</span>
+            <span class="n">p_key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-ToM&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="n">key</span>
 
             <span class="k">if</span> <span class="n">p_key</span> <span class="ow">in</span> <span class="n">readability_transform</span><span class="p">:</span>
                 <span class="n">p_key</span> <span class="o">=</span> <span class="n">readability_transform</span><span class="p">[</span><span class="n">p_key</span><span class="p">]</span>
 
-            <span class="n">p_str</span> <span class="o">=</span> <span class="s2">"|   "</span> <span class="o">*</span> <span class="n">n</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">p_key</span><span class="p">)</span>
+            <span class="n">p_str</span> <span class="o">=</span> <span class="s2">&quot;|   &quot;</span> <span class="o">*</span> <span class="n">n</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">p_key</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="k">else</span> <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-                <span class="n">p_str</span> <span class="o">=</span> <span class="n">p_str</span> <span class="o">+</span> <span class="s2">": "</span> <span class="o">+</span> <span class="s2">" "</span> <span class="o">*</span> <span class="p">(</span><span class="mi">30</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_key</span><span class="p">))</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">p_str</span> <span class="o">=</span> <span class="n">p_str</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">30</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_key</span><span class="p">))</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">keys</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">p_str</span><span class="p">)</span>
 
@@ -898,16 +899,16 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            keys (Optional[list], optional): The key which you wish to print. Defaults to None, indicating all.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">readability_transform</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"volatility"</span><span class="p">:</span> <span class="s2">"volatility (log scale)"</span><span class="p">,</span>
-            <span class="s2">"dilution"</span><span class="p">:</span> <span class="s2">"dilution (log odds)"</span><span class="p">,</span>
-            <span class="s2">"b_temp"</span><span class="p">:</span> <span class="s2">"b_temp (log odds)"</span><span class="p">,</span>
+            <span class="s2">&quot;volatility&quot;</span><span class="p">:</span> <span class="s2">&quot;volatility (log scale)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dilution&quot;</span><span class="p">:</span> <span class="s2">&quot;dilution (log odds)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;b_temp&quot;</span><span class="p">:</span> <span class="s2">&quot;b_temp (log odds)&quot;</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__print</span><span class="p">(</span>
@@ -923,7 +924,7 @@
         <span class="n">keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        prints the internal states of the agent.</span>
 
 <span class="sd">        Explanation of internal states:</span>
@@ -947,22 +948,22 @@
 <span class="sd">            keys (Optional[list], optional): The keys which you desire to print. Defaults to None.</span>
 <span class="sd">            level (Optional[list], optional): List of integers containing levels to print</span>
 <span class="sd">                None indicate all levels will be printed. Defaults to None.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">readability_transform</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"p_k"</span><span class="p">:</span> <span class="s2">"p_k (probability)"</span><span class="p">,</span>
-            <span class="s2">"p_op_mean"</span><span class="p">:</span> <span class="s2">"p_op_mean (log odds)"</span><span class="p">,</span>
-            <span class="s2">"param_var"</span><span class="p">:</span> <span class="s2">"param_var (log scale)"</span><span class="p">,</span>
-            <span class="s2">"p_op"</span><span class="p">:</span> <span class="s2">"p_op (probability)"</span><span class="p">,</span>
-            <span class="s2">"p_self"</span><span class="p">:</span> <span class="s2">"p_self (probability)"</span><span class="p">,</span>
-            <span class="s2">"p_op_mean0"</span><span class="p">:</span> <span class="s2">"p_op_mean0 (log odds)"</span><span class="p">,</span>
-            <span class="s2">"p_op_var0"</span><span class="p">:</span> <span class="s2">"p_op_var0 (log scale)"</span><span class="p">,</span>
+            <span class="s2">&quot;p_k&quot;</span><span class="p">:</span> <span class="s2">&quot;p_k (probability)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;p_op_mean&quot;</span><span class="p">:</span> <span class="s2">&quot;p_op_mean (log odds)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;param_var&quot;</span><span class="p">:</span> <span class="s2">&quot;param_var (log scale)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;p_op&quot;</span><span class="p">:</span> <span class="s2">&quot;p_op (probability)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;p_self&quot;</span><span class="p">:</span> <span class="s2">&quot;p_self (probability)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;p_op_mean0&quot;</span><span class="p">:</span> <span class="s2">&quot;p_op_mean0 (log odds)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;p_op_var0&quot;</span><span class="p">:</span> <span class="s2">&quot;p_op_var0 (log scale)&quot;</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># Convert all elements to string</span>
         <span class="k">if</span> <span class="n">keys</span><span class="p">:</span>
             <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
-            <span class="n">keys</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">"own_states"</span><span class="p">,</span> <span class="s2">"opponent_states"</span><span class="p">]</span>
+            <span class="n">keys</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">,</span> <span class="s2">&quot;opponent_states&quot;</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__print</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">,</span>
@@ -979,22 +980,22 @@
 
 
 <div class="viewcode-block" id="AgentGroup"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup">[docs]</a><span class="k">class</span> <span class="nc">AgentGroup</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An agent group is a group of agents. It is a utility class to allow for</span>
 <span class="sd">    easily setting up tournaments.</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; round_table = AgentGroup(agents=['RB']*2, \</span>
-<span class="sd">            start_params=[{'bias': 1}]*2)</span>
+<span class="sd">        &gt;&gt;&gt; round_table = AgentGroup(agents=[&#39;RB&#39;]*2, \</span>
+<span class="sd">            start_params=[{&#39;bias&#39;: 1}]*2)</span>
 <span class="sd">        &gt;&gt;&gt; round_table.agent_names</span>
-<span class="sd">        ['RB_0', 'RB_1']</span>
-<span class="sd">        &gt;&gt;&gt; RB_0 = round_table.get_agent('RB_0') # extract an agent</span>
+<span class="sd">        [&#39;RB_0&#39;, &#39;RB_1&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; RB_0 = round_table.get_agent(&#39;RB_0&#39;) # extract an agent</span>
 <span class="sd">        &gt;&gt;&gt; RB_0.bias == 1 # should naturally be 1, as we specified it</span>
 <span class="sd">        True</span>
-<span class="sd">        &gt;&gt;&gt; round_table.set_env('round_robin')</span>
-<span class="sd">        &gt;&gt;&gt; result = round_table.compete(p_matrix="penny_competitive", \</span>
+<span class="sd">        &gt;&gt;&gt; round_table.set_env(&#39;round_robin&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; result = round_table.compete(p_matrix=&quot;penny_competitive&quot;, \</span>
 <span class="sd">            n_rounds=100, n_sim=10)</span>
-<span class="sd">        Currently the pair, ('RB_0', 'RB_1'), is competing for 10 simulations, \</span>
+<span class="sd">        Currently the pair, (&#39;RB_0&#39;, &#39;RB_1&#39;), is competing for 10 simulations, \</span>
 <span class="sd">            each containg 100 rounds.</span>
 <span class="sd">            Running simulation 1 out of 10</span>
 <span class="sd">            Running simulation 2 out of 10</span>
@@ -1010,110 +1011,110 @@
 <span class="sd">        &gt;&gt;&gt; result.shape[0] == 10*100 # As there is 10 simulations each containing\</span>
 <span class="sd">                                        100 round</span>
 <span class="sd">        True</span>
-<span class="sd">        &gt;&gt;&gt; result['payoff_agent0'].mean() == 1  # Given that both agents have \</span>
+<span class="sd">        &gt;&gt;&gt; result[&#39;payoff_agent0&#39;].mean() == 1  # Given that both agents have \</span>
 <span class="sd">            always choose 1, it is clear that agent0 always win, when playing the \</span>
 <span class="sd">            competitive pennygame</span>
 <span class="sd">        True</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AgentGroup.__init__"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">start_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            agents (List[str]): A list of agents</span>
 <span class="sd">            start_params (Optional[List[dict]], optional): The starting parameters of the agents specified</span>
 <span class="sd">                as a dictionary pr. agent. Defaults to None, indicating default for all agent. Use empty to</span>
 <span class="sd">                use default of an agent.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">agents</span>
         <span class="k">if</span> <span class="n">start_params</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">agents</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">start_params</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">"the length of agents is not equal to the </span><span class="se">\</span>
-<span class="s2">                                  length of starting parameters."</span>
+                    <span class="s2">&quot;the length of agents is not equal to the </span><span class="se">\</span>
+<span class="s2">                                  length of starting parameters.&quot;</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">start_params</span> <span class="o">=</span> <span class="p">[{}]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">agents</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_params</span> <span class="o">=</span> <span class="n">start_params</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pairing</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="c1"># create unique agent ID's, e.g. a list of 3 RB agent becomes:</span>
+        <span class="c1"># create unique agent ID&#39;s, e.g. a list of 3 RB agent becomes:</span>
         <span class="c1"># [RB_0, RB_1, RB_2]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agent_names</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">v</span> <span class="o">+</span> <span class="s2">"_"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">agents</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">if</span> <span class="n">agents</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">v</span>
+            <span class="n">v</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">agents</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">if</span> <span class="n">agents</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">v</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">agents</span><span class="p">)</span>
         <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_agents</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">name</span><span class="p">:</span> <span class="n">Agent</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">param</span><span class="p">)</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">Agent</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">param</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">start_params</span><span class="p">)</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="AgentGroup.get_environment_name"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.get_environment_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_environment_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The name of the set environment</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-            <span class="s2">"Environment in not set, use set_env() to set </span><span class="se">\</span>
-<span class="s2">                             environment"</span>
+            <span class="s2">&quot;Environment in not set, use set_env() to set </span><span class="se">\</span>
+<span class="s2">                             environment&quot;</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AgentGroup.get_environment"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.get_environment">[docs]</a>    <span class="k">def</span> <span class="nf">get_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            the pairing resulted from the set environment</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairing</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairing</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-            <span class="s2">"Environment in not set, use set_env() to set </span><span class="se">\</span>
-<span class="s2">                             environment"</span>
+            <span class="s2">&quot;Environment in not set, use set_env() to set </span><span class="se">\</span>
+<span class="s2">                             environment&quot;</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AgentGroup.get_names"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.get_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            List[str]: the names of the agents</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_names</span></div>
 
 <div class="viewcode-block" id="AgentGroup.get_agent"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.get_agent">[docs]</a>    <span class="k">def</span> <span class="nf">get_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Agent</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_names</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_agents</span><span class="p">[</span><span class="n">agent</span><span class="p">]</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-            <span class="s2">"agent is not in agent names, to get a list of </span><span class="se">\</span>
-<span class="s2">                             agent names, use get_names()"</span>
+            <span class="s2">&quot;agent is not in agent names, to get a list of </span><span class="se">\</span>
+<span class="s2">                             agent names, use get_names()&quot;</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AgentGroup.set_env"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.set_env">[docs]</a>    <span class="k">def</span> <span class="nf">set_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""Set environment of the agent group.</span>
+        <span class="sd">&quot;&quot;&quot;Set environment of the agent group.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            env (str): The string for the environment you wish to set.</span>
 <span class="sd">                Valid environment strings include:</span>
-<span class="sd">                'round_robin': Matches all participant against all others</span>
-<span class="sd">                'random_pairs': Combines the agent in random pairs (the number of</span>
+<span class="sd">                &#39;round_robin&#39;: Matches all participant against all others</span>
+<span class="sd">                &#39;random_pairs&#39;: Combines the agent in random pairs (the number of</span>
 <span class="sd">                agent must be even)</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s2">"round_robin"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s2">&quot;round_robin&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pairing</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">combinations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_names</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s2">"random_pairs"</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s2">&quot;random_pairs&quot;</span><span class="p">:</span>
             <span class="n">L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_names</span><span class="p">[:]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                    <span class="s2">"List is agent in Agent_group should be </span><span class="se">\</span>
+                    <span class="s2">&quot;List is agent in Agent_group should be </span><span class="se">\</span>
 <span class="s2">                                 even if environment is set to random pairs. </span><span class="se">\</span>
-<span class="s2">                                 Otherwise one would be lonely and we can't </span><span class="se">\</span>
-<span class="s2">                                 have that."</span>
+<span class="s2">                                 Otherwise one would be lonely and we can&#39;t </span><span class="se">\</span>
+<span class="s2">                                 have that.&quot;</span>
                 <span class="p">)</span>
             <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pairing</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">L</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">],</span> <span class="n">L</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="p">:]))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">env</span><span class="si">}</span><span class="s2"> is not a valid environment. Use help() to </span><span class="se">\</span>
-<span class="s2">                             see valid environments"</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">env</span><span class="si">}</span><span class="s2"> is not a valid environment. Use help() to </span><span class="se">\</span>
+<span class="s2">                             see valid environments&quot;</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AgentGroup.compete"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.compete">[docs]</a>    <span class="k">def</span> <span class="nf">compete</span><span class="p">(</span>
@@ -1127,7 +1128,7 @@
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="sd">"""for each pair competes using the specified parameters</span>
+        <span class="sd">&quot;&quot;&quot;for each pair competes using the specified parameters</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            p_matrix (PayoffMatrix): The payoffmatrix in which the agents compete</span>
@@ -1145,12 +1146,12 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: A pandas dataframe of the results.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">env</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">"No env was specified, either specify environment </span><span class="se">\</span>
+                <span class="s2">&quot;No env was specified, either specify environment </span><span class="se">\</span>
 <span class="s2">                            using set_env() or by specifying env for </span><span class="se">\</span>
-<span class="s2">                            compete()"</span>
+<span class="s2">                            compete()&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">env</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_env</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -1159,8 +1160,8 @@
         <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairing</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">"Currently the pair, </span><span class="si">{</span><span class="n">pair</span><span class="si">}</span><span class="s2">, is competing for </span><span class="si">{</span><span class="n">n_sim</span><span class="si">}</span><span class="s2"> </span><span class="se">\</span>
-<span class="s2">                        simulations, each containg </span><span class="si">{</span><span class="n">n_rounds</span><span class="si">}</span><span class="s2"> rounds."</span>
+                    <span class="sa">f</span><span class="s2">&quot;Currently the pair, </span><span class="si">{</span><span class="n">pair</span><span class="si">}</span><span class="s2">, is competing for </span><span class="si">{</span><span class="n">n_sim</span><span class="si">}</span><span class="s2"> </span><span class="se">\</span>
+<span class="s2">                        simulations, each containg </span><span class="si">{</span><span class="n">n_rounds</span><span class="si">}</span><span class="s2"> rounds.&quot;</span>
                 <span class="p">)</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">compete</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_agents</span><span class="p">[</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
@@ -1169,55 +1170,55 @@
                 <span class="n">n_rounds</span><span class="o">=</span><span class="n">n_rounds</span><span class="p">,</span>
                 <span class="n">n_sim</span><span class="o">=</span><span class="n">n_sim</span><span class="p">,</span>
                 <span class="n">reset_agent</span><span class="o">=</span><span class="n">reset_agent</span><span class="p">,</span>
-                <span class="n">return_val</span><span class="o">=</span><span class="s2">"df"</span><span class="p">,</span>
+                <span class="n">return_val</span><span class="o">=</span><span class="s2">&quot;df&quot;</span><span class="p">,</span>
                 <span class="n">save_history</span><span class="o">=</span><span class="n">save_history</span><span class="p">,</span>
                 <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
                 <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">res</span><span class="p">[</span><span class="s2">"agent0"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">res</span><span class="p">[</span><span class="s2">"agent1"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;agent0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;agent1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="n">msg</span><span class="o">.</span><span class="n">good</span><span class="p">(</span><span class="s2">"Simulation complete"</span><span class="p">)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">good</span><span class="p">(</span><span class="s2">&quot;Simulation complete&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__df</span> <span class="o">=</span> <span class="n">ResultsDf</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>  <span class="c1"># concatenate into one df</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__df</span></div>
 
 <div class="viewcode-block" id="AgentGroup.get_results"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.get_results">[docs]</a>    <span class="k">def</span> <span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: The results</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__df</span></div>
 
 <div class="viewcode-block" id="AgentGroup.plot_heatmap"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.plot_heatmap">[docs]</a>    <span class="k">def</span> <span class="nf">plot_heatmap</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">aggregate_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"payoff_agent"</span><span class="p">,</span>
+        <span class="n">aggregate_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;payoff_agent&quot;</span><span class="p">,</span>
         <span class="n">aggregate_fun</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span>
-        <span class="n">certainty_fun</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"mean_ci_95"</span><span class="p">,</span>
-        <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Blues"</span><span class="p">,</span>
-        <span class="n">na_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"xkcd:white"</span><span class="p">,</span>
-        <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Agent"</span><span class="p">,</span>
-        <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Opponent"</span><span class="p">,</span>
-        <span class="n">cbarlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Average score of the agent"</span><span class="p">,</span>
+        <span class="n">certainty_fun</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mean_ci_95&quot;</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
+        <span class="n">na_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;xkcd:white&quot;</span><span class="p">,</span>
+        <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span>
+        <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Opponent&quot;</span><span class="p">,</span>
+        <span class="n">cbarlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Average score of the agent&quot;</span><span class="p">,</span>
         <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""plot a heatmap of the results.</span>
+        <span class="sd">&quot;&quot;&quot;plot a heatmap of the results.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            aggregate_col (str, optional): The column to aggregate on. Defaults to "payoff_agent".</span>
+<span class="sd">            aggregate_col (str, optional): The column to aggregate on. Defaults to &quot;payoff_agent&quot;.</span>
 <span class="sd">            aggregate_fun (Callable, optional): The function to aggregate by. Defaults to np.mean.</span>
 <span class="sd">            certainty_fun (Union[Callable, str], optional): The certainty function specified as a string on</span>
-<span class="sd">                the form "mean_ci_X" where X denote the confidence interval, or a function.</span>
-<span class="sd">                Defaults to "mean_ci_95".</span>
-<span class="sd">            cmap (str, optional): The color map. Defaults to "Blues".</span>
-<span class="sd">            na_color (str, optional): The color of NAs. Defaults to "xkcd:white", e.g. white.</span>
-<span class="sd">            xlab (str, optional): The name on the x-axis. Defaults to "Agent".</span>
-<span class="sd">            ylab (str, optional): The name of the y-axis. Defaults to "Opponent".</span>
+<span class="sd">                the form &quot;mean_ci_X&quot; where X denote the confidence interval, or a function.</span>
+<span class="sd">                Defaults to &quot;mean_ci_95&quot;.</span>
+<span class="sd">            cmap (str, optional): The color map. Defaults to &quot;Blues&quot;.</span>
+<span class="sd">            na_color (str, optional): The color of NAs. Defaults to &quot;xkcd:white&quot;, e.g. white.</span>
+<span class="sd">            xlab (str, optional): The name on the x-axis. Defaults to &quot;Agent&quot;.</span>
+<span class="sd">            ylab (str, optional): The name of the y-axis. Defaults to &quot;Opponent&quot;.</span>
 <span class="sd">            show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plot_heatmap</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__df</span><span class="p">,</span>
             <span class="n">aggregate_col</span><span class="p">,</span>
@@ -1240,7 +1241,7 @@
         <span class="n">plot_individual_sim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""plots the choice of an agent in a defined agent pair</span>
+        <span class="sd">&quot;&quot;&quot;plots the choice of an agent in a defined agent pair</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            agent0 (str): The name of agent0</span>
@@ -1248,7 +1249,7 @@
 <span class="sd">            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.</span>
 <span class="sd">            plot_individual_sim (bool, optional): Should you plot each individual simulation. Defaults to False.</span>
 <span class="sd">            show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">choice</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__df</span><span class="p">,</span>
             <span class="n">agent0</span><span class="o">=</span><span class="n">agent0</span><span class="p">,</span>
@@ -1260,14 +1261,14 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AgentGroup.plot_score"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.plot_score">[docs]</a>    <span class="k">def</span> <span class="nf">plot_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="sd">"""plots the score of an agent in a defined agent pair</span>
+        <span class="sd">&quot;&quot;&quot;plots the score of an agent in a defined agent pair</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            agent0 (str): The name of agent0</span>
 <span class="sd">            agent1 (str): The name of agent1</span>
 <span class="sd">            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.</span>
 <span class="sd">            show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__df</span><span class="p">,</span> <span class="n">agent0</span><span class="p">,</span> <span class="n">agent1</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AgentGroup.plot_history"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.plot_history">[docs]</a>    <span class="k">def</span> <span class="nf">plot_history</span><span class="p">(</span>
@@ -1277,11 +1278,11 @@
         <span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">state</span><span class="p">],</span>
-        <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
-        <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Round"</span><span class="p">,</span>
+        <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Round&quot;</span><span class="p">,</span>
         <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""Plots the history of an agent in a defined agent pair</span>
+        <span class="sd">&quot;&quot;&quot;Plots the history of an agent in a defined agent pair</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            agent0 (str): The name of agent0</span>
@@ -1289,10 +1290,10 @@
 <span class="sd">            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.</span>
 <span class="sd">            state (str):  The state of the agent you wish to plot.</span>
 <span class="sd">            fun (Callable, optional): A function for extracting the state. Defaults to lambdax:x[state].</span>
-<span class="sd">            xlab (str, optional): The name on the x-axis. Defaults to "Agent".</span>
-<span class="sd">            ylab (str, optional): The name of the y-axis. Defaults to "Opponent".</span>
+<span class="sd">            xlab (str, optional): The name on the x-axis. Defaults to &quot;Agent&quot;.</span>
+<span class="sd">            ylab (str, optional): The name of the y-axis. Defaults to &quot;Opponent&quot;.</span>
 <span class="sd">            show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plot_history</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__df</span><span class="p">,</span>
             <span class="n">agent0</span><span class="p">,</span>
@@ -1308,40 +1309,40 @@
 <div class="viewcode-block" id="AgentGroup.plot_p_op_1"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.plot_p_op_1">[docs]</a>    <span class="k">def</span> <span class="nf">plot_p_op_1</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""plots the p_op_1 of a k-ToM agent in a defined agent pair</span>
+        <span class="sd">&quot;&quot;&quot;plots the p_op_1 of a k-ToM agent in a defined agent pair</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            agent0 (str): The name of agent0</span>
 <span class="sd">            agent1 (str): The name of agent1</span>
 <span class="sd">            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.</span>
 <span class="sd">            show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__tom_in_group</span><span class="p">(</span><span class="n">agent0</span><span class="p">,</span> <span class="n">agent1</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
         <span class="n">plot_p_op_1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__df</span><span class="p">,</span> <span class="n">agent0</span><span class="p">,</span> <span class="n">agent1</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AgentGroup.plot_p_k"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.plot_p_k">[docs]</a>    <span class="k">def</span> <span class="nf">plot_p_k</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="p">):</span>
-        <span class="sd">"""plots the p_k of a k-ToM agent in a defined agent pair</span>
+        <span class="sd">&quot;&quot;&quot;plots the p_k of a k-ToM agent in a defined agent pair</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            agent0 (str): The name of agent0</span>
 <span class="sd">            agent1 (str): The name of agent1</span>
 <span class="sd">            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.</span>
 <span class="sd">            show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__tom_in_group</span><span class="p">(</span><span class="n">agent0</span><span class="p">,</span> <span class="n">agent1</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
         <span class="n">plot_p_k</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__df</span><span class="p">,</span> <span class="n">agent0</span><span class="p">,</span> <span class="n">agent1</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AgentGroup.plot_p_self"><a class="viewcode-back" href="../../agent.html#tomsup.agent.AgentGroup.plot_p_self">[docs]</a>    <span class="k">def</span> <span class="nf">plot_p_self</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="sd">"""plots the p_self of a k-ToM agent in a defined agent pair</span>
+        <span class="sd">&quot;&quot;&quot;plots the p_self of a k-ToM agent in a defined agent pair</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            agent0 (str): The name of agent0</span>
 <span class="sd">            agent1 (str): The name of agent1</span>
 <span class="sd">            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.</span>
 <span class="sd">            show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__tom_in_group</span><span class="p">(</span><span class="n">agent0</span><span class="p">,</span> <span class="n">agent1</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
         <span class="n">plot_p_self</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__df</span><span class="p">,</span> <span class="n">agent0</span><span class="p">,</span> <span class="n">agent1</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span></div>
 
@@ -1354,7 +1355,7 @@
         <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""plots the p_self of a k-ToM agent in a defined agent pair</span>
+        <span class="sd">&quot;&quot;&quot;plots the p_self of a k-ToM agent in a defined agent pair</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            agent0 (str): The name of agent0</span>
@@ -1363,7 +1364,7 @@
 <span class="sd">            state (str): a state of the simulated opponent you wish to plot.</span>
 <span class="sd">            level (str): level of the similated opponent you wish to plot.</span>
 <span class="sd">            show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__tom_in_group</span><span class="p">(</span><span class="n">agent0</span><span class="p">,</span> <span class="n">agent1</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
         <span class="n">plot_op_states</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__df</span><span class="p">,</span> <span class="n">agent0</span><span class="p">,</span> <span class="n">agent1</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span></div>
 
@@ -1374,64 +1375,64 @@
         <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">estimate</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">plot</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"mean"</span><span class="p">,</span>
+        <span class="n">plot</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
         <span class="n">transformation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""plot a k-ToM's estimates the opponent in a given pair</span>
+        <span class="sd">&quot;&quot;&quot;plot a k-ToM&#39;s estimates the opponent in a given pair</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            agent0 (str): The name of agent0</span>
 <span class="sd">            agent1 (str): The name of agent1</span>
 <span class="sd">            agent (int, optional): An int denoting which of agent 0 or 1 you should plot. Defaults to 0.</span>
 <span class="sd">            estimate (str): The desired estimate to plot options include:</span>
-<span class="sd">               "volatility",</span>
-<span class="sd">               "behav_temp" (Behavoural Temperature),</span>
-<span class="sd">               "bias",</span>
-<span class="sd">               "dilution".</span>
+<span class="sd">               &quot;volatility&quot;,</span>
+<span class="sd">               &quot;behav_temp&quot; (Behavoural Temperature),</span>
+<span class="sd">               &quot;bias&quot;,</span>
+<span class="sd">               &quot;dilution&quot;.</span>
 <span class="sd">            level (str): Sophistication level of the similated opponent you wish to plot.</span>
-<span class="sd">            plot (str, optional): Toggle between plotting mean ("mean") or variance ("var"). Default to "mean".</span>
+<span class="sd">            plot (str, optional): Toggle between plotting mean (&quot;mean&quot;) or variance (&quot;var&quot;). Default to &quot;mean&quot;.</span>
 <span class="sd">            show (bool, optional): Should plt.show be run at the end. Defaults to True.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__tom_in_group</span><span class="p">(</span><span class="n">agent0</span><span class="p">,</span> <span class="n">agent1</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
 
         <span class="n">d_e</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"volatility"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Volatility"</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
-            <span class="s2">"behav_temp"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Behavoural Temperature"</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
-            <span class="s2">"bias"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Bias"</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
-            <span class="s2">"dilution"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Dilution"</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="s2">&quot;volatility&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Volatility&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+            <span class="s2">&quot;behav_temp&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Behavoural Temperature&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+            <span class="s2">&quot;bias&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Bias&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
+            <span class="s2">&quot;dilution&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Dilution&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">estimate</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d_e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid estimate: </span><span class="si">{</span><span class="n">estimate</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid estimate: </span><span class="si">{</span><span class="n">estimate</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
         <span class="n">ylab</span><span class="p">,</span> <span class="n">loc</span> <span class="o">=</span> <span class="n">d_e</span><span class="p">[</span><span class="n">estimate</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">plot</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"mean"</span><span class="p">,</span> <span class="s2">"var"</span><span class="p">}:</span>
+        <span class="k">if</span> <span class="n">plot</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;var&quot;</span><span class="p">}:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">"plot must be either 'mean' or 'var', for</span><span class="se">\</span>
-<span class="s2">                 plotting either mean or variance"</span>
+                <span class="s2">&quot;plot must be either &#39;mean&#39; or &#39;var&#39;, for</span><span class="se">\</span>
+<span class="s2">                 plotting either mean or variance&quot;</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">plot</span> <span class="o">==</span> <span class="s2">"mean"</span><span class="p">:</span>
-            <span class="n">p_str</span> <span class="o">=</span> <span class="s2">"mean"</span>
-            <span class="n">p_key</span> <span class="o">=</span> <span class="s2">"param_mean"</span>
+        <span class="k">if</span> <span class="n">plot</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+            <span class="n">p_str</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span>
+            <span class="n">p_key</span> <span class="o">=</span> <span class="s2">&quot;param_mean&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">p_str</span> <span class="o">=</span> <span class="s2">"variance"</span>
-            <span class="n">p_key</span> <span class="o">=</span> <span class="s2">"param_var"</span>
+            <span class="n">p_str</span> <span class="o">=</span> <span class="s2">&quot;variance&quot;</span>
+            <span class="n">p_key</span> <span class="o">=</span> <span class="s2">&quot;param_var&quot;</span>
 
-        <span class="k">if</span> <span class="n">estimate</span> <span class="o">==</span> <span class="s2">"dilution"</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">dilution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The desired agent does not estimate dilution"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">estimate</span> <span class="o">==</span> <span class="s2">"bias"</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">dilution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The desired agent does not estimate a bias"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">estimate</span> <span class="o">==</span> <span class="s2">&quot;dilution&quot;</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">dilution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The desired agent does not estimate dilution&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">estimate</span> <span class="o">==</span> <span class="s2">&quot;bias&quot;</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">dilution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The desired agent does not estimate a bias&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">transformation</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">estimate</span> <span class="o">==</span> <span class="s2">"bias"</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">plot</span> <span class="o">==</span> <span class="s2">"mean"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">estimate</span> <span class="o">==</span> <span class="s2">&quot;bias&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">plot</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">):</span>
                 <span class="n">transformation</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">elif</span> <span class="n">plot</span> <span class="o">==</span> <span class="s2">"var"</span><span class="p">:</span>
-                <span class="n">t</span><span class="p">,</span> <span class="n">t_str</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span> <span class="s2">"exp"</span>
+            <span class="k">elif</span> <span class="n">plot</span> <span class="o">==</span> <span class="s2">&quot;var&quot;</span><span class="p">:</span>
+                <span class="n">t</span><span class="p">,</span> <span class="n">t_str</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span> <span class="s2">&quot;exp&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">d_t</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">"volatility"</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span> <span class="s2">"exp"</span><span class="p">),</span>
-                    <span class="s2">"behav_temp"</span><span class="p">:</span> <span class="p">(</span><span class="n">inv_logit</span><span class="p">,</span> <span class="s2">"inverse_logit"</span><span class="p">),</span>
-                    <span class="s2">"dilution"</span><span class="p">:</span> <span class="p">(</span><span class="n">inv_logit</span><span class="p">,</span> <span class="s2">"inverse_logit"</span><span class="p">),</span>
+                    <span class="s2">&quot;volatility&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span> <span class="s2">&quot;exp&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;behav_temp&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">inv_logit</span><span class="p">,</span> <span class="s2">&quot;inverse_logit&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;dilution&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">inv_logit</span><span class="p">,</span> <span class="s2">&quot;inverse_logit&quot;</span><span class="p">),</span>
                 <span class="p">}</span>
                 <span class="n">t</span><span class="p">,</span> <span class="n">t_str</span> <span class="o">=</span> <span class="n">d_t</span><span class="p">[</span><span class="n">estimate</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="n">transformation</span><span class="p">):</span>
@@ -1444,9 +1445,9 @@
                 <span class="k">return</span> <span class="n">x</span>
 
         <span class="k">if</span> <span class="n">transformation</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="n">ylab</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ylab</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">p_str</span><span class="si">}</span><span class="s2">)"</span>
+            <span class="n">ylab</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ylab</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">p_str</span><span class="si">}</span><span class="s2">)&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ylab</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">t_str</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">p_str</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">ylab</span><span class="si">}</span><span class="s2">)"</span>
+            <span class="n">ylab</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t_str</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">p_str</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">ylab</span><span class="si">}</span><span class="s2">)&quot;</span>
 
         <span class="n">plot_history</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__df</span><span class="p">,</span>
@@ -1455,7 +1456,7 @@
             <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span>
             <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">t</span><span class="p">(</span>
-                <span class="n">x</span><span class="p">[</span><span class="s2">"internal_states"</span><span class="p">][</span><span class="s2">"opponent_states"</span><span class="p">][</span><span class="n">level</span><span class="p">][</span><span class="s2">"own_states"</span><span class="p">][</span><span class="n">p_key</span><span class="p">][</span><span class="n">loc</span><span class="p">]</span>
+                <span class="n">x</span><span class="p">[</span><span class="s2">&quot;internal_states&quot;</span><span class="p">][</span><span class="s2">&quot;opponent_states&quot;</span><span class="p">][</span><span class="n">level</span><span class="p">][</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="n">p_key</span><span class="p">][</span><span class="n">loc</span><span class="p">]</span>
             <span class="p">),</span>
             <span class="n">ylab</span><span class="o">=</span><span class="n">ylab</span><span class="p">,</span>
             <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">,</span>
@@ -1467,14 +1468,14 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">TOM</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">agent</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"The function called requires desired agent to be a ToM agent</span><span class="se">\</span>
-<span class="s2">            but the specified agent (</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">) is a agent of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">&quot;The function called requires desired agent to be a ToM agent</span><span class="se">\</span>
+<span class="s2">            but the specified agent (</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">) is a agent of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">header</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"&lt;Class AgentGroup, envinment = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2">&gt; </span><span class="se">\n\n</span><span class="s2">"</span>
-        <span class="n">info</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="p">(</span><span class="s2">"</span><span class="se">\t</span><span class="s2"> | </span><span class="se">\t</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">i</span><span class="p">))</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&lt;Class AgentGroup, envinment = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="si">}</span><span class="s2">&gt; </span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> | </span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">i</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_params</span><span class="p">))</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">header</span> <span class="o">+</span> <span class="n">info</span></div>
@@ -1492,12 +1493,12 @@
     <span class="n">n_rounds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">n_sim</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">reset_agent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">return_val</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"df"</span><span class="p">,</span>
+    <span class="n">return_val</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;df&quot;</span><span class="p">,</span>
     <span class="n">save_history</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Args:</span>
 <span class="sd">        agent_0 (Agent): objects of class Agent which should compete</span>
 <span class="sd">        agent_1 (Agent): objects of class Agent which should compete</span>
@@ -1508,7 +1509,7 @@
 <span class="sd">        reset_agent (bool, optional): Should the agent be reset ? Defaults to True.</span>
 <span class="sd">        save_history (bool, optional): Should the history of agent be saved.</span>
 <span class="sd">            Defaults to False, as this is memory intensive.</span>
-<span class="sd">        return_val (str): Should values be returns as a pandas dataframe ("df"), or a "list".</span>
+<span class="sd">        return_val (str): Should values be returns as a pandas dataframe (&quot;df&quot;), or a &quot;list&quot;.</span>
 <span class="sd">        verbose (bool, optional): Toggles the verbosity of the function. Defaults to True.</span>
 <span class="sd">        n_jobs (Optional[int], optional): Number of parallel jobs. Defaults to None, indicating no parallelization.</span>
 <span class="sd">            -1 indicate as many jobs as there is cores on your unit, i.e. os.cpu_count().</span>
@@ -1516,27 +1517,27 @@
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; sirRB = RB(bias = 0.7)</span>
 <span class="sd">        &gt;&gt;&gt; sirWSLS = WSLS()</span>
-<span class="sd">        &gt;&gt;&gt; result = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", \</span>
+<span class="sd">        &gt;&gt;&gt; result = compete(sirRB, sirWSLS, p_matrix = &quot;penny_competitive&quot;, \</span>
 <span class="sd">            n_rounds = 10)</span>
 <span class="sd">        &gt;&gt;&gt; type(result)</span>
 <span class="sd">        pandas.core.frame.DataFrame</span>
 <span class="sd">        &gt;&gt;&gt; result.columns</span>
-<span class="sd">        Index(['round', 'action_agent0', 'action_agent1', 'payoff_agent0',</span>
-<span class="sd">        'payoff_agent1'],</span>
-<span class="sd">        dtype='object')</span>
-<span class="sd">        &gt;&gt;&gt; result = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", \</span>
-<span class="sd">            n_rounds = 10, n_sim = 3, return_val = 'list')</span>
+<span class="sd">        Index([&#39;round&#39;, &#39;action_agent0&#39;, &#39;action_agent1&#39;, &#39;payoff_agent0&#39;,</span>
+<span class="sd">        &#39;payoff_agent1&#39;],</span>
+<span class="sd">        dtype=&#39;object&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; result = compete(sirRB, sirWSLS, p_matrix = &quot;penny_competitive&quot;, \</span>
+<span class="sd">            n_rounds = 10, n_sim = 3, return_val = &#39;list&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; len(result) == 3*10</span>
 <span class="sd">        True</span>
-<span class="sd">        &gt;&gt;&gt; result = compete(sirRB, sirWSLS, p_matrix = "penny_competitive", \</span>
-<span class="sd">            n_rounds = 100, n_sim = 3, return_val = 'df', verbose = True)</span>
+<span class="sd">        &gt;&gt;&gt; result = compete(sirRB, sirWSLS, p_matrix = &quot;penny_competitive&quot;, \</span>
+<span class="sd">            n_rounds = 100, n_sim = 3, return_val = &#39;df&#39;, verbose = True)</span>
 <span class="sd">            Running simulation 1 out of 3</span>
 <span class="sd">            Running simulation 2 out of 3</span>
 <span class="sd">            Running simulation 3 out of 3</span>
-<span class="sd">        &gt;&gt;&gt; result['payoff_agent1'].mean() &gt; 0  # We see that the WSLS() on \</span>
+<span class="sd">        &gt;&gt;&gt; result[&#39;payoff_agent1&#39;].mean() &gt; 0  # We see that the WSLS() on \</span>
 <span class="sd">            average win more than it lose vs. the biased agent (RB)</span>
 <span class="sd">        True</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p_matrix</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">p_matrix</span> <span class="o">=</span> <span class="n">PayoffMatrix</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">p_matrix</span><span class="p">)</span>
@@ -1545,18 +1546,18 @@
         <span class="n">agent_1</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">save_history</span><span class="o">=</span><span class="n">save_history</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">n_sim</span><span class="p">:</span>
-        <span class="c1"># make sure people don't do things they regret</span>
+        <span class="c1"># make sure people don&#39;t do things they regret</span>
         <span class="k">if</span> <span class="n">reset_agent</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">warn</span><span class="p">(</span>
-                <span class="s2">"n_sim is set and reset_agent is False, the agent will </span><span class="se">\</span>
+                <span class="s2">&quot;n_sim is set and reset_agent is False, the agent will </span><span class="se">\</span>
 <span class="s2">                  maintain their knowledge across simulations. Is this </span><span class="se">\</span>
-<span class="s2">                  the intended outcome?"</span><span class="p">,</span>
+<span class="s2">                  the intended outcome?&quot;</span><span class="p">,</span>
                 <span class="ne">Warning</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">__compete</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">Running simulation </span><span class="si">{</span><span class="n">sim</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">n_sim</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Running simulation </span><span class="si">{</span><span class="n">sim</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">n_sim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="n">res</span> <span class="o">=</span> <span class="n">compete</span><span class="p">(</span>
                 <span class="n">agent_0</span><span class="p">,</span>
@@ -1565,7 +1566,7 @@
                 <span class="n">n_rounds</span><span class="p">,</span>
                 <span class="kc">None</span><span class="p">,</span>
                 <span class="n">reset_agent</span><span class="p">,</span>
-                <span class="n">return_val</span><span class="o">=</span><span class="s2">"list"</span><span class="p">,</span>
+                <span class="n">return_val</span><span class="o">=</span><span class="s2">&quot;list&quot;</span><span class="p">,</span>
                 <span class="n">save_history</span><span class="o">=</span><span class="n">save_history</span><span class="p">,</span>
             <span class="p">)</span>
 
@@ -1602,65 +1603,65 @@
             <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">save_history</span><span class="p">:</span>
-                <span class="n">history0</span> <span class="o">=</span> <span class="n">agent_0</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">"r"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">history1</span> <span class="o">=</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">"r"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">history0</span> <span class="o">=</span> <span class="n">agent_0</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">history1</span> <span class="o">=</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">c_0</span><span class="p">,</span> <span class="n">c_1</span><span class="p">,</span> <span class="n">payoff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">payoff</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">history0</span><span class="p">,</span> <span class="n">history1</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">c_0</span><span class="p">,</span> <span class="n">c_1</span><span class="p">,</span> <span class="n">payoff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">payoff</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-        <span class="k">if</span> <span class="n">return_val</span> <span class="o">==</span> <span class="s2">"df"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">return_val</span> <span class="o">==</span> <span class="s2">&quot;df&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">save_history</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">ResultsDf</span><span class="p">(</span>
                     <span class="n">result</span><span class="p">,</span>
                     <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
-                        <span class="s2">"round"</span><span class="p">,</span>
-                        <span class="s2">"choice_agent0"</span><span class="p">,</span>
-                        <span class="s2">"choice_agent1"</span><span class="p">,</span>
-                        <span class="s2">"payoff_agent0"</span><span class="p">,</span>
-                        <span class="s2">"payoff_agent1"</span><span class="p">,</span>
-                        <span class="s2">"history_agent0"</span><span class="p">,</span>
-                        <span class="s2">"history_agent1"</span><span class="p">,</span>
+                        <span class="s2">&quot;round&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;choice_agent0&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;choice_agent1&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;payoff_agent0&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;payoff_agent1&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;history_agent0&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;history_agent1&quot;</span><span class="p">,</span>
                     <span class="p">],</span>
                 <span class="p">)</span>
             <span class="k">return</span> <span class="n">ResultsDf</span><span class="p">(</span>
                 <span class="n">result</span><span class="p">,</span>
                 <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
-                    <span class="s2">"round"</span><span class="p">,</span>
-                    <span class="s2">"choice_agent0"</span><span class="p">,</span>
-                    <span class="s2">"choice_agent1"</span><span class="p">,</span>
-                    <span class="s2">"payoff_agent0"</span><span class="p">,</span>
-                    <span class="s2">"payoff_agent1"</span><span class="p">,</span>
+                    <span class="s2">&quot;round&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;choice_agent0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;choice_agent1&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;payoff_agent0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;payoff_agent1&quot;</span><span class="p">,</span>
                 <span class="p">],</span>
             <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">return_val</span> <span class="o">==</span> <span class="s2">"list"</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">return_val</span> <span class="o">==</span> <span class="s2">&quot;list&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">result</span>
-    <span class="k">if</span> <span class="n">return_val</span> <span class="o">==</span> <span class="s2">"df"</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">return_val</span> <span class="o">==</span> <span class="s2">&quot;df&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">save_history</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ResultsDf</span><span class="p">(</span>
                 <span class="n">result</span><span class="p">,</span>
                 <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
-                    <span class="s2">"n_sim"</span><span class="p">,</span>
-                    <span class="s2">"round"</span><span class="p">,</span>
-                    <span class="s2">"choice_agent0"</span><span class="p">,</span>
-                    <span class="s2">"choice_agent1"</span><span class="p">,</span>
-                    <span class="s2">"payoff_agent0"</span><span class="p">,</span>
-                    <span class="s2">"payoff_agent1"</span><span class="p">,</span>
-                    <span class="s2">"history_agent0"</span><span class="p">,</span>
-                    <span class="s2">"history_agent1"</span><span class="p">,</span>
+                    <span class="s2">&quot;n_sim&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;round&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;choice_agent0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;choice_agent1&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;payoff_agent0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;payoff_agent1&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;history_agent0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;history_agent1&quot;</span><span class="p">,</span>
                 <span class="p">],</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">ResultsDf</span><span class="p">(</span>
             <span class="n">result</span><span class="p">,</span>
             <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
-                <span class="s2">"n_sim"</span><span class="p">,</span>
-                <span class="s2">"round"</span><span class="p">,</span>
-                <span class="s2">"choice_agent0"</span><span class="p">,</span>
-                <span class="s2">"choice_agent1"</span><span class="p">,</span>
-                <span class="s2">"payoff_agent0"</span><span class="p">,</span>
-                <span class="s2">"payoff_agent1"</span><span class="p">,</span>
+                <span class="s2">&quot;n_sim&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;round&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;choice_agent0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;choice_agent1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;payoff_agent0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;payoff_agent1&quot;</span><span class="p">,</span>
             <span class="p">],</span>
         <span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Invalid return_val, please use either 'df' or 'list'"</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Invalid return_val, please use either &#39;df&#39; or &#39;list&#39;&quot;</span><span class="p">)</span></div>
 </pre></div>
         </article>
       </div>
@@ -1698,6 +1699,7 @@
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/clipboard.min.js"></script>

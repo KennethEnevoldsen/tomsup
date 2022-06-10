@@ -1,13 +1,13 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>tomsup.payoffmatrix - tomsup 1.1.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -196,7 +196,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -211,83 +212,83 @@
         </div>
         <article role="main">
           <h1>Source code for tomsup.payoffmatrix</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This scripts contains the PayoffMatrix</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
 <div class="viewcode-block" id="PayoffMatrix"><a class="viewcode-back" href="../../payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix">[docs]</a><span class="k">class</span> <span class="nc">PayoffMatrix</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class of 2 by 2 payoff matrices.</span>
 
 <span class="sd">    Currently include the following games:</span>
-<span class="sd">    The staghunt game: 'staghunt',</span>
-<span class="sd">    The matching pennies game (coop and competive): 'penny_competive', 'penny_cooperative',</span>
-<span class="sd">    The party dilemma: 'party',</span>
-<span class="sd">    The Battle of the sexes: 'sexes',</span>
-<span class="sd">    The chicken game: 'chicken',</span>
-<span class="sd">    The deadlock: 'deadlock',</span>
-<span class="sd">    The prisoners dilemma: 'prisoners_dilemma'.</span>
+<span class="sd">    The staghunt game: &#39;staghunt&#39;,</span>
+<span class="sd">    The matching pennies game (coop and competive): &#39;penny_competive&#39;, &#39;penny_cooperative&#39;,</span>
+<span class="sd">    The party dilemma: &#39;party&#39;,</span>
+<span class="sd">    The Battle of the sexes: &#39;sexes&#39;,</span>
+<span class="sd">    The chicken game: &#39;chicken&#39;,</span>
+<span class="sd">    The deadlock: &#39;deadlock&#39;,</span>
+<span class="sd">    The prisoners dilemma: &#39;prisoners_dilemma&#39;.</span>
 
 <span class="sd">    For custom payoff matrix supply a 2x2x2 numpy array to the predefined argument.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; import tomsup as ts</span>
-<span class="sd">        &gt;&gt;&gt; staghunt = ts.PayoffMatrix(name="staghunt")</span>
+<span class="sd">        &gt;&gt;&gt; staghunt = ts.PayoffMatrix(name=&quot;staghunt&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; staghunt.payoff(action_agent0=1, action_agent1=1, agent=0)</span>
 <span class="sd">        5</span>
 <span class="sd">        &gt;&gt;&gt; staghunt.payoff(action_agent0=1, action_agent1=0, agent=0)</span>
 <span class="sd">        0</span>
 <span class="sd">        &gt;&gt;&gt; staghunt.payoff(action_agent0=0, action_agent1=1, agent=0)</span>
 <span class="sd">        3</span>
-<span class="sd">        &gt;&gt;&gt; chicken = ts.PayoffMatrix(name="chicken")</span>
+<span class="sd">        &gt;&gt;&gt; chicken = ts.PayoffMatrix(name=&quot;chicken&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; chicken.payoff(0, 1, 0)</span>
 <span class="sd">        -1</span>
-<span class="sd">        &gt;&gt;&gt; dead = ts.PayoffMatrix(name="deadlock")</span>
+<span class="sd">        &gt;&gt;&gt; dead = ts.PayoffMatrix(name=&quot;deadlock&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; dead.payoff(1, 0, 1)</span>
 <span class="sd">        0</span>
-<span class="sd">        &gt;&gt;&gt; sexes = ts.PayoffMatrix(name="sexes")</span>
+<span class="sd">        &gt;&gt;&gt; sexes = ts.PayoffMatrix(name=&quot;sexes&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; sexes.payoff(1, 1, 0)</span>
 <span class="sd">        5</span>
-<span class="sd">        &gt;&gt;&gt; custom = ts.PayoffMatrix(name="custom", np.array(([(10, 0), (0, 5)],</span>
+<span class="sd">        &gt;&gt;&gt; custom = ts.PayoffMatrix(name=&quot;custom&quot;, np.array(([(10, 0), (0, 5)],</span>
 <span class="sd">                                                        [(5, 0), (0, 10)])))</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">predefined</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            name (str): The name of the either predefined matrix or your custom matrix.</span>
 <span class="sd">                Currently include the following games:</span>
-<span class="sd">                The staghunt game ('staghunt'),</span>
-<span class="sd">                the matching pennies game ('penny_competive', 'penny_cooperative'),</span>
-<span class="sd">                the party dilemma ('party'),</span>
-<span class="sd">                the Battle of the sexes ('sexes'), the chicken game ('chicken'),</span>
-<span class="sd">                the deadlock ('deadlock'), nad the prisoners dilemma ('prisoners_dilemma').</span>
+<span class="sd">                The staghunt game (&#39;staghunt&#39;),</span>
+<span class="sd">                the matching pennies game (&#39;penny_competive&#39;, &#39;penny_cooperative&#39;),</span>
+<span class="sd">                the party dilemma (&#39;party&#39;),</span>
+<span class="sd">                the Battle of the sexes (&#39;sexes&#39;), the chicken game (&#39;chicken&#39;),</span>
+<span class="sd">                the deadlock (&#39;deadlock&#39;), nad the prisoners dilemma (&#39;prisoners_dilemma&#39;).</span>
 <span class="sd">            predefined (Optional[np.array], optional): A custom 2x2x2 matrix. Defaults to None.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"staghunt"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;staghunt&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                 <span class="p">(</span>
                     <span class="p">[(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)],</span>
                     <span class="p">[(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)],</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"prisoners_dilemma"</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;prisoners_dilemma&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(([(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)],</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]))</span>
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"penny_competitive"</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;penny_competitive&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(([(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)],</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]))</span>
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"penny_cooperative"</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;penny_cooperative&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(([(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]))</span>
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"party"</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;party&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(([(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)],</span> <span class="p">[(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]))</span>
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"sexes"</span><span class="p">:</span>  <span class="c1"># battle of the sexes</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;sexes&quot;</span><span class="p">:</span>  <span class="c1"># battle of the sexes</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(([(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)],</span> <span class="p">[(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]))</span>
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"chicken"</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;chicken&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(([(</span><span class="o">-</span><span class="mi">1000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]))</span>
-        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"deadlock"</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;deadlock&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(([(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)],</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">predefined</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -296,19 +297,19 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predefined</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                        <span class="s2">"Predefined should be a valid matrix where </span><span class="se">\</span>
+                        <span class="s2">&quot;Predefined should be a valid matrix where </span><span class="se">\</span>
 <span class="s2">                                     matrix.shape == (2, 2, 2), e.g. a 2x2x2 </span><span class="se">\</span>
-<span class="s2">                                     matrix"</span>
+<span class="s2">                                     matrix&quot;</span>
                     <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                    <span class="s2">"Invalid name and no predefined matrix given. </span><span class="se">\</span>
+                    <span class="s2">&quot;Invalid name and no predefined matrix given. </span><span class="se">\</span>
 <span class="s2">                                 Please input a valid name or input a </span><span class="se">\</span>
-<span class="s2">                                 predefined matrix of dimension 2x2x2."</span>
+<span class="s2">                                 predefined matrix of dimension 2x2x2.&quot;</span>
                 <span class="p">)</span>
 
 <div class="viewcode-block" id="PayoffMatrix.payoff"><a class="viewcode-back" href="../../payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix.payoff">[docs]</a>    <span class="k">def</span> <span class="nf">payoff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choice_agent0</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">choice_agent1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            choice_agent0 (int): choice of agent 0</span>
 <span class="sd">            choice_agent1 (int): choice of agent 1</span>
@@ -317,7 +318,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The payoff of the agent</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">[</span><span class="n">agent</span><span class="p">,</span> <span class="n">choice_agent0</span><span class="p">,</span> <span class="n">choice_agent1</span><span class="p">]</span></div>
 
@@ -325,52 +326,52 @@
         <span class="n">print_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">()</span><span class="o">.</span><span class="n">min</span><span class="p">())),</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()))])</span>
 
         <span class="k">def</span> <span class="nf">add_pl</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">print_len</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">string</span><span class="p">)))</span> <span class="o">*</span> <span class="s2">" "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">print_len</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">string</span><span class="p">)))</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
 
-        <span class="n">str1</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"&lt;Class PayoffMatrix, Name = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&gt; "</span>
-        <span class="n">str2</span> <span class="o">=</span> <span class="s2">"The payoff matrix of agent 0"</span>
-        <span class="n">str3</span> <span class="o">=</span> <span class="s2">"       |  Choice agent 1"</span>
+        <span class="n">str1</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&lt;Class PayoffMatrix, Name = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&gt; &quot;</span>
+        <span class="n">str2</span> <span class="o">=</span> <span class="s2">&quot;The payoff matrix of agent 0&quot;</span>
+        <span class="n">str3</span> <span class="o">=</span> <span class="s2">&quot;       |  Choice agent 1&quot;</span>
         <span class="n">str4</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">"       | "</span>
-            <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-            <span class="o">+</span> <span class="s2">" | "</span>
-            <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-            <span class="o">+</span> <span class="s2">" | "</span>
-            <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-            <span class="o">+</span> <span class="s2">" |"</span>
+            <span class="s2">&quot;       | &quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot; |&quot;</span>
         <span class="p">)</span>
-        <span class="n">str5</span> <span class="o">=</span> <span class="s2">"       | "</span> <span class="o">+</span> <span class="n">print_len</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="s2">"-"</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="s2">"---"</span> <span class="o">+</span> <span class="s2">" |"</span>
+        <span class="n">str5</span> <span class="o">=</span> <span class="s2">&quot;       | &quot;</span> <span class="o">+</span> <span class="n">print_len</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="s2">&quot;---&quot;</span> <span class="o">+</span> <span class="s2">&quot; |&quot;</span>
         <span class="n">str6</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">"Choice | "</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" | "</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" | "</span>
-            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" |"</span>
+            <span class="s2">&quot;Choice | &quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; |&quot;</span>
         <span class="p">)</span>
         <span class="n">str7</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">"agent 0| "</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" | "</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" | "</span>
-            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" |"</span>
+            <span class="s2">&quot;agent 0| &quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; |&quot;</span>
         <span class="p">)</span>
-        <span class="n">str8</span> <span class="o">=</span> <span class="s2">" "</span>
-        <span class="n">str9</span> <span class="o">=</span> <span class="s2">"The payoff matrix of agent 1"</span>
-        <span class="n">str10</span> <span class="o">=</span> <span class="s2">"       |  Choice agent 1"</span>
+        <span class="n">str8</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">str9</span> <span class="o">=</span> <span class="s2">&quot;The payoff matrix of agent 1&quot;</span>
+        <span class="n">str10</span> <span class="o">=</span> <span class="s2">&quot;       |  Choice agent 1&quot;</span>
         <span class="n">str11</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">"       | "</span>
-            <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-            <span class="o">+</span> <span class="s2">" | "</span>
-            <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-            <span class="o">+</span> <span class="s2">" | "</span>
-            <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-            <span class="o">+</span> <span class="s2">" |"</span>
+            <span class="s2">&quot;       | &quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot; |&quot;</span>
         <span class="p">)</span>
         <span class="n">str12</span> <span class="o">=</span> <span class="n">str5</span>
         <span class="n">str13</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">"Choice | "</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" | "</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" | "</span>
-            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" |"</span>
+            <span class="s2">&quot;Choice | &quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; |&quot;</span>
         <span class="p">)</span>
         <span class="n">str14</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">"agent 0| "</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" | "</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" | "</span>
-            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">" |"</span>
+            <span class="s2">&quot;agent 0| &quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">add_pl</span><span class="p">(</span><span class="bp">self</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; |&quot;</span>
         <span class="p">)</span>
         <span class="n">str15</span> <span class="o">=</span> <span class="n">str8</span>
-        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="n">str1</span><span class="p">,</span>
                 <span class="n">str2</span><span class="p">,</span>
@@ -391,10 +392,10 @@
         <span class="p">)</span>
 
 <div class="viewcode-block" id="PayoffMatrix.get_matrix"><a class="viewcode-back" href="../../payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix.get_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            np.array: The payoff matrix</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span></div>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -436,6 +437,7 @@
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/clipboard.min.js"></script>

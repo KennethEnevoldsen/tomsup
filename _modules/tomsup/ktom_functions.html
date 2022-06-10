@@ -1,13 +1,13 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>tomsup.ktom_functions - tomsup 1.1.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -196,7 +196,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -211,10 +212,10 @@
         </div>
         <article role="main">
           <h1>Source code for tomsup.ktom_functions</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This script contains all function related to the implementation of the</span>
 <span class="sd">k-ToM agent.</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># For reference the parameter order of the k-ToM parameters is:</span>
 <span class="c1"># [1] Volatility</span>
 <span class="c1"># [2] Behavioural temperature</span>
@@ -234,7 +235,7 @@
 
 
 <div class="viewcode-block" id="p_op_var0_update"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.p_op_var0_update">[docs]</a><span class="k">def</span> <span class="nf">p_op_var0_update</span><span class="p">(</span><span class="n">prev_p_op_mean0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">prev_p_op_var0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">volatility</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-    <span class="sd">"""Variance update of the 0-ToM</span>
+    <span class="sd">&quot;&quot;&quot;Variance update of the 0-ToM</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; p_op_var0_update(1, 0.2, 1)</span>
@@ -245,7 +246,7 @@
 <span class="sd">        &gt;&gt;&gt; #Mean close to 0.5 gives lower variance</span>
 <span class="sd">        &gt;&gt;&gt; p_op_var0_update(1, 0.45, 1) &lt; p_op_var0_update (1, 0.2, 2)</span>
 <span class="sd">        True</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Input variable transforms</span>
     <span class="n">volatility</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">volatility</span><span class="p">)</span>
     <span class="n">prev_p_op_var0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">prev_p_op_var0</span><span class="p">)</span>
@@ -264,7 +265,7 @@
 
 
 <div class="viewcode-block" id="p_op_mean0_update"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.p_op_mean0_update">[docs]</a><span class="k">def</span> <span class="nf">p_op_mean0_update</span><span class="p">(</span><span class="n">prev_p_op_mean0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_op_var0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">"""0-ToM updates mean choice probability estimate"""</span>
+    <span class="sd">&quot;&quot;&quot;0-ToM updates mean choice probability estimate&quot;&quot;&quot;</span>
     <span class="c1"># Input variable transforms</span>
     <span class="n">p_op_var0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">p_op_var0</span><span class="p">)</span>
 
@@ -286,14 +287,14 @@
     <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">):</span>
 
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Approximates the estimated choice probability of the opponent on the</span>
 <span class="sd">    previous round.</span>
 <span class="sd">    A semi-analytical approximation derived in Daunizeau, J. (2017)</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; p_opk_approx_fun(prev_p_op_mean = np.array([0]), prev_param_var = np.array([[0, 0, 0]]), prev_gradient = np.array([[0, 0, 0]]), level = 1)</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Constants</span>
     <span class="n">a</span> <span class="o">=</span> <span class="mf">0.205</span>
     <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.319</span>
@@ -324,14 +325,14 @@
 <div class="viewcode-block" id="p_k_udpate"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.p_k_udpate">[docs]</a><span class="k">def</span> <span class="nf">p_k_udpate</span><span class="p">(</span>
     <span class="n">prev_p_k</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">p_opk_approx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dilution</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    k-ToM updates its estimate of opponents sophistication level.</span>
 <span class="sd">    If k-ToM has a dilution parameter, it does a partial forgetting of learned</span>
 <span class="sd">    estimates.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; p_k_udpate(prev_p_k = np.array([1.]), p_opk_approx = np.array([-0.69314718]), op_choice = 1, dilution = None)</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Input variable transforms</span>
     <span class="n">p_opk_approx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">p_opk_approx</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dilution</span><span class="p">:</span>
@@ -362,8 +363,8 @@
     <span class="n">volatility_dummy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    k-ToM updates its uncertainty / variance on its estimates of opponent's</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    k-ToM updates its uncertainty / variance on its estimates of opponent&#39;s</span>
 <span class="sd">    parameter values</span>
 
 <span class="sd">    Examples:</span>
@@ -372,7 +373,7 @@
 <span class="sd">            prev_gradient = np.array([0, 0, 0]), p_k = np.array([1.]), \</span>
 <span class="sd">            volatility = -2, volatility_dummy = None)</span>
 <span class="sd">        array([[0.12692801, 0.        , 0.        ]])</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Dummy constant: sets volatility to 0 for all except volatility opponent</span>
     <span class="c1"># parameter estimates</span>
     <span class="k">if</span> <span class="n">volatility_dummy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -407,12 +408,12 @@
     <span class="n">param_var</span><span class="p">,</span>
     <span class="n">op_choice</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    k-ToM updates its estimates of opponent's parameter values</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    k-ToM updates its estimates of opponent&#39;s parameter values</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; param_mean_update(prev_p_op_mean, prev_param_mean = np.array([[0, 0, 0]]), prev_gradient = np.array([0, 0, 0]), p_k = np.array([0, 0, 0]), param_var, op_choice)</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Input variable transforms</span>
     <span class="n">param_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">param_var</span><span class="p">)</span> <span class="o">*</span> <span class="n">prev_gradient</span>
 
@@ -442,7 +443,7 @@
     <span class="n">p_matrix</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-    <span class="sd">"""The gradient update of the k-ToM agent"""</span>
+    <span class="sd">&quot;&quot;&quot;The gradient update of the k-ToM agent&quot;&quot;&quot;</span>
     <span class="c1"># Make empty list for fillin in gradients</span>
     <span class="n">gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param_mean</span><span class="p">))</span>
 
@@ -493,14 +494,14 @@
 
 <span class="c1"># Decision subfunctions</span>
 <div class="viewcode-block" id="p_op0_fun"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.p_op0_fun">[docs]</a><span class="k">def</span> <span class="nf">p_op0_fun</span><span class="p">(</span><span class="n">p_op_mean0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_op_var0</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    0-ToM combines the mean and variance of its parameter estimate into a</span>
 <span class="sd">    final choice probability estimate.</span>
-<span class="sd">    To avoid unidentifiability problems this function does not use 0-ToM's volatility parameter.</span>
+<span class="sd">    To avoid unidentifiability problems this function does not use 0-ToM&#39;s volatility parameter.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">    &gt;&gt;&gt; p_op0_fun(p_op_mean0 = 0.7, p_op_var0 = 0.3)</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Constants</span>
     <span class="n">a</span> <span class="o">=</span> <span class="mf">0.36</span>
 
@@ -516,11 +517,11 @@
 
 
 <div class="viewcode-block" id="p_opk_fun"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.p_opk_fun">[docs]</a><span class="k">def</span> <span class="nf">p_opk_fun</span><span class="p">(</span><span class="n">p_op_mean</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">param_var</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">gradient</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    k-ToM combines the mean choice probability estimate and the variances of</span>
 <span class="sd">    its parameter estimates into a final choice probability estimate.</span>
-<span class="sd">    To avoid unidentifiability problems this function does not use 0-ToM's volatility parameter.</span>
-<span class="sd">    """</span>
+<span class="sd">    To avoid unidentifiability problems this function does not use 0-ToM&#39;s volatility parameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Constants</span>
     <span class="n">a</span> <span class="o">=</span> <span class="mf">0.36</span>
 
@@ -540,7 +541,7 @@
 
 
 <div class="viewcode-block" id="expected_payoff_fun"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.expected_payoff_fun">[docs]</a><span class="k">def</span> <span class="nf">expected_payoff_fun</span><span class="p">(</span><span class="n">p_op</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">):</span>
-    <span class="sd">"""Calculate expected payoff of choosing 1 over 0</span>
+    <span class="sd">&quot;&quot;&quot;Calculate expected payoff of choosing 1 over 0</span>
 
 
 <span class="sd">    Args:</span>
@@ -552,10 +553,10 @@
 <span class="sd">        The expected payoff</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; staghunt = PayoffMatrix(name = 'staghunt')</span>
+<span class="sd">        &gt;&gt;&gt; staghunt = PayoffMatrix(name = &#39;staghunt&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; expected_payoff_fun(1, agent = 0, p_matrix = staghunt)</span>
 <span class="sd">        2</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Calculate</span>
     <span class="n">expected_payoff</span> <span class="o">=</span> <span class="n">p_op</span> <span class="o">*</span> <span class="p">(</span>
         <span class="n">p_matrix</span><span class="o">.</span><span class="n">payoff</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span> <span class="o">-</span> <span class="n">p_matrix</span><span class="o">.</span><span class="n">payoff</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span>
@@ -565,13 +566,13 @@
 
 
 <span class="k">def</span> <span class="nf">softmax</span><span class="p">(</span><span class="n">expected_payoff</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Softmax function for calculating own probability of choosing 1</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Extract necessary parameters</span>
-    <span class="n">b_temp</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">"b_temp"</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">"bias"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
-        <span class="n">bias</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">"bias"</span><span class="p">]</span>
+    <span class="n">b_temp</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;b_temp&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;bias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="n">bias</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;bias&quot;</span><span class="p">]</span>
 
     <span class="c1"># Input variable transforms</span>
     <span class="n">b_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">b_temp</span><span class="p">)</span>
@@ -580,7 +581,7 @@
     <span class="n">expected_payoff</span> <span class="o">=</span> <span class="n">expected_payoff</span> <span class="o">/</span> <span class="n">b_temp</span>
 
     <span class="c1"># Add bias, optional</span>
-    <span class="k">if</span> <span class="s2">"bias"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;bias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
         <span class="n">expected_payoff</span> <span class="o">=</span> <span class="n">expected_payoff</span> <span class="o">+</span> <span class="n">bias</span>
 
     <span class="c1"># The logit transform completes the softmax function</span>
@@ -589,12 +590,12 @@
     <span class="c1"># Set output bounds</span>
     <span class="k">if</span> <span class="n">p_self</span> <span class="o">&gt;</span> <span class="mf">0.999</span><span class="p">:</span>
         <span class="n">p_self</span> <span class="o">=</span> <span class="mf">0.999</span>
-        <span class="c1"># warn("Choice probability constrained at upper bound 0.999 to avoid</span>
-        <span class="c1"># rounding errors", Warning)</span>
+        <span class="c1"># warn(&quot;Choice probability constrained at upper bound 0.999 to avoid</span>
+        <span class="c1"># rounding errors&quot;, Warning)</span>
     <span class="k">if</span> <span class="n">p_self</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="p">:</span>
         <span class="n">p_self</span> <span class="o">=</span> <span class="mf">0.001</span>
-        <span class="c1"># warn("Choice probability constrained at lower bound 0.001 to avoid</span>
-        <span class="c1"># rounding errors", Warning)</span>
+        <span class="c1"># warn(&quot;Choice probability constrained at lower bound 0.001 to avoid</span>
+        <span class="c1"># rounding errors&quot;, Warning)</span>
 
     <span class="k">return</span> <span class="n">p_self</span>
 
@@ -610,7 +611,7 @@
     <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="sd">"""The general learning function for the k-ToM agent</span>
+    <span class="sd">&quot;&quot;&quot;The general learning function for the k-ToM agent</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        prev_internal_states (dict): Previous internal states</span>
@@ -623,11 +624,11 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: The updated internal states</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Extract needed parameters</span>
-    <span class="n">volatility</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">"volatility"</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">"dilution"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
-        <span class="n">dilution</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">"dilution"</span><span class="p">]</span>
+    <span class="n">volatility</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;volatility&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;dilution&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="n">dilution</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;dilution&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">dilution</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -638,26 +639,26 @@
     <span class="c1"># If the (simulated) agent is a 0-ToM</span>
     <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="c1"># Extract needed variables</span>
-        <span class="n">prev_p_op_mean0</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_op_mean0"</span><span class="p">]</span>
-        <span class="n">prev_p_op_var0</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_op_var0"</span><span class="p">]</span>
+        <span class="n">prev_p_op_mean0</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;p_op_mean0&quot;</span><span class="p">]</span>
+        <span class="n">prev_p_op_var0</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;p_op_var0&quot;</span><span class="p">]</span>
 
-        <span class="c1"># Update 0-ToM's uncertainty of opponent choice probability</span>
+        <span class="c1"># Update 0-ToM&#39;s uncertainty of opponent choice probability</span>
         <span class="n">p_op_var0</span> <span class="o">=</span> <span class="n">p_op_var0_update</span><span class="p">(</span><span class="n">prev_p_op_mean0</span><span class="p">,</span> <span class="n">prev_p_op_var0</span><span class="p">,</span> <span class="n">volatility</span><span class="p">)</span>
 
-        <span class="c1"># Update 0-ToM's mean estimate of opponent choice probability</span>
+        <span class="c1"># Update 0-ToM&#39;s mean estimate of opponent choice probability</span>
         <span class="n">p_op_mean0</span> <span class="o">=</span> <span class="n">p_op_mean0_update</span><span class="p">(</span><span class="n">prev_p_op_mean0</span><span class="p">,</span> <span class="n">p_op_var0</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">)</span>
 
         <span class="c1"># Gather own internal states</span>
-        <span class="n">own_states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"p_op_mean0"</span><span class="p">:</span> <span class="n">p_op_mean0</span><span class="p">,</span> <span class="s2">"p_op_var0"</span><span class="p">:</span> <span class="n">p_op_var0</span><span class="p">}</span>
+        <span class="n">own_states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p_op_mean0&quot;</span><span class="p">:</span> <span class="n">p_op_mean0</span><span class="p">,</span> <span class="s2">&quot;p_op_var0&quot;</span><span class="p">:</span> <span class="n">p_op_var0</span><span class="p">}</span>
 
     <span class="c1"># If the (simulated) agent is a k-ToM</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Extract needed variables</span>
-        <span class="n">prev_p_k</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_k"</span><span class="p">]</span>
-        <span class="n">prev_p_op_mean</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_op_mean"</span><span class="p">]</span>
-        <span class="n">prev_param_mean</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"param_mean"</span><span class="p">]</span>
-        <span class="n">prev_param_var</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"param_var"</span><span class="p">]</span>
-        <span class="n">prev_gradient</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"gradient"</span><span class="p">]</span>
+        <span class="n">prev_p_k</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;p_k&quot;</span><span class="p">]</span>
+        <span class="n">prev_p_op_mean</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;p_op_mean&quot;</span><span class="p">]</span>
+        <span class="n">prev_param_mean</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;param_mean&quot;</span><span class="p">]</span>
+        <span class="n">prev_param_var</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;param_var&quot;</span><span class="p">]</span>
+        <span class="n">prev_gradient</span> <span class="o">=</span> <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
 
         <span class="c1"># Update opponent level probabilities</span>
         <span class="n">p_opk_approx</span> <span class="o">=</span> <span class="n">p_opk_approx_fun</span><span class="p">(</span>
@@ -689,7 +690,7 @@
 
             <span class="c1"># Further preparation of simulated perspective</span>
             <span class="n">sim_prev_internal_states</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
-                <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">"opponent_states"</span><span class="p">][</span><span class="n">sim_level</span><span class="p">]</span>
+                <span class="n">prev_internal_states</span><span class="p">[</span><span class="s2">&quot;opponent_states&quot;</span><span class="p">][</span><span class="n">sim_level</span><span class="p">]</span>
             <span class="p">)</span>
 
             <span class="c1"># Make parameter structure similar to own</span>
@@ -732,21 +733,21 @@
                 <span class="o">**</span><span class="n">kwargs</span>
             <span class="p">)</span>
 
-            <span class="c1"># Save opponent's states</span>
+            <span class="c1"># Save opponent&#39;s states</span>
             <span class="n">opponent_states</span><span class="p">[</span><span class="n">sim_level</span><span class="p">]</span> <span class="o">=</span> <span class="n">sim_new_internal_states</span>
 
         <span class="c1"># Gather own internal states</span>
         <span class="n">own_states</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"p_k"</span><span class="p">:</span> <span class="n">p_k</span><span class="p">,</span>
-            <span class="s2">"p_op_mean"</span><span class="p">:</span> <span class="n">p_op_mean</span><span class="p">,</span>
-            <span class="s2">"param_mean"</span><span class="p">:</span> <span class="n">param_mean</span><span class="p">,</span>
-            <span class="s2">"param_var"</span><span class="p">:</span> <span class="n">param_var</span><span class="p">,</span>
-            <span class="s2">"gradient"</span><span class="p">:</span> <span class="n">gradient</span><span class="p">,</span>
+            <span class="s2">&quot;p_k&quot;</span><span class="p">:</span> <span class="n">p_k</span><span class="p">,</span>
+            <span class="s2">&quot;p_op_mean&quot;</span><span class="p">:</span> <span class="n">p_op_mean</span><span class="p">,</span>
+            <span class="s2">&quot;param_mean&quot;</span><span class="p">:</span> <span class="n">param_mean</span><span class="p">,</span>
+            <span class="s2">&quot;param_var&quot;</span><span class="p">:</span> <span class="n">param_var</span><span class="p">,</span>
+            <span class="s2">&quot;gradient&quot;</span><span class="p">:</span> <span class="n">gradient</span><span class="p">,</span>
         <span class="p">}</span>
 
     <span class="c1"># Save the updated estimated and own internal states</span>
-    <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">"opponent_states"</span><span class="p">]</span> <span class="o">=</span> <span class="n">opponent_states</span>
-    <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">]</span> <span class="o">=</span> <span class="n">own_states</span>
+    <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">&quot;opponent_states&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">opponent_states</span>
+    <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">own_states</span>
 
     <span class="k">return</span> <span class="n">new_internal_states</span></div>
 
@@ -758,7 +759,7 @@
     <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-    <span class="sd">"""The decision function of the k-ToM agent</span>
+    <span class="sd">&quot;&quot;&quot;The decision function of the k-ToM agent</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        new_internal_states (dict): Dict of updated internal states</span>
@@ -772,19 +773,19 @@
 
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; penny = PayoffMatrix(name = "penny_competitive")</span>
-<span class="sd">        &gt;&gt;&gt; new_internal_states = {'opponent_states': {}, \</span>
-<span class="sd">        'own_states': {'p_op_mean0': 30, 'p_op_var0': 2}}</span>
-<span class="sd">        &gt;&gt;&gt; params = {'volatility': -2, 'b_temp': -1}</span>
+<span class="sd">        &gt;&gt;&gt; penny = PayoffMatrix(name = &quot;penny_competitive&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; new_internal_states = {&#39;opponent_states&#39;: {}, \</span>
+<span class="sd">        &#39;own_states&#39;: {&#39;p_op_mean0&#39;: 30, &#39;p_op_var0&#39;: 2}}</span>
+<span class="sd">        &gt;&gt;&gt; params = {&#39;volatility&#39;: -2, &#39;b_temp&#39;: -1}</span>
 <span class="sd">        &gt;&gt;&gt; decision_function(new_internal_states, params, agent = 0, \</span>
 <span class="sd">            level = 0, p_matrix = penny)</span>
 <span class="sd">        -5.436561973742046</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># If (simulated) agent is a 0-ToM</span>
     <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="c1"># Extract needed variables</span>
-        <span class="n">p_op_mean0</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_op_mean0"</span><span class="p">]</span>
-        <span class="n">p_op_var0</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_op_var0"</span><span class="p">]</span>
+        <span class="n">p_op_mean0</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;p_op_mean0&quot;</span><span class="p">]</span>
+        <span class="n">p_op_var0</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;p_op_var0&quot;</span><span class="p">]</span>
 
         <span class="c1"># Estimate probability of opponent choice</span>
         <span class="n">p_op</span> <span class="o">=</span> <span class="n">p_op0_fun</span><span class="p">(</span><span class="n">p_op_mean0</span><span class="p">,</span> <span class="n">p_op_var0</span><span class="p">)</span>
@@ -792,10 +793,10 @@
     <span class="c1"># If the (simulated) agent is a k-ToM</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Extract needed variables</span>
-        <span class="n">p_op_mean</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_op_mean"</span><span class="p">]</span>
-        <span class="n">param_var</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"param_var"</span><span class="p">]</span>
-        <span class="n">gradient</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"gradient"</span><span class="p">]</span>
-        <span class="n">p_k</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_k"</span><span class="p">]</span>
+        <span class="n">p_op_mean</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;p_op_mean&quot;</span><span class="p">]</span>
+        <span class="n">param_var</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;param_var&quot;</span><span class="p">]</span>
+        <span class="n">gradient</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
+        <span class="n">p_k</span> <span class="o">=</span> <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;p_k&quot;</span><span class="p">]</span>
 
         <span class="c1"># Estimate probability of opponent choice for each simulated level</span>
         <span class="n">p_opk</span> <span class="o">=</span> <span class="n">p_opk_fun</span><span class="p">(</span><span class="n">p_op_mean</span><span class="p">,</span> <span class="n">param_var</span><span class="p">,</span> <span class="n">gradient</span><span class="p">)</span>
@@ -827,7 +828,7 @@
     <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-    <span class="sd">"""The full k-ToM implementation</span>
+    <span class="sd">&quot;&quot;&quot;The full k-ToM implementation</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        prev_internal_states (dict):  Dict of previous internal states</span>
@@ -841,7 +842,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[int, dict]: a tuple containing the choice and the updated internal states</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Update estimates of opponent based on behaviour</span>
     <span class="k">if</span> <span class="n">self_choice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -868,8 +869,8 @@
     <span class="n">p_self</span> <span class="o">=</span> <span class="n">inv_logit</span><span class="p">(</span><span class="n">p_self</span><span class="p">)</span>
 
     <span class="c1"># Save own choice probability</span>
-    <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_self"</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_self</span>
-    <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">][</span><span class="s2">"p_op"</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_op</span>
+    <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;p_self&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_self</span>
+    <span class="n">new_internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">][</span><span class="s2">&quot;p_op&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_op</span>
 
     <span class="c1"># Make decision</span>
     <span class="n">choice</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p_self</span><span class="p">)</span>
@@ -878,29 +879,29 @@
 
 
 <span class="c1"># Initializing function</span>
-<div class="viewcode-block" id="init_k_tom"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.init_k_tom">[docs]</a><span class="k">def</span> <span class="nf">init_k_tom</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">priors</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"default"</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<div class="viewcode-block" id="init_k_tom"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.init_k_tom">[docs]</a><span class="k">def</span> <span class="nf">init_k_tom</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">priors</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initialization function of the k-ToM agent</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        params (dict): The starting parameters</span>
 <span class="sd">        level (int): The sophistication level of the agent</span>
-<span class="sd">        priors (Union[dict, str], optional): The priors of the k-ToM. Default to "default".</span>
+<span class="sd">        priors (Union[dict, str], optional): The priors of the k-ToM. Default to &quot;default&quot;.</span>
 <span class="sd">            See tutorial on how to set internal states of the k-ToM agent.</span>
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; init_k_tom(params = {'volatility': -2, 'b_temp': -1, 'bias':0 }, level=1, priors='default')</span>
-<span class="sd">    """</span>
+<span class="sd">        &gt;&gt;&gt; init_k_tom(params = {&#39;volatility&#39;: -2, &#39;b_temp&#39;: -1, &#39;bias&#39;:0 }, level=1, priors=&#39;default&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># If no priors are specified</span>
-    <span class="k">if</span> <span class="n">priors</span> <span class="o">==</span> <span class="s2">"default"</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">priors</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
         <span class="c1"># Set default priors</span>
-        <span class="n">priors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"p_op_mean0"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"p_op_var0"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>  <span class="c1"># Agnostic</span>
+        <span class="n">priors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p_op_mean0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;p_op_var0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>  <span class="c1"># Agnostic</span>
         <span class="k">if</span> <span class="n">level</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># the following is not used by 0-ToM</span>
-            <span class="n">priors</span><span class="p">[</span><span class="s2">"p_op_mean"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">priors</span><span class="p">[</span><span class="s2">"param_mean"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
-            <span class="n">priors</span><span class="p">[</span><span class="s2">"param_var"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
-            <span class="n">priors</span><span class="p">[</span><span class="s2">"gradient"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
-            <span class="k">if</span> <span class="s2">"bias"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>  <span class="c1"># Following the original VBA implementation</span>
-                <span class="n">priors</span><span class="p">[</span><span class="s2">"gradient"</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.999999997998081</span>
+            <span class="n">priors</span><span class="p">[</span><span class="s2">&quot;p_op_mean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">priors</span><span class="p">[</span><span class="s2">&quot;param_mean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+            <span class="n">priors</span><span class="p">[</span><span class="s2">&quot;param_var&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+            <span class="n">priors</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+            <span class="k">if</span> <span class="s2">&quot;bias&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>  <span class="c1"># Following the original VBA implementation</span>
+                <span class="n">priors</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.999999997998081</span>
 
     <span class="c1"># Make empty list for prior internal states</span>
     <span class="n">internal_states</span> <span class="o">=</span> <span class="p">{}</span>
@@ -909,44 +910,44 @@
     <span class="c1"># If the (simulated) agent i a 0-ToM</span>
     <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="c1"># Set priors for choice probability estimate and its uncertainty</span>
-        <span class="n">p_op_var0</span> <span class="o">=</span> <span class="n">priors</span><span class="p">[</span><span class="s2">"p_op_var0"</span><span class="p">]</span>
-        <span class="n">p_op_mean0</span> <span class="o">=</span> <span class="n">priors</span><span class="p">[</span><span class="s2">"p_op_mean0"</span><span class="p">]</span>
+        <span class="n">p_op_var0</span> <span class="o">=</span> <span class="n">priors</span><span class="p">[</span><span class="s2">&quot;p_op_var0&quot;</span><span class="p">]</span>
+        <span class="n">p_op_mean0</span> <span class="o">=</span> <span class="n">priors</span><span class="p">[</span><span class="s2">&quot;p_op_mean0&quot;</span><span class="p">]</span>
 
         <span class="c1"># Gather own internal states</span>
-        <span class="n">own_states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"p_op_mean0"</span><span class="p">:</span> <span class="n">p_op_mean0</span><span class="p">,</span> <span class="s2">"p_op_var0"</span><span class="p">:</span> <span class="n">p_op_var0</span><span class="p">}</span>
+        <span class="n">own_states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p_op_mean0&quot;</span><span class="p">:</span> <span class="n">p_op_mean0</span><span class="p">,</span> <span class="s2">&quot;p_op_var0&quot;</span><span class="p">:</span> <span class="n">p_op_var0</span><span class="p">}</span>
 
     <span class="c1"># If the (simulated) agent is a k-ToM</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Set priors</span>
         <span class="n">p_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="n">level</span><span class="p">),</span> <span class="n">level</span><span class="p">)</span>
-        <span class="n">p_op_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="s2">"p_op_mean"</span><span class="p">],</span> <span class="n">level</span><span class="p">)</span>
-        <span class="n">param_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="s2">"param_var"</span><span class="p">],</span> <span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">param_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="s2">"param_mean"</span><span class="p">],</span> <span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="s2">"gradient"</span><span class="p">],</span> <span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">p_op_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="s2">&quot;p_op_mean&quot;</span><span class="p">],</span> <span class="n">level</span><span class="p">)</span>
+        <span class="n">param_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="s2">&quot;param_var&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">param_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="s2">&quot;param_mean&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
         <span class="c1"># k-ToM simulates an opponent for each level below its own</span>
         <span class="k">for</span> <span class="n">level_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">level</span><span class="p">):</span>
             <span class="c1"># Simulate opponents to create the recursive data structure</span>
             <span class="n">sim_new_internal_states</span> <span class="o">=</span> <span class="n">init_k_tom</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">level_index</span><span class="p">,</span> <span class="n">priors</span><span class="p">)</span>
-            <span class="c1"># Save opponent's states</span>
+            <span class="c1"># Save opponent&#39;s states</span>
             <span class="n">opponent_states</span><span class="p">[</span><span class="n">level_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">sim_new_internal_states</span>
 
         <span class="c1"># Gather own internal states</span>
         <span class="n">own_states</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"p_k"</span><span class="p">:</span> <span class="n">p_k</span><span class="p">,</span>
-            <span class="s2">"p_op_mean"</span><span class="p">:</span> <span class="n">p_op_mean</span><span class="p">,</span>
-            <span class="s2">"param_mean"</span><span class="p">:</span> <span class="n">param_mean</span><span class="p">,</span>
-            <span class="s2">"param_var"</span><span class="p">:</span> <span class="n">param_var</span><span class="p">,</span>
-            <span class="s2">"gradient"</span><span class="p">:</span> <span class="n">gradient</span><span class="p">,</span>
+            <span class="s2">&quot;p_k&quot;</span><span class="p">:</span> <span class="n">p_k</span><span class="p">,</span>
+            <span class="s2">&quot;p_op_mean&quot;</span><span class="p">:</span> <span class="n">p_op_mean</span><span class="p">,</span>
+            <span class="s2">&quot;param_mean&quot;</span><span class="p">:</span> <span class="n">param_mean</span><span class="p">,</span>
+            <span class="s2">&quot;param_var&quot;</span><span class="p">:</span> <span class="n">param_var</span><span class="p">,</span>
+            <span class="s2">&quot;gradient&quot;</span><span class="p">:</span> <span class="n">gradient</span><span class="p">,</span>
         <span class="p">}</span>
 
     <span class="c1"># Save own choice probability</span>
-    <span class="n">own_states</span><span class="p">[</span><span class="s2">"p_self"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">own_states</span><span class="p">[</span><span class="s2">"p_op"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">own_states</span><span class="p">[</span><span class="s2">&quot;p_self&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">own_states</span><span class="p">[</span><span class="s2">&quot;p_op&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
     <span class="c1"># Save the updated estimated and own internal states</span>
-    <span class="n">internal_states</span><span class="p">[</span><span class="s2">"opponent_states"</span><span class="p">]</span> <span class="o">=</span> <span class="n">opponent_states</span>
-    <span class="n">internal_states</span><span class="p">[</span><span class="s2">"own_states"</span><span class="p">]</span> <span class="o">=</span> <span class="n">own_states</span>
+    <span class="n">internal_states</span><span class="p">[</span><span class="s2">&quot;opponent_states&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">opponent_states</span>
+    <span class="n">internal_states</span><span class="p">[</span><span class="s2">&quot;own_states&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">own_states</span>
 
     <span class="k">return</span> <span class="n">internal_states</span></div>
 </pre></div>
@@ -986,6 +987,7 @@
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
