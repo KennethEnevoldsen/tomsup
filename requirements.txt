@@ -6,7 +6,7 @@ joblib >= 1.0.1
 wasabi >= 0.8.2,< 0.10.0
 
 # code style
-black[jupyter]==22.3.0
+black[jupyter]==22.6.0
 flake8
 
 # docs
