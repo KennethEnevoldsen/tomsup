@@ -13,10 +13,10 @@
 <meta property="og:description" content="tomsup.agent: docstring" />
   <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="PayoffMatrix" href="payoffmatrix.html" /><link rel="prev" title="Using tomsup" href="using-tomsup.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
         <title>Agent and AgentGroup - tomsup 1.1.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -206,7 +206,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -1181,10 +1182,10 @@ Defaults to False, as this is memory intensive.</p></li>
                 </div>
                 <div class="title">PayoffMatrix</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="using-tomsup.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -1220,14 +1221,86 @@ Defaults to False, as this is memory intensive.</p></li>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Agent and AgentGroup</a><ul>
-<li><a class="reference internal" href="#module-tomsup.agent">tomsup.agent</a></li>
+<li><a class="reference internal" href="#module-tomsup.agent">tomsup.agent</a><ul>
+<li><a class="reference internal" href="#tomsup.agent.Agent"><code class="docutils literal notranslate"><span class="pre">Agent</span></code></a><ul>
+<li><a class="reference internal" href="#tomsup.agent.Agent.__init__"><code class="docutils literal notranslate"><span class="pre">Agent.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.Agent.get_choice"><code class="docutils literal notranslate"><span class="pre">Agent.get_choice()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.Agent.get_history"><code class="docutils literal notranslate"><span class="pre">Agent.get_history()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.Agent.get_start_params"><code class="docutils literal notranslate"><span class="pre">Agent.get_start_params()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.Agent.get_strategy"><code class="docutils literal notranslate"><span class="pre">Agent.get_strategy()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.Agent.plot_choice"><code class="docutils literal notranslate"><span class="pre">Agent.plot_choice()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.Agent.plot_internal"><code class="docutils literal notranslate"><span class="pre">Agent.plot_internal()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.Agent.reset"><code class="docutils literal notranslate"><span class="pre">Agent.reset()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup"><code class="docutils literal notranslate"><span class="pre">AgentGroup</span></code></a><ul>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.__init__"><code class="docutils literal notranslate"><span class="pre">AgentGroup.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.compete"><code class="docutils literal notranslate"><span class="pre">AgentGroup.compete()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.get_agent"><code class="docutils literal notranslate"><span class="pre">AgentGroup.get_agent()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.get_environment"><code class="docutils literal notranslate"><span class="pre">AgentGroup.get_environment()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.get_environment_name"><code class="docutils literal notranslate"><span class="pre">AgentGroup.get_environment_name()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.get_names"><code class="docutils literal notranslate"><span class="pre">AgentGroup.get_names()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.get_results"><code class="docutils literal notranslate"><span class="pre">AgentGroup.get_results()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.plot_choice"><code class="docutils literal notranslate"><span class="pre">AgentGroup.plot_choice()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.plot_heatmap"><code class="docutils literal notranslate"><span class="pre">AgentGroup.plot_heatmap()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.plot_history"><code class="docutils literal notranslate"><span class="pre">AgentGroup.plot_history()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.plot_op_states"><code class="docutils literal notranslate"><span class="pre">AgentGroup.plot_op_states()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.plot_p_k"><code class="docutils literal notranslate"><span class="pre">AgentGroup.plot_p_k()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.plot_p_op_1"><code class="docutils literal notranslate"><span class="pre">AgentGroup.plot_p_op_1()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.plot_p_self"><code class="docutils literal notranslate"><span class="pre">AgentGroup.plot_p_self()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.plot_score"><code class="docutils literal notranslate"><span class="pre">AgentGroup.plot_score()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.plot_tom_op_estimate"><code class="docutils literal notranslate"><span class="pre">AgentGroup.plot_tom_op_estimate()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.AgentGroup.set_env"><code class="docutils literal notranslate"><span class="pre">AgentGroup.set_env()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tomsup.agent.QL"><code class="docutils literal notranslate"><span class="pre">QL</span></code></a><ul>
+<li><a class="reference internal" href="#tomsup.agent.QL.__init__"><code class="docutils literal notranslate"><span class="pre">QL.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.QL.compete"><code class="docutils literal notranslate"><span class="pre">QL.compete()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.QL.get_expected_values"><code class="docutils literal notranslate"><span class="pre">QL.get_expected_values()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.QL.get_learning_rate"><code class="docutils literal notranslate"><span class="pre">QL.get_learning_rate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tomsup.agent.RB"><code class="docutils literal notranslate"><span class="pre">RB</span></code></a><ul>
+<li><a class="reference internal" href="#tomsup.agent.RB.__init__"><code class="docutils literal notranslate"><span class="pre">RB.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.RB.compete"><code class="docutils literal notranslate"><span class="pre">RB.compete()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.RB.get_bias"><code class="docutils literal notranslate"><span class="pre">RB.get_bias()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tomsup.agent.TFT"><code class="docutils literal notranslate"><span class="pre">TFT</span></code></a><ul>
+<li><a class="reference internal" href="#tomsup.agent.TFT.__init__"><code class="docutils literal notranslate"><span class="pre">TFT.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TFT.compete"><code class="docutils literal notranslate"><span class="pre">TFT.compete()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tomsup.agent.TOM"><code class="docutils literal notranslate"><span class="pre">TOM</span></code></a><ul>
+<li><a class="reference internal" href="#tomsup.agent.TOM.__init__"><code class="docutils literal notranslate"><span class="pre">TOM.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.compete"><code class="docutils literal notranslate"><span class="pre">TOM.compete()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.get_behav_temperature"><code class="docutils literal notranslate"><span class="pre">TOM.get_behav_temperature()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.get_bias"><code class="docutils literal notranslate"><span class="pre">TOM.get_bias()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.get_dilution"><code class="docutils literal notranslate"><span class="pre">TOM.get_dilution()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.get_internal_states"><code class="docutils literal notranslate"><span class="pre">TOM.get_internal_states()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.get_level"><code class="docutils literal notranslate"><span class="pre">TOM.get_level()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.get_parameters"><code class="docutils literal notranslate"><span class="pre">TOM.get_parameters()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.get_volatility"><code class="docutils literal notranslate"><span class="pre">TOM.get_volatility()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.print_internal"><code class="docutils literal notranslate"><span class="pre">TOM.print_internal()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.print_parameters"><code class="docutils literal notranslate"><span class="pre">TOM.print_parameters()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.TOM.set_internal_states"><code class="docutils literal notranslate"><span class="pre">TOM.set_internal_states()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tomsup.agent.WSLS"><code class="docutils literal notranslate"><span class="pre">WSLS</span></code></a><ul>
+<li><a class="reference internal" href="#tomsup.agent.WSLS.__init__"><code class="docutils literal notranslate"><span class="pre">WSLS.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.agent.WSLS.compete"><code class="docutils literal notranslate"><span class="pre">WSLS.compete()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tomsup.agent.compete"><code class="docutils literal notranslate"><span class="pre">compete()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1244,6 +1317,7 @@ Defaults to False, as this is memory intensive.</p></li>
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>

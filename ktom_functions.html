@@ -13,10 +13,10 @@
 <meta property="og:description" content="These are the internal functions used for the k-ToM agents. In general, we don’t recommend using these directly, as they are mostly for internal use in the TOM agent. tomsup.ktom_functions: This sc..." />
   <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Utility Functions" href="utils.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+    <link rel="shortcut icon" href="_static/favicon.ico"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
         <title>k-ToM Functions - tomsup 1.1.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -206,7 +206,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -455,7 +456,7 @@ parameter values</p>
         <div class="related-pages">
           
           <a class="prev-page" href="utils.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -491,14 +492,30 @@ parameter values</p>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">k-ToM Functions</a><ul>
-<li><a class="reference internal" href="#module-tomsup.ktom_functions">tomsup.ktom_functions</a></li>
+<li><a class="reference internal" href="#module-tomsup.ktom_functions">tomsup.ktom_functions</a><ul>
+<li><a class="reference internal" href="#tomsup.ktom_functions.decision_function"><code class="docutils literal notranslate"><span class="pre">decision_function()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.expected_payoff_fun"><code class="docutils literal notranslate"><span class="pre">expected_payoff_fun()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.gradient_update"><code class="docutils literal notranslate"><span class="pre">gradient_update()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.init_k_tom"><code class="docutils literal notranslate"><span class="pre">init_k_tom()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.k_tom"><code class="docutils literal notranslate"><span class="pre">k_tom()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.learning_function"><code class="docutils literal notranslate"><span class="pre">learning_function()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_k_udpate"><code class="docutils literal notranslate"><span class="pre">p_k_udpate()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_op0_fun"><code class="docutils literal notranslate"><span class="pre">p_op0_fun()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_op_mean0_update"><code class="docutils literal notranslate"><span class="pre">p_op_mean0_update()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_op_var0_update"><code class="docutils literal notranslate"><span class="pre">p_op_var0_update()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_opk_approx_fun"><code class="docutils literal notranslate"><span class="pre">p_opk_approx_fun()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_opk_fun"><code class="docutils literal notranslate"><span class="pre">p_opk_fun()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.param_mean_update"><code class="docutils literal notranslate"><span class="pre">param_mean_update()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.param_var_update"><code class="docutils literal notranslate"><span class="pre">param_var_update()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -515,6 +532,7 @@ parameter values</p>
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
