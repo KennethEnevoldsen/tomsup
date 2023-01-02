@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 6.0.0 and Furo 2022.12.07 -->
         <title>tomsup.ktom_functions - tomsup 1.1.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -235,7 +235,7 @@
 
 
 <div class="viewcode-block" id="p_op_var0_update"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.p_op_var0_update">[docs]</a><span class="k">def</span> <span class="nf">p_op_var0_update</span><span class="p">(</span><span class="n">prev_p_op_mean0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">prev_p_op_var0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">volatility</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Variance update of the 0-ToM</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Variance update of the 0-ToM</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; p_op_var0_update(1, 0.2, 1)</span>
@@ -265,7 +265,7 @@
 
 
 <div class="viewcode-block" id="p_op_mean0_update"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.p_op_mean0_update">[docs]</a><span class="k">def</span> <span class="nf">p_op_mean0_update</span><span class="p">(</span><span class="n">prev_p_op_mean0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_op_var0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;0-ToM updates mean choice probability estimate&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;0-ToM updates mean choice probability estimate&quot;&quot;&quot;</span>
     <span class="c1"># Input variable transforms</span>
     <span class="n">p_op_var0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">p_op_var0</span><span class="p">)</span>
 
@@ -287,7 +287,7 @@
     <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Approximates the estimated choice probability of the opponent on the</span>
 <span class="sd">    previous round.</span>
 <span class="sd">    A semi-analytical approximation derived in Daunizeau, J. (2017)</span>
@@ -325,7 +325,7 @@
 <div class="viewcode-block" id="p_k_udpate"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.p_k_udpate">[docs]</a><span class="k">def</span> <span class="nf">p_k_udpate</span><span class="p">(</span>
     <span class="n">prev_p_k</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">p_opk_approx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">op_choice</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dilution</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    k-ToM updates its estimate of opponents sophistication level.</span>
 <span class="sd">    If k-ToM has a dilution parameter, it does a partial forgetting of learned</span>
 <span class="sd">    estimates.</span>
@@ -363,7 +363,7 @@
     <span class="n">volatility_dummy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    k-ToM updates its uncertainty / variance on its estimates of opponent&#39;s</span>
 <span class="sd">    parameter values</span>
 
@@ -408,7 +408,7 @@
     <span class="n">param_var</span><span class="p">,</span>
     <span class="n">op_choice</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    k-ToM updates its estimates of opponent&#39;s parameter values</span>
 
 <span class="sd">    Examples:</span>
@@ -443,7 +443,7 @@
     <span class="n">p_matrix</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The gradient update of the k-ToM agent&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The gradient update of the k-ToM agent&quot;&quot;&quot;</span>
     <span class="c1"># Make empty list for fillin in gradients</span>
     <span class="n">gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param_mean</span><span class="p">))</span>
 
@@ -494,7 +494,7 @@
 
 <span class="c1"># Decision subfunctions</span>
 <div class="viewcode-block" id="p_op0_fun"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.p_op0_fun">[docs]</a><span class="k">def</span> <span class="nf">p_op0_fun</span><span class="p">(</span><span class="n">p_op_mean0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_op_var0</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    0-ToM combines the mean and variance of its parameter estimate into a</span>
 <span class="sd">    final choice probability estimate.</span>
 <span class="sd">    To avoid unidentifiability problems this function does not use 0-ToM&#39;s volatility parameter.</span>
@@ -517,7 +517,7 @@
 
 
 <div class="viewcode-block" id="p_opk_fun"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.p_opk_fun">[docs]</a><span class="k">def</span> <span class="nf">p_opk_fun</span><span class="p">(</span><span class="n">p_op_mean</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">param_var</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">gradient</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    k-ToM combines the mean choice probability estimate and the variances of</span>
 <span class="sd">    its parameter estimates into a final choice probability estimate.</span>
 <span class="sd">    To avoid unidentifiability problems this function does not use 0-ToM&#39;s volatility parameter.</span>
@@ -541,7 +541,7 @@
 
 
 <div class="viewcode-block" id="expected_payoff_fun"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.expected_payoff_fun">[docs]</a><span class="k">def</span> <span class="nf">expected_payoff_fun</span><span class="p">(</span><span class="n">p_op</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculate expected payoff of choosing 1 over 0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate expected payoff of choosing 1 over 0</span>
 
 
 <span class="sd">    Args:</span>
@@ -566,7 +566,7 @@
 
 
 <span class="k">def</span> <span class="nf">softmax</span><span class="p">(</span><span class="n">expected_payoff</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Softmax function for calculating own probability of choosing 1</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Extract necessary parameters</span>
@@ -611,7 +611,7 @@
     <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;The general learning function for the k-ToM agent</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The general learning function for the k-ToM agent</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        prev_internal_states (dict): Previous internal states</span>
@@ -759,7 +759,7 @@
     <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;The decision function of the k-ToM agent</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The decision function of the k-ToM agent</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        new_internal_states (dict): Dict of updated internal states</span>
@@ -828,7 +828,7 @@
     <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;The full k-ToM implementation</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The full k-ToM implementation</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        prev_internal_states (dict):  Dict of previous internal states</span>
@@ -880,7 +880,7 @@
 
 <span class="c1"># Initializing function</span>
 <div class="viewcode-block" id="init_k_tom"><a class="viewcode-back" href="../../ktom_functions.html#tomsup.ktom_functions.init_k_tom">[docs]</a><span class="k">def</span> <span class="nf">init_k_tom</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">priors</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initialization function of the k-ToM agent</span>
 
 <span class="sd">    Args:</span>
@@ -983,9 +983,6 @@
     </aside>
   </div>
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>

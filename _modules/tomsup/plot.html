@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 6.0.0 and Furo 2022.12.07 -->
         <title>tomsup.plot - tomsup 1.1.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -225,7 +225,7 @@
 
 
 <span class="k">class</span> <span class="nc">ResultsDf</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A class wrapper around a pandas dataframe for denoting results from a compete function.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class wrapper around a pandas dataframe for denoting results from a compete function.</span>
 <span class="sd">    Function exactly like a pandas dataframe.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -246,7 +246,7 @@
     <span class="n">cbarlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Average score of the agent&quot;</span><span class="p">,</span>
     <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;plot a heatmap of the agents payoffs</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;plot a heatmap of the agents payoffs</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        df (pd.DataFrame): An outcome from the compete() function</span>
@@ -305,7 +305,7 @@
         <span class="n">df_ci</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_ci</span><span class="p">,</span> <span class="n">df_ci2</span><span class="p">])</span>
 
         <span class="n">df_ci</span><span class="p">[</span><span class="s2">&quot;ci&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">(</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">sd</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">sd</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">(</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">sd</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">sd</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
             <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">sd</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_mean</span><span class="p">[</span><span class="n">aggregate_col</span><span class="p">],</span> <span class="n">df_ci</span><span class="p">[</span><span class="s2">&quot;ci&quot;</span><span class="p">])</span>
         <span class="p">]</span>
         <span class="n">annot_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">df_ci</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;ci&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;agent1&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;agent0&quot;</span><span class="p">)</span>
@@ -331,7 +331,7 @@
 
 
 <span class="k">def</span> <span class="nf">check_plot_input</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;checks if plot input is valid&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;checks if plot input is valid&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">ResultsDf</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;The input dataframe is expected to be a ResultDf </span><span class="se">\</span>
@@ -354,7 +354,7 @@
 <div class="viewcode-block" id="score"><a class="viewcode-back" href="../../plot.html#tomsup.plot.score">[docs]</a><span class="k">def</span> <span class="nf">score</span><span class="p">(</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;plot the score of the agent pair</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;plot the score of the agent pair</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        df (pd.DataFrame): a dataframe resulting from a compete function on an</span>
@@ -422,7 +422,7 @@
     <span class="n">plot_individual_sim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;plot the score of the agent pair</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;plot the score of the agent pair</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        df (pd.DataFrame): a dataframe resulting from a compete function on an</span>
@@ -483,7 +483,7 @@
     <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Round&quot;</span><span class="p">,</span>
     <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;plot the history of an agent.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;plot the history of an agent.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        df (pd.DataFrame): a dataframe resulting from a compete function on an</span>
@@ -536,7 +536,7 @@
 <div class="viewcode-block" id="plot_p_k"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_p_k">[docs]</a><span class="k">def</span> <span class="nf">plot_p_k</span><span class="p">(</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;plot the p_k of a k-ToM agent</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;plot the p_k of a k-ToM agent</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        df (pd.DataFrame): a dataframe resulting from a compete function on an</span>
@@ -564,7 +564,7 @@
 <div class="viewcode-block" id="plot_p_op_1"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_p_op_1">[docs]</a><span class="k">def</span> <span class="nf">plot_p_op_1</span><span class="p">(</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;plot the p_op_1 of a k-ToM agent</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;plot the p_op_1 of a k-ToM agent</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        df (pd.DataFrame): a dataframe resulting from a compete function on an</span>
@@ -589,7 +589,7 @@
 <div class="viewcode-block" id="plot_p_self"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_p_self">[docs]</a><span class="k">def</span> <span class="nf">plot_p_self</span><span class="p">(</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent0</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;plot the p_self of a k-ToM agent</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;plot the p_self of a k-ToM agent</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        df (pd.DataFrame): a dataframe resulting from a compete function on an</span>
@@ -620,7 +620,7 @@
     <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    df (ResultsDf): an outcome from the compete() function</span>
 <span class="sd">    agent0 (str): an agent name in the agent0 column in the df</span>
 <span class="sd">    agent1 (str): an agent name in the agent1 column in the df</span>
@@ -674,9 +674,6 @@
     </aside>
   </div>
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
