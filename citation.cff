@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Waade"
+    given-names: "Peter"
+    orcid: "https://orcid.org/0000-0002-6061-0084"
+  - family-names: "Enevoldsen"
+    given-names: "Kenneth"
+    orcid: "https://orcid.org/0000-0001-8733-0966"
+  - family-names: "Vermillet"
+    given-names: "Arnault-Quentin"
+  - family-names: "Simonsen"
+    given-names: "Arndis"
+  - family-names: "Fusaroli"
+    given-names: "Riccardo"
+
+title: "tomsup: Theory of Mind Simulation using Python"
+version: 1.1.7
+date-released: 2021-02-25
+url: "https://github.com/KennethEnevoldsen/tomsup"
+
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Waade"
+      given-names: "Peter"
+      orcid: "https://orcid.org/0000-0002-6061-0084"
+    - family-names: "Enevoldsen"
+      given-names: "Kenneth"
+      orcid: "https://orcid.org/0000-0001-8733-0966"
+    - family-names: "Vermillet"
+      given-names: "Arnault-Quentin"
+    - family-names: "Simonsen"
+      given-names: "Arndis"
+    - family-names: "Fusaroli"
+      given-names: "Riccardo"
+  doi: "https://doi.org/10.3758/s13428-022-01827-2"
+  journal: "Behavior Research Methods"
+  month: 3
+  title: "Introducing tomsup: Theory of mind simulations using Python"
+  issue: 1
+  volume: 1
+  year: 2022
