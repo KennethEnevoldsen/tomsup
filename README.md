@@ -10,7 +10,6 @@
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/KennethEnevoldsen/tomsup/blob/master/LICENSE)
 [![github actions pytest](https://github.com/KennethEnevoldsen/tomsup/actions/workflows/pytest-cov-comment.yml/badge.svg)](https://github.com/KennethEnevoldsen/tomsup/actions)
 [![github actions docs](https://github.com/KennethEnevoldsen/tomsup/actions/workflows/documentation.yml/badge.svg)](https://KennethEnevoldsen.github.io/tomsup/)
-![github coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/KennethEnevoldsen/ba4cb2310c5b370dc2c49d0be0a7e3ec/raw/badge-tomsup-pytest-coverage.json)
 [![CodeFactor](https://www.codefactor.io/repository/github/KennethEnevoldsen/tomsup/badge)](https://www.codefactor.io/repository/github/KennethEnevoldsen/tomsup)
 
 
@@ -19,6 +18,8 @@ A Python Package for Agent-Based simulations. The package provides a computation
 
 # 📰 News
 
+- 7 March 2022
+  - Paper accepted at [Behavior Research Methods](https://link.springer.com/article/10.3758/s13428-022-01827-2) 2022
 - v. 1.1.5
   - New plotting features were added
   - Speed and memory improvements as well as support for multicore simulations 🏎
@@ -155,10 +156,12 @@ tomsup is released under the [Apache License, Version 2.0](http://www.apache.org
 ### Citing
 If you use this work please cite:
 ```bibtex
-@article{enevoldsen2020tomsup,
-  title={tomsup: An implementation of computational Theory of Mind in Python},
-  author={Enevoldsen, Kenneth C and Waade, Peter Thestrup},
-  year={2020},
-  publisher={PsyArXiv}
+@article{waade2022introducing,
+  title={Introducing tomsup: Theory of mind simulations using Python},
+  author={Waade, Peter T and Enevoldsen, Kenneth C and Vermillet, Arnault-Quentin and Simonsen, Arndis and Fusaroli, Riccardo},
+  journal={Behavior Research Methods},
+  pages={1--35},
+  year={2022},
+  publisher={Springer}
 }
 ```
