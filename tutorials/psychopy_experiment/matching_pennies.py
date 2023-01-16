@@ -1,8 +1,10 @@
 # ------------- Setup -------------
 # import packages
-from psychopy import core, gui, event, visual
 import os
+
 import pandas as pd
+from psychopy import core, event, gui, visual
+
 import tomsup as ts
 
 # Set path to location of the file
@@ -183,51 +185,56 @@ for trial in trial_list:
     stopwatch.reset()
     win.flip()
 
+    resp_part = None  # setting participant response to none for the first round
+
+    # get ToM response
+    resp_tom = tom.compete(p_matrix=penny, op_choice=resp_part, agent=0)
+
     k = event.waitKeys(keyList=["escape", "left", "right"])
+
+    # get participant response
     if k[0] == "escape":
         core.quit()
-    if k[0] == "left":
+    elif k[0] == "left":
         resp_part = 0
-        trial["RT"] = stopwatch.getTime()
+    elif k[0] == "right":
+        resp_part = 1
+    trial["RT"] = stopwatch.getTime()
+
+    #
+    if resp_tom == 0: # left hand
+        rl_tom = "left"
+        picture1 = visual.ImageStim(
+            win, image=RH_coin,  # agent point of view
+            pos=img_pos1, units="norm", size=img_size
+        )
+        picture2 = visual.ImageStim(
+            win, image=LH_open, pos=img_pos2, units="norm", size=img_size
+        )
+    elif resp_tom == 1:  # right hand
+        rl_tom = "right"
         picture1 = visual.ImageStim(
             win, image=RH_open, pos=img_pos1, units="norm", size=img_size
         )
         picture2 = visual.ImageStim(
             win, image=LH_coin, pos=img_pos2, units="norm", size=img_size
         )
-        picture1.draw()
-        picture2.draw()
-        win.flip()
-        event.waitKeys()
-    elif k[0] == "right":
-        resp_part = 1
-        trial["RT"] = stopwatch.getTime()
-        picture1 = visual.ImageStim(
-            win, image=RH_coin, pos=img_pos1, units="norm", size=img_size
-        )
-        picture2 = visual.ImageStim(
-            win, image=LH_open, pos=img_pos2, units="norm", size=img_size
-        )
-        picture1.draw()
-        picture2.draw()
-        win.flip()
-        event.waitKeys()
-
-    # get ToM response
-    resp_tom = tom.compete(p_matrix=penny, op_choice=resp_part, agent=1)
+    picture1.draw()
+    picture2.draw()
+    win.flip()
+    event.waitKeys()
 
     # get payoff
     payoff_part = penny.payoff(
-        choice_agent0=resp_part, choice_agent1=resp_tom, agent=0
+        choice_agent0=resp_part, choice_agent1=resp_tom, agent=1
     )  # agent0 is seeker e.g. the participant
-    payoff_tom = penny.payoff(choice_agent0=resp_part, choice_agent1=resp_tom, agent=1)
+    payoff_tom = penny.payoff(choice_agent0=resp_part, choice_agent1=resp_tom, agent=0)
 
     # Give response text
-    rl_tom = "left" if resp_tom == 0 else "right"
     current_score_part += payoff_part
     current_score_tom += payoff_tom
     show_text(
-        f"You chose {k[0]} and the penny was in the {rl_tom} hand. This gives you {payoff_part} points while your opponent gets {payoff_part} points.\n\n"
+        f"You chose {k[0]} and the penny was in the {rl_tom} hand. This gives you {payoff_part} points while your opponent gets {payoff_tom} points.\n\n"
         + f"Your current score is: {current_score_part} \n Your opponent's current score is: {current_score_tom}. \nPress ENTER to continue."
     )
 
@@ -256,5 +263,7 @@ Press ENTER to quit.
 
 event.waitKeys()
 
+# Close psychopy
+core.quit()
 # Close psychopy
 core.quit()
