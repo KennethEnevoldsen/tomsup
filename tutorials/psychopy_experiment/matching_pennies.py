@@ -25,7 +25,7 @@ l = os.listdir("data")
 # If there is data already present
 if l:
     # Find the max ID and set it 1 higher
-    ID = max([int(i.split("_")[-1].split(".")[0]) for i in l])
+    ID = max([int(i.split("_")[-1].split(".")[0]) for i in l if i.startswith("ID")])
     ID = ID + 1
 else:
     # Otherwise start at 1
