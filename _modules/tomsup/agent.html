@@ -1435,7 +1435,7 @@
                     <span class="s2">&quot;dilution&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">inv_logit</span><span class="p">,</span> <span class="s2">&quot;inverse_logit&quot;</span><span class="p">),</span>
                 <span class="p">}</span>
                 <span class="n">t</span><span class="p">,</span> <span class="n">t_str</span> <span class="o">=</span> <span class="n">d_t</span><span class="p">[</span><span class="n">estimate</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="n">transformation</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="n">transformation</span><span class="p">):</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">transformation</span>
             <span class="n">t_str</span> <span class="o">=</span> <span class="n">transformation</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="k">else</span><span class="p">:</span>
