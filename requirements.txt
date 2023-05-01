@@ -11,7 +11,7 @@ black[jupyter]==22.12.0
 flake8
 
 # docs
-sphinx>=4.5.0,<5.1.0
+sphinx>=4.5.0,<7.1.0
 furo>=2022.6.21,<2022.6.30
 sphinx-copybutton>=0.5.0,<0.6.0
 sphinxext-opengraph>=0.6.3,<0.9.0
