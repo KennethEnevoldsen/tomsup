@@ -11,51 +11,14 @@
 A Python Package for Agent-Based simulations. The package provides a computational eco-system for investigating and comparing computational models of hypothesized Theory of mind (ToM) mechanisms and for using them as experimental stimuli. The package notably includes an easy-to-use implementation of the variational Bayesian k-ToM model developed by [Devaine, et al. (2017)](http://dx.plos.org/10.1371/journal.pcbi.1005833). This model has been shown able to capture individual and group-level differences in social skills, including between clinical populations and across primate species. It has also been deemed among the best computational models of ToM in terms of interaction with others and recursive representation of mental states. We provide a series of tutorials on how to implement the k-ToM model and a score of simpler types of ToM mechanisms in game-theory based simulations and experimental stimuli, including how to specify custom ToM models, and show examples of how resulting data can be analyzed.
 
 
-# 📰 News
-
-- 7 March 2022
-  - Paper accepted at [Behavior Research Methods](https://link.springer.com/article/10.3758/s13428-022-01827-2) 2022
-- v. 1.1.5
-  - New plotting features were added
-  - Speed and memory improvements as well as support for multicore simulations 🏎
-  - Added workflows to ensure dependencies are being updated
-  - Minor bugfixes 
-- v. 1.1.0
-  - A [speed comparison](missing) between the matlab implementation was introduced, showing the the tomsup implementation to be notably faster.
-  - An extensive testsuite was introduced, for how to run it see the FAQ.
-  - Code coverage was upped to 86% and code quality was raised to A.
-  - A [documentation](https://KennethEnevoldsen.github.io/tomsup/) site was introduced.
-  - Added continiuous integration to ensure that the package always works as intended, with support for mac, windows and linux tests.
-  - A new logo was introduced 🌟
-- v. 1.0.0
-  - tomsup released its first version along with a [preprint](https://psyarxiv.com/zcgkv/) on psyarxiv
-  - A series of [tutorials](https://KennethEnevoldsen.github.io/tomsup/using-tomsup) was introduced to get you started with tomsup
-
 # 🔧 Setup and installation
 
-tomsup supports Python 3.6 or later. We strongly recommend that you install tomsup from pip. If you haven't installed pip you can install it from [the official pip website](https://pip.pypa.io/en/stable/installing/), otherwise, run:
+You can install tomsup using pip If you haven't installed pip you can install it from [the official pip website](https://pip.pypa.io/en/stable/installing/), otherwise, run:
 
 ```bash
 pip install tomsup 
 ```
 
-<details>
-  <summary>Detailed instructions</summary>
-
-  You can also install it directly from GitHub by simply running:
-  ```bash
-  pip install git+https://github.com/KennethEnevoldsen/tomsup.git
-  ```
-
-  or more explicitly:
-  ```bash
-  git clone https://github.com/KennethEnevoldsen/tomsup.git
-  cd tomsup
-  pip3 install -e .
-  ```
-
-
-</details>
 
 
 ## Getting Started with tomsup

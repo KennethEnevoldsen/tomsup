@@ -31,6 +31,9 @@ examples of how resulting data can be analyzed.
 
     - Added `.lock` file to ensure reproducibility
 
+* 7 March 2022
+
+  - Paper accepted at `Behavior Research Methods <https://link.springer.com/article/10.3758/s13428-022-01827-2>`__ (2022)
 
 * Version 1.1.5
   
