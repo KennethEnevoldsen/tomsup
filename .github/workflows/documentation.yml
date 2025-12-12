@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: |
-            SPHINX_DOCUMENTATION
+          pip install -e . --group dev
 
       - name: Build and Commit
         uses: sphinx-notes/pages@2.1
