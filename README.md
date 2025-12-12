@@ -77,7 +77,7 @@ uv run pytest--cov=.
 <details>
   <summary>Does tomsup run on X?</summary>
 
-  tomssup is intended to run on all major OS, this includes Windows (latest version), MacOS (Catalina) and the latest version of Linux (Ubuntu). Please note these are only the systems tomsup is being actively tested on, if you run on a similar system (e.g. an earlier version of Linux) the package will likely run there as well.
+  tomsup is intended to run on all major OS, this includes Windows, MacOS and Linux (Ubuntu). Please note these are only the systems tomsup is being actively tested on, if you run on a similar system (e.g. an earlier version of Linux) the package will likely run there as well.
 
   
 </details>
@@ -91,12 +91,11 @@ uv run pytest--cov=.
   To make the documentation you can run:
   
   ```
-  # install sphinx, themes and extensions
-  pip install sphinx furo sphinx-copybutton sphinxext-opengraph
+  # install required dependencies and builds the documentation
+  make build-docs
 
-  # generate html from documentations
-
-  make -C docs html
+  # view docs
+  make view-docs
   ```
   
 </details>
