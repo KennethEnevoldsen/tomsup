@@ -4,9 +4,7 @@
 # tomsup: Theory of Mind Simulation using Python 
 
 [![PyPI version](https://badge.fury.io/py/tomsup.svg)](https://pypi.org/project/tomsup/)
-[![pip downloads](https://img.shields.io/pypi/dm/tomsup.svg)](https://pypi.org/project/tomsup/)
-[![Code style: black](https://img.shields.io/badge/Code%20Style-Black-black)](https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html)
-[![python version](https://img.shields.io/badge/Python-%3E=3.6-blue)](https://github.com/KennethEnevoldsen/tomsup)
+[![python version](https://img.shields.io/badge/Python-%3E=3.9-blue)](https://github.com/KennethEnevoldsen/tomsup)
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/KennethEnevoldsen/tomsup/blob/master/LICENSE)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)]([ruff])
 
