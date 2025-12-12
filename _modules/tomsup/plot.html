@@ -4,8 +4,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 5.0.2 and Furo 2023.03.27 -->
-        <title>tomsup.plot - tomsup 1.3.1 documentation</title>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>tomsup.plot - tomsup 1.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -129,7 +129,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">tomsup 1.3.1 documentation</div></a>
+      <a href="../../index.html"><div class="brand">tomsup 1.4.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -215,13 +215,15 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Utility plotting functiona for tomsup</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">st</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">st</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 
 
 <span class="k">class</span> <span class="nc">ResultsDf</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
@@ -230,8 +232,17 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
-<span class="k">def</span> <span class="nf">mean_confidence_interval</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="n">confidence</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">sem</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">mean_confidence_interval</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sem</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Handle case where standard error is 0 (no variance)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">se</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="c1"># Return mean with zero-width interval</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">m</span><span class="p">,</span> <span class="n">m</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="n">confidence</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">se</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="plot_heatmap"><a class="viewcode-back" href="../../plot.html#tomsup.plot.plot_heatmap">[docs]</a><span class="k">def</span> <span class="nf">plot_heatmap</span><span class="p">(</span>
@@ -272,13 +283,19 @@
     <span class="n">df_mean</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">df_</span><span class="p">[[</span><span class="n">aggregate_col</span> <span class="o">+</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent1&quot;</span><span class="p">]]</span>
         <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent1&quot;</span><span class="p">])</span>
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">aggregate_fun</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">aggregate_fun</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">include_groups</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="p">)</span>
     <span class="n">df_mean2</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">df_</span><span class="p">[[</span><span class="n">aggregate_col</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent1&quot;</span><span class="p">]]</span>
         <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent1&quot;</span><span class="p">])</span>
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">aggregate_fun</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">aggregate_fun</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">include_groups</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="p">)</span>
     <span class="n">df_mean</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent1&quot;</span><span class="p">,</span> <span class="n">aggregate_col</span><span class="p">]</span>
@@ -291,16 +308,24 @@
         <span class="n">df_ci</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">df_</span><span class="p">[[</span><span class="n">aggregate_col</span> <span class="o">+</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent1&quot;</span><span class="p">]]</span>
             <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent1&quot;</span><span class="p">])</span>
-            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">mean_confidence_interval</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">mean_confidence_interval</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">)),</span>
+                <span class="n">include_groups</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="p">)</span>
+        <span class="n">df_ci</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ci&quot;</span>
+        <span class="n">df_ci</span> <span class="o">=</span> <span class="n">df_ci</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="n">df_ci</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent1&quot;</span><span class="p">,</span> <span class="s2">&quot;ci&quot;</span><span class="p">]</span>
         <span class="n">df_ci2</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">df_</span><span class="p">[[</span><span class="n">aggregate_col</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent1&quot;</span><span class="p">]]</span>
             <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;agent1&quot;</span><span class="p">])</span>
-            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">mean_confidence_interval</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">mean_confidence_interval</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">)),</span>
+                <span class="n">include_groups</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="p">)</span>
+        <span class="n">df_ci2</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ci&quot;</span>
+        <span class="n">df_ci2</span> <span class="o">=</span> <span class="n">df_ci2</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="n">df_ci2</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;agent1&quot;</span><span class="p">,</span> <span class="s2">&quot;agent0&quot;</span><span class="p">,</span> <span class="s2">&quot;ci&quot;</span><span class="p">]</span>
         <span class="n">df_ci</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_ci</span><span class="p">,</span> <span class="n">df_ci2</span><span class="p">])</span>
 
@@ -339,12 +364,12 @@
 <span class="s2">                          DataFrame which is obtained using the compete() </span><span class="se">\</span>
 <span class="s2">                          function&quot;</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">agent0</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;agent0&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">agent0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">agent0</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;agent0&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="ow">and</span> <span class="n">agent0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;The specified agent0 is not a valid agent </span><span class="se">\</span>
 <span class="s2">                          (i.e. it is not present in columns agent0)&quot;</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">agent1</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;agent1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">agent1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">agent1</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;agent1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="ow">and</span> <span class="n">agent1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;The specified agent1 is not a valid agent </span><span class="se">\</span>
 <span class="s2">                          (i.e. it is not present in columns agent1)&quot;</span>
@@ -399,7 +424,7 @@
     <span class="c1"># set label text</span>
     <span class="n">label_text</span> <span class="o">=</span> <span class="s2">&quot;mean score across simulations&quot;</span> <span class="k">if</span> <span class="s2">&quot;n_sim&quot;</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">else</span> <span class="s2">&quot;score&quot;</span>
 
-    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;round&quot;</span><span class="p">])[</span><span class="n">cum_payoff</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;round&quot;</span><span class="p">])[</span><span class="n">cum_payoff</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">numeric_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)),</span> <span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightblue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_text</span>
     <span class="p">)</span>
@@ -456,7 +481,7 @@
     <span class="n">label_text</span> <span class="o">=</span> <span class="s2">&quot;mean choice across simulations&quot;</span> <span class="k">if</span> <span class="s2">&quot;n_sim&quot;</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">else</span> <span class="s2">&quot;choice&quot;</span>
 
     <span class="c1"># plot mean</span>
-    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;round&quot;</span><span class="p">])[</span><span class="n">action</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;round&quot;</span><span class="p">])[</span><span class="n">action</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">numeric_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)),</span> <span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightblue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_text</span>
     <span class="p">)</span>
@@ -478,7 +503,7 @@
     <span class="n">agent1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">state</span><span class="p">],</span>
+    <span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">state</span><span class="p">],</span>  <span class="c1"># noqa</span>
     <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Round&quot;</span><span class="p">,</span>
     <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -519,7 +544,7 @@
     <span class="c1"># plot mean</span>
     <span class="n">label_text</span> <span class="o">=</span> <span class="s2">&quot;mean score across simulations&quot;</span> <span class="k">if</span> <span class="s2">&quot;n_sim&quot;</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">else</span> <span class="s2">&quot;score&quot;</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">&quot;extract&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">hist</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
-    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;round&quot;</span><span class="p">])[</span><span class="s2">&quot;extract&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;round&quot;</span><span class="p">])[</span><span class="s2">&quot;extract&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">numeric_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)),</span> <span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightblue&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label_text</span>
     <span class="p">)</span>
@@ -678,6 +703,7 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>

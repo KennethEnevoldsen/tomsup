@@ -16,8 +16,8 @@
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Utility Functions" href="utils.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 5.0.2 and Furo 2023.03.27 -->
-        <title>k-ToM Functions - tomsup 1.3.1 documentation</title>
+    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>k-ToM Functions - tomsup 1.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -141,7 +141,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">tomsup 1.3.1 documentation</div></a>
+      <a href="index.html"><div class="brand">tomsup 1.4.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -500,7 +500,23 @@ parameter values</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">k-ToM Functions</a><ul>
-<li><a class="reference internal" href="#module-tomsup.ktom_functions">tomsup.ktom_functions</a></li>
+<li><a class="reference internal" href="#module-tomsup.ktom_functions">tomsup.ktom_functions</a><ul>
+<li><a class="reference internal" href="#tomsup.ktom_functions.decision_function"><code class="docutils literal notranslate"><span class="pre">decision_function()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.expected_payoff_fun"><code class="docutils literal notranslate"><span class="pre">expected_payoff_fun()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.gradient_update"><code class="docutils literal notranslate"><span class="pre">gradient_update()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.init_k_tom"><code class="docutils literal notranslate"><span class="pre">init_k_tom()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.k_tom"><code class="docutils literal notranslate"><span class="pre">k_tom()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.learning_function"><code class="docutils literal notranslate"><span class="pre">learning_function()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_k_udpate"><code class="docutils literal notranslate"><span class="pre">p_k_udpate()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_op0_fun"><code class="docutils literal notranslate"><span class="pre">p_op0_fun()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_op_mean0_update"><code class="docutils literal notranslate"><span class="pre">p_op_mean0_update()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_op_var0_update"><code class="docutils literal notranslate"><span class="pre">p_op_var0_update()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_opk_approx_fun"><code class="docutils literal notranslate"><span class="pre">p_opk_approx_fun()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.p_opk_fun"><code class="docutils literal notranslate"><span class="pre">p_opk_fun()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.param_mean_update"><code class="docutils literal notranslate"><span class="pre">param_mean_update()</span></code></a></li>
+<li><a class="reference internal" href="#tomsup.ktom_functions.param_var_update"><code class="docutils literal notranslate"><span class="pre">param_var_update()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -517,6 +533,7 @@ parameter values</p>
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>

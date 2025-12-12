@@ -16,8 +16,8 @@
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Installation" href="installation.html" />
 
-    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 5.0.2 and Furo 2023.03.27 -->
-        <title>tomsup 1.3.1 documentation</title>
+    <link rel="shortcut icon" href="_static/favicon.ico"/><!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>tomsup 1.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -141,7 +141,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">tomsup 1.3.1 documentation</div></a>
+      <a href="#"><div class="brand">tomsup 1.4.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -238,6 +238,24 @@ examples of how resulting data can be analyzed.</p>
 <section id="news">
 <h2>📰 News<a class="headerlink" href="#news" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
+<li><p>Version 1.4.0</p>
+<ul>
+<li><p>Major improvements to ensure long-term maintainance of the project</p>
+<ul>
+<li><p>Added support for &gt;3.9 and dropped support for =&lt;3.8</p></li>
+<li><p>Updated installations to use the new <cite>pyproject.toml</cite> standard</p></li>
+<li><p>resolved multiple deprecation warnings</p></li>
+<li><p>Allow for numpy and pandas dependencies &gt;2.0.0</p></li>
+<li><p>Added <cite>.lock</cite> file to ensure reproducibility</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>7 March 2022</p>
+<ul>
+<li><p>Paper accepted at <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-022-01827-2">Behavior Research Methods</a> (2022)</p></li>
+</ul>
+</li>
 <li><p>Version 1.1.5</p>
 <ul>
 <li><p>New plotting features were added</p></li>
@@ -284,23 +302,66 @@ examples of how resulting data can be analyzed.</p>
 <p class="caption" role="heading"><span class="caption-text">Package References</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="agent.html">Agent and AgentGroup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="agent.html#module-tomsup.agent">tomsup.agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agent.html#module-tomsup.agent">tomsup.agent</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="agent.html#tomsup.agent.Agent"><code class="docutils literal notranslate"><span class="pre">Agent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agent.html#tomsup.agent.AgentGroup"><code class="docutils literal notranslate"><span class="pre">AgentGroup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agent.html#tomsup.agent.QL"><code class="docutils literal notranslate"><span class="pre">QL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agent.html#tomsup.agent.RB"><code class="docutils literal notranslate"><span class="pre">RB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agent.html#tomsup.agent.TFT"><code class="docutils literal notranslate"><span class="pre">TFT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agent.html#tomsup.agent.TOM"><code class="docutils literal notranslate"><span class="pre">TOM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agent.html#tomsup.agent.WSLS"><code class="docutils literal notranslate"><span class="pre">WSLS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="agent.html#tomsup.agent.compete"><code class="docutils literal notranslate"><span class="pre">compete()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="payoffmatrix.html">PayoffMatrix</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="payoffmatrix.html#module-tomsup.payoffmatrix">tomsup.payoffmatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payoffmatrix.html#module-tomsup.payoffmatrix">tomsup.payoffmatrix</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="payoffmatrix.html#tomsup.payoffmatrix.PayoffMatrix"><code class="docutils literal notranslate"><span class="pre">PayoffMatrix</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="plot.html">Plot</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="plot.html#module-tomsup.plot">tomsup.plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#module-tomsup.plot">tomsup.plot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plot.html#tomsup.plot.choice"><code class="docutils literal notranslate"><span class="pre">choice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot.html#tomsup.plot.plot_heatmap"><code class="docutils literal notranslate"><span class="pre">plot_heatmap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot.html#tomsup.plot.plot_history"><code class="docutils literal notranslate"><span class="pre">plot_history()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot.html#tomsup.plot.plot_op_states"><code class="docutils literal notranslate"><span class="pre">plot_op_states()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot.html#tomsup.plot.plot_p_k"><code class="docutils literal notranslate"><span class="pre">plot_p_k()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot.html#tomsup.plot.plot_p_op_1"><code class="docutils literal notranslate"><span class="pre">plot_p_op_1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot.html#tomsup.plot.plot_p_self"><code class="docutils literal notranslate"><span class="pre">plot_p_self()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot.html#tomsup.plot.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Utility Functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#module-tomsup.utils">tomsup.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#module-tomsup.utils">tomsup.utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="utils.html#tomsup.utils.create_agents"><code class="docutils literal notranslate"><span class="pre">create_agents()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html#tomsup.utils.valid_agents"><code class="docutils literal notranslate"><span class="pre">valid_agents()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ktom_functions.html">k-ToM Functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ktom_functions.html#module-tomsup.ktom_functions">tomsup.ktom_functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ktom_functions.html#module-tomsup.ktom_functions">tomsup.ktom_functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.decision_function"><code class="docutils literal notranslate"><span class="pre">decision_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.expected_payoff_fun"><code class="docutils literal notranslate"><span class="pre">expected_payoff_fun()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.gradient_update"><code class="docutils literal notranslate"><span class="pre">gradient_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.init_k_tom"><code class="docutils literal notranslate"><span class="pre">init_k_tom()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.k_tom"><code class="docutils literal notranslate"><span class="pre">k_tom()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.learning_function"><code class="docutils literal notranslate"><span class="pre">learning_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.p_k_udpate"><code class="docutils literal notranslate"><span class="pre">p_k_udpate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.p_op0_fun"><code class="docutils literal notranslate"><span class="pre">p_op0_fun()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.p_op_mean0_update"><code class="docutils literal notranslate"><span class="pre">p_op_mean0_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.p_op_var0_update"><code class="docutils literal notranslate"><span class="pre">p_op_var0_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.p_opk_approx_fun"><code class="docutils literal notranslate"><span class="pre">p_opk_approx_fun()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.p_opk_fun"><code class="docutils literal notranslate"><span class="pre">p_opk_fun()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.param_mean_update"><code class="docutils literal notranslate"><span class="pre">param_mean_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ktom_functions.html#tomsup.ktom_functions.param_var_update"><code class="docutils literal notranslate"><span class="pre">param_var_update()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -387,6 +448,7 @@ examples of how resulting data can be analyzed.</p>
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>

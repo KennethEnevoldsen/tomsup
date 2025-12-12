@@ -4,8 +4,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 5.0.2 and Furo 2023.03.27 -->
-        <title>tomsup.agent - tomsup 1.3.1 documentation</title>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>tomsup.agent - tomsup 1.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -129,7 +129,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">tomsup 1.3.1 documentation</div></a>
+      <a href="../../index.html"><div class="brand">tomsup 1.4.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -215,33 +215,31 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">docstring</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
-<span class="kn">import</span> <span class="nn">random</span>
 
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
-
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">wasabi</span> <span class="kn">import</span> <span class="n">msg</span>
 
-<span class="kn">from</span> <span class="nn">tomsup.ktom_functions</span> <span class="kn">import</span> <span class="n">k_tom</span><span class="p">,</span> <span class="n">init_k_tom</span><span class="p">,</span> <span class="n">inv_logit</span>
+<span class="kn">from</span> <span class="nn">tomsup.ktom_functions</span> <span class="kn">import</span> <span class="n">init_k_tom</span><span class="p">,</span> <span class="n">inv_logit</span><span class="p">,</span> <span class="n">k_tom</span>
 <span class="kn">from</span> <span class="nn">tomsup.payoffmatrix</span> <span class="kn">import</span> <span class="n">PayoffMatrix</span>
 <span class="kn">from</span> <span class="nn">tomsup.plot</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">choice</span><span class="p">,</span>
-    <span class="n">score</span><span class="p">,</span>
     <span class="n">ResultsDf</span><span class="p">,</span>
+    <span class="n">choice</span><span class="p">,</span>
+    <span class="n">plot_heatmap</span><span class="p">,</span>
     <span class="n">plot_history</span><span class="p">,</span>
+    <span class="n">plot_op_states</span><span class="p">,</span>
     <span class="n">plot_p_k</span><span class="p">,</span>
     <span class="n">plot_p_op_1</span><span class="p">,</span>
     <span class="n">plot_p_self</span><span class="p">,</span>
-    <span class="n">plot_op_states</span><span class="p">,</span>
-    <span class="n">plot_heatmap</span><span class="p">,</span>
+    <span class="n">score</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">wasabi</span> <span class="kn">import</span> <span class="n">msg</span>
-
 
 <span class="c1">###################</span>
 <span class="c1"># ___ AGENT ___</span>
@@ -296,10 +294,14 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TOM&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">kwargs</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">kwargs</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
 
     <span class="c1"># Getters</span>
 <div class="viewcode-block" id="Agent.get_start_params"><a class="viewcode-back" href="../../agent.html#tomsup.agent.Agent.get_start_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_start_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -552,7 +554,7 @@
 <div class="viewcode-block" id="TFT.compete"><a class="viewcode-back" href="../../agent.html#tomsup.agent.TFT.compete">[docs]</a>    <span class="k">def</span> <span class="nf">compete</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">op_choice</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span> <span class="o">=</span> <span class="n">PayoffMatrix</span><span class="p">(</span><span class="s2">&quot;prisoners_dilemma&quot;</span><span class="p">),</span>
+        <span class="n">p_matrix</span><span class="p">:</span> <span class="n">PayoffMatrix</span> <span class="o">=</span> <span class="n">PayoffMatrix</span><span class="p">(</span><span class="s2">&quot;prisoners_dilemma&quot;</span><span class="p">),</span>  <span class="c1"># noqa</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -570,6 +572,7 @@
                 <span class="s2">&quot;Tit-for-Tat is designed for the prisoners dilemma and might </span><span class="se">\</span>
 <span class="s2">                  not perform well with other payoff matrices.&quot;</span><span class="p">,</span>
                 <span class="ne">Warning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="c1"># If a choice haven&#39;t been made: Cooperate</span>
@@ -746,6 +749,7 @@
                 <span class="s2">&quot;It is quite computationally expensive to run a TOM with a </span><span class="se">\</span>
 <span class="s2">                  level &gt; 5. Make sure this is your intention.&quot;</span><span class="p">,</span>
                 <span class="ne">Warning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">volatility</span> <span class="o">=</span> <span class="n">volatility</span>
@@ -869,9 +873,16 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span></div>
 
     <span class="k">def</span> <span class="nf">__print</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">readability_transform</span><span class="o">=</span><span class="p">{},</span> <span class="n">print_level</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">d</span><span class="p">,</span>
+        <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">readability_transform</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">print_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;A helper function for printing dictionaries&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">readability_transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">readability_transform</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span>
                 <span class="p">(</span><span class="n">print_level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
@@ -1011,7 +1022,7 @@
 <span class="sd">        &gt;&gt;&gt; result.shape[0] == 10*100 # As there is 10 simulations each containing\</span>
 <span class="sd">                                        100 round</span>
 <span class="sd">        True</span>
-<span class="sd">        &gt;&gt;&gt; result[&#39;payoff_agent0&#39;].mean() == 1  # Given that both agents have \</span>
+<span class="sd">        &gt;&gt;&gt; result[&#39;payoff_agent0&#39;].mean(numeric_only=True) == 1  # Given that both agents have \</span>
 <span class="sd">            always choose 1, it is clear that agent0 always win, when playing the \</span>
 <span class="sd">            competitive pennygame</span>
 <span class="sd">        True</span>
@@ -1277,7 +1288,7 @@
         <span class="n">agent1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">agent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">state</span><span class="p">],</span>
+        <span class="n">fun</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">state</span><span class="p">],</span>  <span class="c1"># noqa</span>
         <span class="n">ylab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">xlab</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Round&quot;</span><span class="p">,</span>
         <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -1503,7 +1514,7 @@
 <span class="sd">        agent_0 (Agent): objects of class Agent which should compete</span>
 <span class="sd">        agent_1 (Agent): objects of class Agent which should compete</span>
 <span class="sd">        p_matrix (PayoffMatrix): The payoffmatrix in which the agents compete</span>
-<span class="sd">        n_rounds (int, optional): Number of rounds the agent should play in each simulation. </span>
+<span class="sd">        n_rounds (int, optional): Number of rounds the agent should play in each simulation.</span>
 <span class="sd">            Defaults to 10.</span>
 <span class="sd">        n_sim (int, optional): The number of simulations. Defaults to 1.</span>
 <span class="sd">        reset_agent (bool, optional): Should the agent be reset ? Defaults to True.</span>
@@ -1534,7 +1545,7 @@
 <span class="sd">            Running simulation 1 out of 3</span>
 <span class="sd">            Running simulation 2 out of 3</span>
 <span class="sd">            Running simulation 3 out of 3</span>
-<span class="sd">        &gt;&gt;&gt; result[&#39;payoff_agent1&#39;].mean() &gt; 0  # We see that the WSLS() on \</span>
+<span class="sd">        &gt;&gt;&gt; result[&#39;payoff_agent1&#39;].mean(numeric_only=True) &gt; 0  # We see that the WSLS() on \</span>
 <span class="sd">            average win more than it lose vs. the biased agent (RB)</span>
 <span class="sd">        True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1553,11 +1564,12 @@
 <span class="s2">                  maintain their knowledge across simulations. Is this </span><span class="se">\</span>
 <span class="s2">                  the intended outcome?&quot;</span><span class="p">,</span>
                 <span class="ne">Warning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">__compete</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Running simulation </span><span class="si">{</span><span class="n">sim</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">n_sim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Running simulation </span><span class="si">{</span><span class="n">sim</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">n_sim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="n">res</span> <span class="o">=</span> <span class="n">compete</span><span class="p">(</span>
                 <span class="n">agent_0</span><span class="p">,</span>
@@ -1603,8 +1615,8 @@
             <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">save_history</span><span class="p">:</span>
-                <span class="n">history0</span> <span class="o">=</span> <span class="n">agent_0</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">history1</span> <span class="o">=</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">history0</span> <span class="o">=</span> <span class="n">agent_0</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">history1</span> <span class="o">=</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">c_0</span><span class="p">,</span> <span class="n">c_1</span><span class="p">,</span> <span class="n">payoff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">payoff</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">history0</span><span class="p">,</span> <span class="n">history1</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">c_0</span><span class="p">,</span> <span class="n">c_1</span><span class="p">,</span> <span class="n">payoff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">payoff</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
@@ -1699,6 +1711,7 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
