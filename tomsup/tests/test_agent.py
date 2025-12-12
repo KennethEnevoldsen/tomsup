@@ -41,9 +41,9 @@ def test_QL():
 
 
 def test_TOM():
-    t0 = ts.agent.TOM(level=0, volatility=-2, b_temp=-1)
-    t2 = ts.agent.TOM(level=2, volatility=-2, b_temp=-1)
-    t2 = ts.agent.TOM(level=2, volatility=-2, b_temp=-1, dilution=0.5, bias=0.3)
+    ts.agent.TOM(level=0, volatility=-2, b_temp=-1)
+    ts.agent.TOM(level=2, volatility=-2, b_temp=-1)
+    ts.agent.TOM(level=2, volatility=-2, b_temp=-1, dilution=0.5, bias=0.3)
 
 
 def test_AgentGroup():
@@ -94,9 +94,7 @@ def test_plot_internal():
     t2 = ts.agent.TOM(level=2)
     wsls = ts.agent.WSLS()
 
-    result = ts.compete(
-        t2, wsls, p_matrix="penny_competitive", n_rounds=10, save_history=True
-    )
+    ts.compete(t2, wsls, p_matrix="penny_competitive", n_rounds=10, save_history=True)
 
     t2.plot_internal(
         fun=lambda internal_states: internal_states["own_states"]["p_op"], show=False

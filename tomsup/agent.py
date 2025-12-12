@@ -340,7 +340,7 @@ class TFT(Agent):
     def compete(
         self,
         op_choice: Optional[int] = None,
-        p_matrix: PayoffMatrix = PayoffMatrix("prisoners_dilemma"),
+        p_matrix: PayoffMatrix = PayoffMatrix("prisoners_dilemma"),  # noqa
         verbose: bool = True,
         **kwargs,
     ) -> int:
@@ -358,6 +358,7 @@ class TFT(Agent):
                 "Tit-for-Tat is designed for the prisoners dilemma and might \
                   not perform well with other payoff matrices.",
                 Warning,
+                stacklevel=2,
             )
 
         # If a choice haven't been made: Cooperate
@@ -534,6 +535,7 @@ class TOM(Agent):
                 "It is quite computationally expensive to run a TOM with a \
                   level > 5. Make sure this is your intention.",
                 Warning,
+                stacklevel=2,
             )
 
         self.volatility = volatility
@@ -657,9 +659,16 @@ class TOM(Agent):
         return self.params
 
     def __print(
-        self, d, n=0, keys=None, readability_transform={}, print_level=None
+        self,
+        d,
+        n=0,
+        keys=None,
+        readability_transform: dict | None = None,
+        print_level=None,
     ) -> None:
         """A helper function for printing dictionaries"""
+        if readability_transform is None:
+            readability_transform = {}
         for key in d:
             if (
                 (print_level is not None)
@@ -1065,7 +1074,7 @@ class AgentGroup:
         agent1: int,
         state: str,
         agent: int = 0,
-        fun: Callable = lambda x: x[state],
+        fun: Callable = lambda x: x[state],  # noqa
         ylab: str = "",
         xlab: str = "Round",
         show: bool = True,
@@ -1291,7 +1300,7 @@ def compete(
         agent_0 (Agent): objects of class Agent which should compete
         agent_1 (Agent): objects of class Agent which should compete
         p_matrix (PayoffMatrix): The payoffmatrix in which the agents compete
-        n_rounds (int, optional): Number of rounds the agent should play in each simulation. 
+        n_rounds (int, optional): Number of rounds the agent should play in each simulation.
             Defaults to 10.
         n_sim (int, optional): The number of simulations. Defaults to 1.
         reset_agent (bool, optional): Should the agent be reset ? Defaults to True.
@@ -1341,6 +1350,7 @@ def compete(
                   maintain their knowledge across simulations. Is this \
                   the intended outcome?",
                 Warning,
+                stacklevel=2,
             )
 
         def __compete(sim):

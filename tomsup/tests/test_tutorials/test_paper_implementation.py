@@ -18,7 +18,7 @@ def test_tutorial():
     # Examine Agent
     print(f"jung is a class of type: {type(jung)}")
     if isinstance(jung, ts.Agent):
-        print(f"but jung is also an instance of the parent class ts.Agent")
+        print("but jung is also an instance of the parent class ts.Agent")
 
     # let us have Jung make a choice
     choice = jung.compete()

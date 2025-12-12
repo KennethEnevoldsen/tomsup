@@ -274,7 +274,7 @@ def plot_history(
     agent1: str,
     state: str,
     agent: int = 0,
-    fun: Callable = lambda x: x[state],
+    fun: Callable = lambda x: x[state],  # noqa
     ylab: str = "",
     xlab: str = "Round",
     show: bool = True,

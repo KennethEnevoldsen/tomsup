@@ -73,7 +73,7 @@ tom = ts.create_agents(agents=opponent_strategy, start_params=opponent_params)
 penny = ts.PayoffMatrix(name=game_type)
 
 # ------------- Defining Variables and function -------------
-introtext = f"""Dear participant
+introtext = """Dear participant
 
 Thank you for playing against tomsup!
 Here we will make you play against simulated agents in simple decision-making games.

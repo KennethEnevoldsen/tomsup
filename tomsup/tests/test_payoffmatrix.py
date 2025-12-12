@@ -18,7 +18,7 @@ def test_PayoffMatrix():
     sexes = ts.PayoffMatrix(name="sexes")
     assert sexes.payoff(1, 1, 0) == 5
 
-    custom = ts.PayoffMatrix(
+    ts.PayoffMatrix(
         name="custom", predefined=np.array(([(10, 0), (0, 5)], [(5, 0), (0, 10)]))
     )
 

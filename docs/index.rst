@@ -17,6 +17,21 @@ examples of how resulting data can be analyzed.
 📰 News
 ---------------------------------
 
+* Version 1.4.0
+
+  - Major improvements to ensure long-term maintainance of the project
+
+    - Added support for >3.9 and dropped support for =<3.8
+
+    - Updated installations to use the new `pyproject.toml` standard
+
+    - resolved multiple deprecation warnings
+
+    - Allowed a newer versions of numpy and pandas
+
+    - Added `.lock` file to ensure reproducibility
+
+
 * Version 1.1.5
   
   - New plotting features were added
