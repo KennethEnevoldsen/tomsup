@@ -18,10 +18,17 @@ class ResultsDf(pd.DataFrame):
     """
 
 
-def mean_confidence_interval(x: np.ndarray, confidence: float = 0.95) -> np.ndarray:
-    return st.t.interval(
-        confidence, len(x) - 1, loc=np.mean(x, axis=0), scale=st.sem(x)
-    )
+def mean_confidence_interval(x: np.ndarray, confidence: float = 0.95):
+    n = len(x)
+    m = np.mean(x, axis=0)
+    se = st.sem(x, axis=0)
+
+    # Handle case where standard error is 0 (no variance)
+    if np.any(se == 0):
+        # Return mean with zero-width interval
+        return np.array([m, m])
+
+    return st.t.interval(confidence, n - 1, loc=m, scale=se)
 
 
 def plot_heatmap(
@@ -62,13 +69,19 @@ def plot_heatmap(
     df_mean = (
         df_[[aggregate_col + "0", "agent0", "agent1"]]
         .groupby(["agent0", "agent1"])
-        .apply(lambda x: aggregate_fun(x.select_dtypes(include="number"), axis=0))
+        .apply(
+            lambda x: aggregate_fun(x.select_dtypes(include="number"), axis=0),
+            include_groups=False,
+        )
         .reset_index()
     )
     df_mean2 = (
         df_[[aggregate_col + "1", "agent0", "agent1"]]
         .groupby(["agent0", "agent1"])
-        .apply(lambda x: aggregate_fun(x.select_dtypes(include="number"), axis=0))
+        .apply(
+            lambda x: aggregate_fun(x.select_dtypes(include="number"), axis=0),
+            include_groups=False,
+        )
         .reset_index()
     )
     df_mean.columns = ["agent0", "agent1", aggregate_col]
@@ -82,7 +95,8 @@ def plot_heatmap(
             df_[[aggregate_col + "0", "agent0", "agent1"]]
             .groupby(["agent0", "agent1"])
             .apply(
-                lambda x: mean_confidence_interval(x.select_dtypes(include="number"))
+                lambda x: mean_confidence_interval(x.select_dtypes(include="number")),
+                include_groups=False,
             )
         )
         df_ci.name = "ci"
@@ -92,7 +106,8 @@ def plot_heatmap(
             df_[[aggregate_col + "1", "agent0", "agent1"]]
             .groupby(["agent0", "agent1"])
             .apply(
-                lambda x: mean_confidence_interval(x.select_dtypes(include="number"))
+                lambda x: mean_confidence_interval(x.select_dtypes(include="number")),
+                include_groups=False,
             )
         )
         df_ci2.name = "ci"

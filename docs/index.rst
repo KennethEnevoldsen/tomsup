@@ -27,7 +27,7 @@ examples of how resulting data can be analyzed.
 
     - resolved multiple deprecation warnings
 
-    - Allowed a newer versions of numpy and pandas
+    - Allow for numpy and pandas dependencies >2.0.0
 
     - Added `.lock` file to ensure reproducibility
 
