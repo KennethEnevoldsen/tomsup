@@ -18,7 +18,7 @@ cd tomsup/tutorials/psychopy_experiment
 ```
 
 Make sure that the 'images' folder contains the six images as on the github repo, and that the 'data' folder is empty or nonexistent.
-The repo can be found [here](https://github.com/KennethEnevoldsen/tomsup/tree/master/tutorials/psychopy_experiment).
+The repo can be found [here](https://github.com/KennethEnevoldsen/tomsup/tree/main/tutorials/psychopy_experiment).
 
 The python script should now run.
 

@@ -5,7 +5,7 @@
 
 [![PyPI version](https://badge.fury.io/py/tomsup.svg)](https://pypi.org/project/tomsup/)
 [![python version](https://img.shields.io/badge/Python-%3E=3.10-blue)](https://github.com/KennethEnevoldsen/tomsup)
-[![license](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/KennethEnevoldsen/tomsup/blob/master/LICENSE)
+[![license](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/KennethEnevoldsen/tomsup/blob/main/LICENSE)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 A Python Package for Agent-Based simulations. The package provides a computational eco-system for investigating and comparing computational models of hypothesized Theory of mind (ToM) mechanisms and for using them as experimental stimuli. The package notably includes an easy-to-use implementation of the variational Bayesian k-ToM model developed by [Devaine, et al. (2017)](http://dx.plos.org/10.1371/journal.pcbi.1005833). This model has been shown able to capture individual and group-level differences in social skills, including between clinical populations and across primate species. It has also been deemed among the best computational models of ToM in terms of interaction with others and recursive representation of mental states. We provide a series of tutorials on how to implement the k-ToM model and a score of simpler types of ToM mechanisms in game-theory based simulations and experimental stimuli, including how to specify custom ToM models, and show examples of how resulting data can be analyzed.
@@ -22,7 +22,7 @@ pip install tomsup
 
 
 ## Getting Started with tomsup
-To get started with tomsup we recommend the tutorials in the tutorials [folder](https://github.com/KennethEnevoldsen/tomsup/tree/master/tutorials). We recommend that you start with the introduction.
+To get started with tomsup we recommend the tutorials in the tutorials [folder](https://github.com/KennethEnevoldsen/tomsup/tree/main/tutorials). We recommend that you start with the introduction.
 
 The tutorials are provided as Jupyter Notebooks. If you do not have Jupyter Notebook installed, instructions for installing and running can be found [here]( http://jupyter.org/install). 
 
@@ -30,10 +30,10 @@ The tutorials are provided as Jupyter Notebooks. If you do not have Jupyter Note
 | Tutorial                                                                                                                         | Content                                                                                        | file name                                         | Open with                                                                                                                                                                                              |
 | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [Documentation](https://kennethenevoldsen.github.io/tomsup/)                                                                     | The documentations of tomsup                                                                   |                                                   |                                                                                                                                                                                                        |
-| [Introduction](https://github.com/KennethEnevoldsen/tomsup/blob/master/tutorials/paper_implementation.ipynb)                     | a general introduction to the features of tomsup which follows the implementation in the paper | paper_implementation.ipynb                        | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KennethEnevoldsen/tomsup/blob/master/tutorials/paper_implementation.ipynb)       |
-| [Creating an agent](https://github.com/KennethEnevoldsen/tomsup/blob/master/tutorials/Creating_an_agent.ipynb)                   | an example of how you would create new agent for the package.                                  | Creating_an_agent.ipynb                           | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KennethEnevoldsen/tomsup/blob/master/tutorials/Creating_an_agent.ipynb)          |
-| [Specifying internal states](https://github.com/KennethEnevoldsen/tomsup/blob/master/tutorials/specifying_internal_states.ipynb) | a short guide on how to specify internal states on a k-ToM agent                               | specifying_internal_states.ipynb                  | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KennethEnevoldsen/tomsup/blob/master/tutorials/specifying_internal_states.ipynb) |
-| [Psychopy experiment](https://github.com/KennethEnevoldsen/tomsup/tree/master/tutorials/psychopy_experiment)                     | An example of how one might implement tomsup in an experiment                                  | Not a notebook, but a folder, psychopy_experiment | [![Open in Github](https://img.shields.io/badge/%20-Open%20in%20GitHub-black?style=plastic&logo=github)](https://github.com/KennethEnevoldsen/tomsup/tree/master/tutorials/psychopy_experiment)        |
+| [Introduction](https://github.com/KennethEnevoldsen/tomsup/blob/main/tutorials/paper_implementation.ipynb)                     | a general introduction to the features of tomsup which follows the implementation in the paper | paper_implementation.ipynb                        | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KennethEnevoldsen/tomsup/blob/main/tutorials/paper_implementation.ipynb)       |
+| [Creating an agent](https://github.com/KennethEnevoldsen/tomsup/blob/main/tutorials/Creating_an_agent.ipynb)                   | an example of how you would create new agent for the package.                                  | Creating_an_agent.ipynb                           | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KennethEnevoldsen/tomsup/blob/main/tutorials/Creating_an_agent.ipynb)          |
+| [Specifying internal states](https://github.com/KennethEnevoldsen/tomsup/blob/main/tutorials/specifying_internal_states.ipynb) | a short guide on how to specify internal states on a k-ToM agent                               | specifying_internal_states.ipynb                  | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KennethEnevoldsen/tomsup/blob/main/tutorials/specifying_internal_states.ipynb) |
+| [Psychopy experiment](https://github.com/KennethEnevoldsen/tomsup/tree/main/tutorials/psychopy_experiment)                     | An example of how one might implement tomsup in an experiment                                  | Not a notebook, but a folder, psychopy_experiment | [![Open in Github](https://img.shields.io/badge/%20-Open%20in%20GitHub-black?style=plastic&logo=github)](https://github.com/KennethEnevoldsen/tomsup/tree/main/tutorials/psychopy_experiment)        |
 
 
 # 🤔 Issues and Usage Q&A
@@ -86,7 +86,7 @@ uv run pytest--cov=.
 <details>
   <summary>How is the documentation generated?</summary>
 
-  Tomsup uses [sphinx](https://www.sphinx-doc.org/en/master/index.html) to generate documentation. It uses the [Furo](https://github.com/pradyunsg/furo) theme with a custom styling.
+  Tomsup uses [sphinx](https://www.sphinx-doc.org/en/main/index.html) to generate documentation. It uses the [Furo](https://github.com/pradyunsg/furo) theme with a custom styling.
 
   To make the documentation you can run:
   
