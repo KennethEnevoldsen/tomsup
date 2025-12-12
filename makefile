@@ -14,3 +14,7 @@ lint:
 lint-check:
 	uv run ruff format tomsup/ --check
 	uv run ruff check tomsup/
+
+publish:
+	uv build
+	uv publish
