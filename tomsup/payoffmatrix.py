@@ -1,6 +1,7 @@
 """
 This scripts contains the PayoffMatrix
 """
+
 from typing import Optional
 import numpy as np
 
@@ -128,12 +129,12 @@ class PayoffMatrix:
         )
         str5 = "       | " + print_len * 3 * "-" + 2 * "---" + " |"
         str6 = (
-            "Choice | " + f"{add_pl(0)}" + " | " + f"{add_pl(self()[0][0,0])}" + " | "
-            f"{add_pl(self()[0][0,1])}" + " |"
+            "Choice | " + f"{add_pl(0)}" + " | " + f"{add_pl(self()[0][0, 0])}" + " | "
+            f"{add_pl(self()[0][0, 1])}" + " |"
         )
         str7 = (
-            "agent 0| " + f"{add_pl(1)}" + " | " + f"{add_pl(self()[0][1,0])}" + " | "
-            f"{add_pl(self()[0][1,1])}" + " |"
+            "agent 0| " + f"{add_pl(1)}" + " | " + f"{add_pl(self()[0][1, 0])}" + " | "
+            f"{add_pl(self()[0][1, 1])}" + " |"
         )
         str8 = " "
         str9 = "The payoff matrix of agent 1"
@@ -149,12 +150,12 @@ class PayoffMatrix:
         )
         str12 = str5
         str13 = (
-            "Choice | " + f"{add_pl(0)}" + " | " + f"{add_pl(self()[1][0,0])}" + " | "
-            f"{add_pl(self()[1][0,1])}" + " |"
+            "Choice | " + f"{add_pl(0)}" + " | " + f"{add_pl(self()[1][0, 0])}" + " | "
+            f"{add_pl(self()[1][0, 1])}" + " |"
         )
         str14 = (
-            "agent 0| " + f"{add_pl(1)}" + " | " + f"{add_pl(self()[1][1,0])}" + " | "
-            f"{add_pl(self()[1][1,1])}" + " |"
+            "agent 0| " + f"{add_pl(1)}" + " | " + f"{add_pl(self()[1][1, 0])}" + " | "
+            f"{add_pl(self()[1][1, 1])}" + " |"
         )
         str15 = str8
         return "\n".join(

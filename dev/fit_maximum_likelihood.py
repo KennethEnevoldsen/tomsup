@@ -1,6 +1,7 @@
 """
 This script fits the k-ToM model to data using scipy.optimize()
 """
+
 import sys
 from functools import partial
 

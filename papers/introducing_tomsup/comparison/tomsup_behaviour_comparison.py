@@ -36,7 +36,6 @@ player_2.reset()
 
 # Go through each trial one at a time
 for trial in range(n_trials):
-
     print(trial)
 
     # Save opponent choices and save

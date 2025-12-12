@@ -48,7 +48,6 @@ parvals = [0] * len(params_means)
 
 # For each simulation
 for sim in range(n_sim):
-
     print(f"Simulation {sim}")
 
     # Resample parameter values

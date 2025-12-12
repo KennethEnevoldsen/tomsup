@@ -35,7 +35,6 @@ for participant_id in tqdm(np.unique(experiment_df["participant.code"])):
 
             # Go through each of the trials
             for trial in np.unique(temp_df_1["trial"])[:]:
-
                 # get the opponent's choice from the dataframe
                 prev_choice_human = temp_df_1[
                     temp_df_1["trial"] == trial

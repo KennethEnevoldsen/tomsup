@@ -41,7 +41,6 @@ elapsed_times = [None] * n_tests
 # pr.enable()
 
 for test in range(n_tests):
-
     # print(test)
 
     # Get start time

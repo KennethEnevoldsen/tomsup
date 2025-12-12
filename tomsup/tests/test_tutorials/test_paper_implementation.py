@@ -75,7 +75,8 @@ def test_tutorial():
         )
 
     tom_2.print_internal(
-        keys=["p_k", "p_op"], level=[0, 1]  # print these two states
+        keys=["p_k", "p_op"],
+        level=[0, 1],  # print these two states
     )  # for the agent simulated opponents 0-ToM and 1-ToM
 
     # Create a list of agents

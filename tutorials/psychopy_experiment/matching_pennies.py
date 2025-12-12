@@ -118,6 +118,7 @@ if game_type == "penny_competitive":
 elif game_type == "penny_cooperative":
     rulestext = rulestext_pennycooperattive
 
+
 # Show_text for normal text
 def show_text(txt):
     msg = visual.TextStim(win, text=txt, height=0.05)
@@ -202,11 +203,14 @@ for trial in trial_list:
     trial["RT"] = stopwatch.getTime()
 
     #
-    if resp_tom == 0: # left hand
+    if resp_tom == 0:  # left hand
         rl_tom = "left"
         picture1 = visual.ImageStim(
-            win, image=RH_coin,  # agent point of view
-            pos=img_pos1, units="norm", size=img_size
+            win,
+            image=RH_coin,  # agent point of view
+            pos=img_pos1,
+            units="norm",
+            size=img_size,
         )
         picture2 = visual.ImageStim(
             win, image=LH_open, pos=img_pos2, units="norm", size=img_size
