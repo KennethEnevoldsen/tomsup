@@ -17,6 +17,24 @@ examples of how resulting data can be analyzed.
 📰 News
 ---------------------------------
 
+* Version 1.4.0
+
+  - Major improvements to ensure long-term maintainance of the project
+
+    - Added support for >3.9 and dropped support for =<3.8
+
+    - Updated installations to use the new `pyproject.toml` standard
+
+    - resolved multiple deprecation warnings
+
+    - Allow for numpy and pandas dependencies >2.0.0
+
+    - Added `.lock` file to ensure reproducibility
+
+* 7 March 2022
+
+  - Paper accepted at `Behavior Research Methods <https://link.springer.com/article/10.3758/s13428-022-01827-2>`__ (2022)
+
 * Version 1.1.5
   
   - New plotting features were added

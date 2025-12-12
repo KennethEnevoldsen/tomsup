@@ -18,7 +18,7 @@ def test_tutorial():
     # Examine Agent
     print(f"jung is a class of type: {type(jung)}")
     if isinstance(jung, ts.Agent):
-        print(f"but jung is also an instance of the parent class ts.Agent")
+        print("but jung is also an instance of the parent class ts.Agent")
 
     # let us have Jung make a choice
     choice = jung.compete()
@@ -75,7 +75,8 @@ def test_tutorial():
         )
 
     tom_2.print_internal(
-        keys=["p_k", "p_op"], level=[0, 1]  # print these two states
+        keys=["p_k", "p_op"],
+        level=[0, 1],  # print these two states
     )  # for the agent simulated opponents 0-ToM and 1-ToM
 
     # Create a list of agents

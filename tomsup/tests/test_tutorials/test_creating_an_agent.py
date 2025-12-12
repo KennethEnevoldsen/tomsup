@@ -7,7 +7,7 @@ def test_tutorial():
     # inspect sigmund
     print(f"sigmund is an class of type: {type(sigmund)}")  # f is for format
     if isinstance(sigmund, ts.Agent):
-        print(f"but sigmund is also of has the parent class ts.Agent")
+        print("but sigmund is also of has the parent class ts.Agent")
 
     class ReversedWSLS(ts.Agent):  # make sure that the parent class is ts.Agent
         """

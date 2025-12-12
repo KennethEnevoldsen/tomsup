@@ -73,7 +73,7 @@ tom = ts.create_agents(agents=opponent_strategy, start_params=opponent_params)
 penny = ts.PayoffMatrix(name=game_type)
 
 # ------------- Defining Variables and function -------------
-introtext = f"""Dear participant
+introtext = """Dear participant
 
 Thank you for playing against tomsup!
 Here we will make you play against simulated agents in simple decision-making games.
@@ -117,6 +117,7 @@ if game_type == "penny_competitive":
     rulestext = rulestext_pennycompetitive
 elif game_type == "penny_cooperative":
     rulestext = rulestext_pennycooperattive
+
 
 # Show_text for normal text
 def show_text(txt):
@@ -202,11 +203,14 @@ for trial in trial_list:
     trial["RT"] = stopwatch.getTime()
 
     #
-    if resp_tom == 0: # left hand
+    if resp_tom == 0:  # left hand
         rl_tom = "left"
         picture1 = visual.ImageStim(
-            win, image=RH_coin,  # agent point of view
-            pos=img_pos1, units="norm", size=img_size
+            win,
+            image=RH_coin,  # agent point of view
+            pos=img_pos1,
+            units="norm",
+            size=img_size,
         )
         picture2 = visual.ImageStim(
             win, image=LH_open, pos=img_pos2, units="norm", size=img_size

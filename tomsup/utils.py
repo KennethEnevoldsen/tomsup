@@ -1,14 +1,12 @@
 """
 This script contains utility functions used in the tomsup package
 """
+
 import json
 import os
 from typing import List, Optional, Union
 
-import pandas as pd
-
-from tomsup.agent import AgentGroup
-from tomsup.agent import Agent
+from tomsup.agent import Agent, AgentGroup
 
 
 def valid_agents() -> dict:

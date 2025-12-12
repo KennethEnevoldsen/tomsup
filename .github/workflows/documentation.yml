@@ -1,10 +1,11 @@
+# creates the documentation on pushes it to the gh-pages branch
 name: Documentation
+
 on:
   push:
-    branches: [master, main]
+    branches: [main, master]
   pull_request:
-    branches: [master, main]
-
+    branches: [main, master]
 
 jobs:
   build:
@@ -16,21 +17,17 @@ jobs:
         with:
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-
       - name: Install dependencies
+        shell: bash
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -e . --group dev
 
       - name: Build and Commit
         uses: sphinx-notes/pages@2.1
         with:
           documentation_path: docs
+          sphinx_version: "5.3.0"
 
       - name: Push changes
         if: ${{ github.event_name == 'push' }}
@@ -38,4 +35,3 @@ jobs:
         with:
           github_token: ${{ secrets.SPHINX_DOCUMENTATION }}
           branch: gh-pages
-

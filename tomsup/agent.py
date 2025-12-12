@@ -1,33 +1,31 @@
 """
 docstring
 """
+
+import random
+from itertools import combinations
 from typing import Callable, List, Optional, Tuple, Union
 from warnings import warn
-from itertools import combinations
-import random
 
-from joblib import Parallel, delayed
-
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from joblib import Parallel, delayed
+from wasabi import msg
 
-from tomsup.ktom_functions import k_tom, init_k_tom, inv_logit
+from tomsup.ktom_functions import init_k_tom, inv_logit, k_tom
 from tomsup.payoffmatrix import PayoffMatrix
 from tomsup.plot import (
-    choice,
-    score,
     ResultsDf,
+    choice,
+    plot_heatmap,
     plot_history,
+    plot_op_states,
     plot_p_k,
     plot_p_op_1,
     plot_p_self,
-    plot_op_states,
-    plot_heatmap,
+    score,
 )
-
-from wasabi import msg
-
 
 ###################
 # ___ AGENT ___
@@ -82,10 +80,14 @@ class Agent:
         elif self.history.empty:
             self.history = pd.DataFrame(data=kwargs, index=[0])
             if self.strategy.split("-")[-1] == "TOM":
-                self.history = self.history.append(kwargs, ignore_index=True)
+                self.history = pd.concat(
+                    [self.history, pd.DataFrame([kwargs])], ignore_index=True
+                )
                 self.history = self.history.drop([0]).reset_index()
         else:
-            self.history = self.history.append(kwargs, ignore_index=True)
+            self.history = pd.concat(
+                [self.history, pd.DataFrame([kwargs])], ignore_index=True
+            )
 
     # Getters
     def get_start_params(self) -> dict:
@@ -338,7 +340,7 @@ class TFT(Agent):
     def compete(
         self,
         op_choice: Optional[int] = None,
-        p_matrix: PayoffMatrix = PayoffMatrix("prisoners_dilemma"),
+        p_matrix: PayoffMatrix = PayoffMatrix("prisoners_dilemma"),  # noqa
         verbose: bool = True,
         **kwargs,
     ) -> int:
@@ -356,6 +358,7 @@ class TFT(Agent):
                 "Tit-for-Tat is designed for the prisoners dilemma and might \
                   not perform well with other payoff matrices.",
                 Warning,
+                stacklevel=2,
             )
 
         # If a choice haven't been made: Cooperate
@@ -532,6 +535,7 @@ class TOM(Agent):
                 "It is quite computationally expensive to run a TOM with a \
                   level > 5. Make sure this is your intention.",
                 Warning,
+                stacklevel=2,
             )
 
         self.volatility = volatility
@@ -655,9 +659,16 @@ class TOM(Agent):
         return self.params
 
     def __print(
-        self, d, n=0, keys=None, readability_transform={}, print_level=None
+        self,
+        d,
+        n=0,
+        keys=None,
+        readability_transform: dict | None = None,
+        print_level=None,
     ) -> None:
         """A helper function for printing dictionaries"""
+        if readability_transform is None:
+            readability_transform = {}
         for key in d:
             if (
                 (print_level is not None)
@@ -797,7 +808,7 @@ class AgentGroup:
         >>> result.shape[0] == 10*100 # As there is 10 simulations each containing\
                                         100 round
         True
-        >>> result['payoff_agent0'].mean() == 1  # Given that both agents have \
+        >>> result['payoff_agent0'].mean(numeric_only=True) == 1  # Given that both agents have \
             always choose 1, it is clear that agent0 always win, when playing the \
             competitive pennygame
         True
@@ -1063,7 +1074,7 @@ class AgentGroup:
         agent1: int,
         state: str,
         agent: int = 0,
-        fun: Callable = lambda x: x[state],
+        fun: Callable = lambda x: x[state],  # noqa
         ylab: str = "",
         xlab: str = "Round",
         show: bool = True,
@@ -1289,7 +1300,7 @@ def compete(
         agent_0 (Agent): objects of class Agent which should compete
         agent_1 (Agent): objects of class Agent which should compete
         p_matrix (PayoffMatrix): The payoffmatrix in which the agents compete
-        n_rounds (int, optional): Number of rounds the agent should play in each simulation. 
+        n_rounds (int, optional): Number of rounds the agent should play in each simulation.
             Defaults to 10.
         n_sim (int, optional): The number of simulations. Defaults to 1.
         reset_agent (bool, optional): Should the agent be reset ? Defaults to True.
@@ -1320,7 +1331,7 @@ def compete(
             Running simulation 1 out of 3
             Running simulation 2 out of 3
             Running simulation 3 out of 3
-        >>> result['payoff_agent1'].mean() > 0  # We see that the WSLS() on \
+        >>> result['payoff_agent1'].mean(numeric_only=True) > 0  # We see that the WSLS() on \
             average win more than it lose vs. the biased agent (RB)
         True
     """
@@ -1339,11 +1350,12 @@ def compete(
                   maintain their knowledge across simulations. Is this \
                   the intended outcome?",
                 Warning,
+                stacklevel=2,
             )
 
         def __compete(sim):
             if verbose:
-                msg.info(f"\tRunning simulation {sim+1} out of {n_sim}")
+                msg.info(f"\tRunning simulation {sim + 1} out of {n_sim}")
 
             res = compete(
                 agent_0,
@@ -1389,8 +1401,8 @@ def compete(
             )
 
             if save_history:
-                history0 = agent_0.history.tail(1).to_dict("r")[0]
-                history1 = agent_1.history.tail(1).to_dict("r")[0]
+                history0 = agent_0.history.tail(1).to_dict("records")[0]
+                history1 = agent_1.history.tail(1).to_dict("records")[0]
                 result.append((i, c_0, c_1, payoff[0], payoff[1], history0, history1))
             else:
                 result.append((i, c_0, c_1, payoff[0], payoff[1]))

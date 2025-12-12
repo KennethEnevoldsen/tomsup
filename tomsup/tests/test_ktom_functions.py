@@ -4,10 +4,8 @@ from tomsup.ktom_functions import (
     learning_function,
     expected_payoff_fun,
     p_op0_fun,
-    param_var_update,
     p_k_udpate,
     p_opk_approx_fun,
-    p_op_var0_update,
 )
 
 

@@ -12,6 +12,7 @@ Detailed instructions
 You can also install it directly from github by simply running:
 
 .. code-block::
+
    pip install git+https://github.com/KennethEnevoldsen/tomsup.git
 
    or more explicitly:

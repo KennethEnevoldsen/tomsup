@@ -72,7 +72,6 @@ def p_opk_approx_fun(
     prev_gradient: np.array,
     level: int,
 ):
-
     """
     Approximates the estimated choice probability of the opponent on the
     previous round.
@@ -147,7 +146,7 @@ def param_var_update(
     p_k: np.array,
     volatility: float,
     volatility_dummy=None,
-    **kwargs
+    **kwargs,
 ):
     """
     k-ToM updates its uncertainty / variance on its estimates of opponent's
@@ -227,7 +226,7 @@ def gradient_update(
     sim_level,
     sim_agent,
     p_matrix,
-    **kwargs
+    **kwargs,
 ):
     """The gradient update of the k-ToM agent"""
     # Make empty list for fillin in gradients
@@ -244,7 +243,7 @@ def gradient_update(
 
         # Make parameter structure similar to own
         # sim_params_incr = copy.deepcopy(params)
-        sim_params_incr = dict()
+        sim_params_incr = {}
         # Populate it with estimated values, including the increment
         for param_idx, param_key in enumerate(params):
             sim_params_incr[param_key] = param_mean_incr[param_idx]
@@ -258,7 +257,7 @@ def gradient_update(
             sim_level,
             sim_agent,
             p_matrix,
-            **kwargs
+            **kwargs,
         )
 
         # Simulate opponent decision using incremented parameters
@@ -268,9 +267,7 @@ def gradient_update(
             sim_agent,
             sim_level,
             p_matrix,
-        )[
-            0
-        ]  # only use the first part of the output
+        )[0]  # only use the first part of the output
 
         # Calculate the gradient: a measure of the size of the influence of
         # the incremented parameter value
@@ -395,7 +392,7 @@ def learning_function(
     level: int,
     agent: int,
     p_matrix: PayoffMatrix,
-    **kwargs
+    **kwargs,
 ) -> dict:
     """The general learning function for the k-ToM agent
 
@@ -473,14 +470,13 @@ def learning_function(
 
         # k-ToM simulates an opponent for each level below its own
         for sim_level in range(level):
-
             # Further preparation of simulated perspective
             sim_prev_internal_states = copy.deepcopy(
                 prev_internal_states["opponent_states"][sim_level]
             )
 
             # Make parameter structure similar to own
-            sim_params = dict()
+            sim_params = {}
 
             # Populate it with estimated values
             for param_idx, param_key in enumerate(params):
@@ -495,15 +491,13 @@ def learning_function(
                 sim_level,
                 sim_agent,
                 p_matrix,
-                **kwargs
+                **kwargs,
             )
 
             # Simulate opponent deciding
             p_op_mean[sim_level] = decision_function(
                 sim_new_internal_states, sim_params, sim_agent, sim_level, p_matrix
-            )[
-                0
-            ]  # only use the first part of the output
+            )[0]  # only use the first part of the output
 
             # Update gradient (recursive)
             gradient[sim_level] = gradient_update(
@@ -516,7 +510,7 @@ def learning_function(
                 sim_level,
                 sim_agent,
                 p_matrix,
-                **kwargs
+                **kwargs,
             )
 
             # Save opponent's states
@@ -612,7 +606,7 @@ def k_tom(
     level: int,
     agent: int,
     p_matrix: PayoffMatrix,
-    **kwargs
+    **kwargs,
 ) -> Tuple[int, dict]:
     """The full k-ToM implementation
 
@@ -640,7 +634,7 @@ def k_tom(
             level,
             agent,
             p_matrix,
-            **kwargs
+            **kwargs,
         )
 
     else:  # If first round or missed round, make no update

@@ -3,7 +3,7 @@ import tomsup as ts
 
 def test_tutorial():
     # Get the competitive penny game payoff matrix
-    penny = ts.PayoffMatrix("penny_competitive")
+    ts.PayoffMatrix("penny_competitive")  # see if it runs without error
 
     tom_1 = ts.TOM(level=1)
     init_states = tom_1.get_internal_states()
