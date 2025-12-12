@@ -1,13 +1,15 @@
 """
 Utility plotting functiona for tomsup
 """
-from typing import Callable, Optional, Union
-import seaborn as sns
-import pandas as pd
-import numpy as np
-import scipy.stats as st
-import matplotlib.pyplot as plt
+
 from functools import partial
+from typing import Callable, Optional, Union
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import scipy.stats as st
+import seaborn as sns
 
 
 class ResultsDf(pd.DataFrame):
@@ -16,8 +18,10 @@ class ResultsDf(pd.DataFrame):
     """
 
 
-def mean_confidence_interval(x: np.array, confidence: float = 0.95) -> np.array:
-    return st.t.interval(confidence, len(x) - 1, loc=np.mean(x), scale=st.sem(x))
+def mean_confidence_interval(x: np.ndarray, confidence: float = 0.95) -> np.ndarray:
+    return st.t.interval(
+        confidence, len(x) - 1, loc=np.mean(x, axis=0), scale=st.sem(x)
+    )
 
 
 def plot_heatmap(
@@ -58,13 +62,13 @@ def plot_heatmap(
     df_mean = (
         df_[[aggregate_col + "0", "agent0", "agent1"]]
         .groupby(["agent0", "agent1"])
-        .apply(aggregate_fun)
+        .apply(lambda x: aggregate_fun(x.select_dtypes(include="number"), axis=0))
         .reset_index()
     )
     df_mean2 = (
         df_[[aggregate_col + "1", "agent0", "agent1"]]
         .groupby(["agent0", "agent1"])
-        .apply(aggregate_fun)
+        .apply(lambda x: aggregate_fun(x.select_dtypes(include="number"), axis=0))
         .reset_index()
     )
     df_mean.columns = ["agent0", "agent1", aggregate_col]
@@ -77,16 +81,22 @@ def plot_heatmap(
         df_ci = (
             df_[[aggregate_col + "0", "agent0", "agent1"]]
             .groupby(["agent0", "agent1"])
-            .apply(mean_confidence_interval)
-            .reset_index()
+            .apply(
+                lambda x: mean_confidence_interval(x.select_dtypes(include="number"))
+            )
         )
+        df_ci.name = "ci"
+        df_ci = df_ci.reset_index()
         df_ci.columns = ["agent0", "agent1", "ci"]
         df_ci2 = (
             df_[[aggregate_col + "1", "agent0", "agent1"]]
             .groupby(["agent0", "agent1"])
-            .apply(mean_confidence_interval)
-            .reset_index()
+            .apply(
+                lambda x: mean_confidence_interval(x.select_dtypes(include="number"))
+            )
         )
+        df_ci2.name = "ci"
+        df_ci2 = df_ci2.reset_index()
         df_ci2.columns = ["agent1", "agent0", "ci"]
         df_ci = pd.concat([df_ci, df_ci2])
 
@@ -125,12 +135,12 @@ def check_plot_input(df: pd.DataFrame, agent0: str, agent1: str) -> None:
                           DataFrame which is obtained using the compete() \
                           function"
         )
-    if (agent0 not in df["agent0"].values) and not (agent0 is None):
+    if (agent0 not in df["agent0"].values) and agent0 is not None:
         raise ValueError(
             "The specified agent0 is not a valid agent \
                           (i.e. it is not present in columns agent0)"
         )
-    if (agent1 not in df["agent1"].values) and not (agent1 is None):
+    if (agent1 not in df["agent1"].values) and agent1 is not None:
         raise ValueError(
             "The specified agent1 is not a valid agent \
                           (i.e. it is not present in columns agent1)"
@@ -185,7 +195,7 @@ def score(
     # set label text
     label_text = "mean score across simulations" if "n_sim" in df else "score"
 
-    tmp = df.groupby(by=["round"])[cum_payoff].mean()
+    tmp = df.groupby(by=["round"])[cum_payoff].mean(numeric_only=True)
     ax.plot(
         range(len(tmp)), tmp.values, color="lightblue", linewidth=4, label=label_text
     )
@@ -242,7 +252,7 @@ def choice(
     label_text = "mean choice across simulations" if "n_sim" in df else "choice"
 
     # plot mean
-    tmp = df.groupby(by=["round"])[action].mean()
+    tmp = df.groupby(by=["round"])[action].mean(numeric_only=True)
     ax.plot(
         range(len(tmp)), tmp.values, color="lightblue", linewidth=4, label=label_text
     )
@@ -305,7 +315,7 @@ def plot_history(
     # plot mean
     label_text = "mean score across simulations" if "n_sim" in df else "score"
     df["extract"] = df[hist].apply(fun)
-    tmp = df.groupby(by=["round"])["extract"].mean()
+    tmp = df.groupby(by=["round"])["extract"].mean(numeric_only=True)
     plt.plot(
         range(len(tmp)), tmp.values, color="lightblue", linewidth=4, label=label_text
     )

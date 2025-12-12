@@ -58,7 +58,7 @@ def test_AgentGroup():
 
     assert result.shape[0] == 2 * 3  # As there is 3 simulations each containing 2 round
 
-    assert result["payoff_agent1"].mean() == 1
+    assert result["payoff_agent1"].mean(numeric_only=True) == 1
     # Given that both agents have always choose 1, it is clear that agent1
     # always win, when playing the competitive pennygame
 
@@ -86,7 +86,7 @@ def test_compete():
         verbose=True,
     )
 
-    assert result["payoff_agent1"].mean() > 0
+    assert result["payoff_agent1"].mean(numeric_only=True) > 0
     # We see that the WSLS() on average win more than it lose vs. the biased agent (RB)
 
 
