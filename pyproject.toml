@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tomsup"
-version = "1.4.0"
+version = "1.4.1"
 description = "An implementation of game theory of mind in a agent based framework following the implementation of Devaine, et al. (2017)."
 authors = [
     { name = "Kenneth C. Enevoldsen", email = "kenevoldsen@pm.me" },
